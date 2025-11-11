@@ -21,10 +21,12 @@ const Dimension standardized_spaces[4] = {
   [Handicap]  = {3.6, 5.0},
   [Compact]   = {2.3, 4.5},
   [EV]        = {2.6, 5.0},
-} // These might be magic numbers
+}; // These might be magic numbers
+
+const char* space_type_labels[4] = {"Standard", "Handicap", "Compact", "EV"};
 
 typedef struct {
-  SpaceType space;
+  SpaceType type;
   Location location;
 } Space;
 
