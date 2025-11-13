@@ -16,14 +16,14 @@ typedef struct {
   double height;
 } Dimension;
 
-const Dimension standardized_spaces[4] = {
-  [Standard]  = {2.5, 5.0},
-  [Handicap]  = {3.6, 5.0},
-  [Compact]   = {2.3, 4.5},
-  [EV]        = {2.6, 5.0},
-}; // These might be magic numbers
+//const Dimension standardized_spaces[4] = {
+//  [Standard]  = {2.5, 5.0},
+//  [Handicap]  = {3.6, 5.0},
+//  [Compact]   = {2.3, 4.5},
+//  [EV]        = {2.6, 5.0},
+//}; // These might be magic numbers
 
-const char* space_type_labels[4] = {"Standard", "Handicap", "Compact", "EV"};
+//const char* space_type_labels[4] = {"Standard", "Handicap", "Compact", "EV"};
 
 typedef struct {
   SpaceType type;
@@ -39,3 +39,5 @@ typedef struct {
   PathVector vector;
   Location start_point;
 } Path;
+
+int addfn(int a, int b);
