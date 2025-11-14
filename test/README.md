@@ -11,7 +11,7 @@ Also remember to add the test to CTest with the `add_test` function. The functio
 
 # Running the tests
 Make sure you first build the tests with the build command.
-`````
+
 ```
 cmake --build build 
 ```
