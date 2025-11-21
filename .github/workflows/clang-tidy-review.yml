@@ -15,7 +15,7 @@ jobs:
       - uses: ZedThree/clang-tidy-review@v0.22.0
         id: review
         with:
-          lgtm_comment_body: "LGTM 👍"
+          clang_tidy_version: "21"
           exclude: "lib/external/*"
 
       # Uploads an artefact containing clang_fixes.json
