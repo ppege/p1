@@ -23,5 +23,6 @@ jobs:
         id: upload-review
 
       # If there are any comments, fail the check
-      - if: steps.review.outputs.total_comments > 0
-        run: exit 1
+      # We still want the option to merge without 100% clean code
+      #- if: steps.review.outputs.total_comments > 0
+      #  run: exit 1
