@@ -17,6 +17,7 @@ jobs:
         with:
           clang_tidy_version: "21"
           exclude: "lib/external/*"
+          apt_packages: "build-essential,cmake,git,tzdata,clang-tidy-21,python3,python3-pip"
 
       # Uploads an artefact containing clang_fixes.json
       - uses: ZedThree/clang-tidy-review/upload@v0.22.0
