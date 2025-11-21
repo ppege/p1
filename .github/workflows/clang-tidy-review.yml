@@ -16,6 +16,7 @@ jobs:
         id: review
         with:
           exclude: "lib/external/*"
+          token: ${{ github.token }}
 
       # Uploads an artefact containing clang_fixes.json
       - uses: ZedThree/clang-tidy-review/upload@v0.22.0
