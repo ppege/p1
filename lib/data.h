@@ -40,4 +40,16 @@ typedef struct {
   Location start_point;
 } Path;
 
+typedef struct {
+  Path* paths;
+  int path_count;
+  Space* spaces;
+  int space_count;
+  Location* ups;
+  int up_count;
+  Location* downs;
+  int down_count;
+  Location entrance;
+} Lot;
+
 int addfn(int a, int b);
