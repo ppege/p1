@@ -56,11 +56,17 @@ void print_lot(const Lot* lot) {
 }
 
 int main() {
-  Lot* lot = create_lot(3, 30, 0, 0);
+  Lot* lot = create_lot(6, 60, 1, 1);
   lot->entrance = (Location){7.0, 1.0, 0};
   lot->paths[0] = (Path){.vector = {0.0, 9.0}, .start_point = {7.0, 1.0, 0}};
   lot->paths[1] = (Path){.vector = {12.0, 0.0}, .start_point = {1.0, 2.0, 0}};
   lot->paths[2] = (Path){.vector = {12.0, 0.0}, .start_point = {1.0, 7.0, 0}};
+  lot->paths[3] = (Path){.vector = {0.0, 9.0}, .start_point = {7.0, 1.0, 1}};
+  lot->paths[4] = (Path){.vector = {12.0, 0.0}, .start_point = {1.0, 2.0, 1}};
+  lot->paths[5] = (Path){.vector = {12.0, 0.0}, .start_point = {1.0, 7.0, 1}};
+
+  lot->ups[0] = (Location){7.0, 10.0, 0};
+  lot->downs[0] = (Location){7.0, 10.0, 1};
 
   lot->spaces[0] = (Space){.type = Standard, .location = {1.0, 2.5, 0}};
   lot->spaces[1] = (Space){.type = Standard, .location = {2.0, 2.5, 0}};
@@ -97,6 +103,42 @@ int main() {
   lot->spaces[27] = (Space){.type = Standard, .location = {10.0, 7.5, 0}};
   lot->spaces[28] = (Space){.type = Standard, .location = {11.0, 7.5, 0}};
   lot->spaces[29] = (Space){.type = Standard, .location = {12.0, 7.5, 0}};
+  
+  lot->spaces[30] = (Space){.type = Standard, .location = {1.0, 2.5, 1}};
+  lot->spaces[31] = (Space){.type = Standard, .location = {2.0, 2.5, 1}};
+  lot->spaces[32] = (Space){.type = Standard, .location = {3.0, 2.5, 1}};
+  lot->spaces[33] = (Space){.type = Standard, .location = {4.0, 2.5, 1}};
+  lot->spaces[34] = (Space){.type = Standard, .location = {5.0, 2.5, 1}};
+
+  lot->spaces[35] = (Space){.type = Standard, .location = {8.0, 2.5, 1}};
+  lot->spaces[36] = (Space){.type = Standard, .location = {9.0, 2.5, 1}};
+  lot->spaces[37] = (Space){.type = Standard, .location = {10.0, 2.5, 1}};
+  lot->spaces[38] = (Space){.type = Standard, .location = {11.0, 2.5, 1}};
+  lot->spaces[39] = (Space){.type = Standard, .location = {12.0, 2.5, 1}};
+
+  lot->spaces[40] = (Space){.type = Standard, .location = {1.0, 4.5, 1}};
+  lot->spaces[41] = (Space){.type = Standard, .location = {2.0, 4.5, 1}};
+  lot->spaces[42] = (Space){.type = Standard, .location = {3.0, 4.5, 1}};
+  lot->spaces[43] = (Space){.type = Standard, .location = {4.0, 4.5, 1}};
+  lot->spaces[44] = (Space){.type = Standard, .location = {5.0, 4.5, 1}};
+
+  lot->spaces[45] = (Space){.type = Standard, .location = {8.0, 4.5, 1}};
+  lot->spaces[46] = (Space){.type = Standard, .location = {9.0, 4.5, 1}};
+  lot->spaces[47] = (Space){.type = Standard, .location = {10.0, 4.5, 1}};
+  lot->spaces[48] = (Space){.type = Standard, .location = {11.0, 4.5, 1}};
+  lot->spaces[49] = (Space){.type = Standard, .location = {12.0, 4.5, 1}};
+
+  lot->spaces[50] = (Space){.type = Standard, .location = {1.0, 7.5, 1}};
+  lot->spaces[51] = (Space){.type = Standard, .location = {2.0, 7.5, 1}};
+  lot->spaces[52] = (Space){.type = Standard, .location = {3.0, 7.5, 1}};
+  lot->spaces[53] = (Space){.type = Standard, .location = {4.0, 7.5, 1}};
+  lot->spaces[54] = (Space){.type = Standard, .location = {5.0, 7.5, 1}};
+
+  lot->spaces[55] = (Space){.type = Standard, .location = {8.0, 7.5, 1}};
+  lot->spaces[56] = (Space){.type = Standard, .location = {9.0, 7.5, 1}};
+  lot->spaces[57] = (Space){.type = Standard, .location = {10.0, 7.5, 1}};
+  lot->spaces[58] = (Space){.type = Standard, .location = {11.0, 7.5, 1}};
+  lot->spaces[59] = (Space){.type = Standard, .location = {12.0, 7.5, 1}};
 
   print_lot(lot);
   free_lot(lot);
