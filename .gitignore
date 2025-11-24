@@ -55,6 +55,8 @@ dkms.conf
 build/
 .idea
 .env
+.cache/
+compile_commands.json
 
 # debug information files
 *.dwo
