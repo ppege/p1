@@ -36,5 +36,3 @@ typedef struct {
   PathVector vector;
   Location start_point;
 } Path;
-
-int addfn(int a, int b);
