@@ -25,6 +25,7 @@ typedef struct {
 typedef struct {
   SpaceType type;
   Location location;
+  char *name;
 } Space;
 
 typedef struct {
@@ -36,3 +37,18 @@ typedef struct {
   PathVector vector;
   Location start_point;
 } Path;
+
+typedef struct {
+  Path* paths;
+  int path_count;
+  Space* spaces;
+  int space_count;
+  Location* ups;
+  int up_count;
+  Location* downs;
+  int down_count;
+  Location entrance;
+  Location POI;
+} Lot;
+
+int addfn(int a, int b);
