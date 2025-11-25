@@ -1,3 +1,6 @@
+add_executable(test_1 test.c)
+target_link_libraries(test_1 Unity)
+
 add_executable(test_PlateDB PlateDB.c)
 target_link_libraries(test_PlateDB data PlateDB Unity)
 

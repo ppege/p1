@@ -6,7 +6,7 @@ void setUp() {}
 
 void tearDown() {}
 
-char *FileName = "test/test.txt";
+char *FileName = "../../test/test.txt";
 
 void test_read_file_lines(void) {
   int lines = GetFileLines(FileName);
