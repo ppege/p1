@@ -1,9 +1,17 @@
 #include "PlateDB.h"
 #include "data.h"
+#include "lot.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 int main() {
+  // lot.c example
+  Lot* lot = create_lot(6, 60, 1, 1);
+  populate_lot(lot);
+  print_lot(lot);
+  free_lot(lot);
+  
+  // lot file reading example
   Space space = {
       EV,
       {6.7, 4.2, 69},
@@ -29,5 +37,7 @@ int main() {
          space.type, space.location.x, space.location.y, space.location.level);
 
   free(CarArr);
+  
+  // that's it
   return 0;
 }
