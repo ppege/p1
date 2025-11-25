@@ -28,6 +28,7 @@ typedef struct {
 typedef struct {
   SpaceType type;
   Location location;
+  char *name;
 } Space;
 
 typedef struct {
@@ -50,6 +51,7 @@ typedef struct {
   Location* downs;
   int down_count;
   Location entrance;
+  Location POI;
 } Lot;
 
 int addfn(int a, int b);
