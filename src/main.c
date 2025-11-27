@@ -1,12 +1,13 @@
 #include "PlateDB.h"
 #include "data.h"
 #include "lot.h"
+#include "validate.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 int main() {
   // lot.c example
-  Lot* lot = create_lot(6, 60, 1, 1);
+  Lot* lot = create_lot(2, 6, 60, 1, 1);
   populate_lot(lot);
   print_lot(lot);
   free_lot(lot);

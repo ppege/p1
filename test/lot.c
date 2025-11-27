@@ -1,21 +1,20 @@
 #include "unity.h"
 #include "lot.h"
 
-void setUp()
-{
+void setUp() {
 }
 
-void tearDown()
-{
+void tearDown() {
 }
 
-void test_create_lot(void)
-{
+void test_create_lot(void) {
+  int level_count = 2;
   int path_count = 3;
   int space_count = 30;
   int up_count = 0;
   int down_count = 0;
-  Lot* lot = create_lot(path_count, space_count, up_count, down_count);
+  Lot* lot = create_lot(level_count, path_count, space_count, up_count, down_count);
+  TEST_ASSERT_EQUAL_INT(level_count, lot->level_count); 
   TEST_ASSERT_EQUAL_INT(path_count, lot->path_count); 
   TEST_ASSERT_EQUAL_INT(space_count, lot->space_count); 
   TEST_ASSERT_EQUAL_INT(up_count, lot->up_count); 
@@ -23,8 +22,7 @@ void test_create_lot(void)
   // TEST_ASSERT_EQUAL_INT(path_count * sizeof(Path), sizeof(lot->paths));
 }
 
-int main(void)
-{
+int main(void) {
 	UNITY_BEGIN();
 	RUN_TEST(test_create_lot);
 	return UNITY_END();

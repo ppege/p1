@@ -22,23 +22,26 @@ typedef struct {
 
 // const char* space_type_labels[4] = {"Standard", "Handicap", "Compact", "EV"};
 
+
 typedef struct {
   SpaceType type;
   Location location;
-  char *name;
+  double rotation; // in degrees
+  char* name;
 } Space;
 
 typedef struct {
   double x;
   double y;
-} PathVector;
+} Vector;
 
 typedef struct {
-  PathVector vector;
+  Vector vector;
   Location start_point;
 } Path;
 
 typedef struct {
+  int level_count;
   Path* paths;
   int path_count;
   Space* spaces;
@@ -51,4 +54,4 @@ typedef struct {
   Location POI;
 } Lot;
 
-int addfn(int a, int b);
+Location get_endpoint(const Path *path);
