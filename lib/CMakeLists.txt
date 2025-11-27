@@ -3,6 +3,10 @@ target_include_directories(data PUBLIC .)
 
 add_library(lot lot.c)
 target_include_directories(lot PUBLIC .)
+
+add_library(display display.c)
+target_include_directories(display PUBLIC .)
+
 add_library(PlateDB PlateDB.c)
 target_include_directories(PlateDB PUBLIC .)
 
