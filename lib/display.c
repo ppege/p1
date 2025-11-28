@@ -1,4 +1,12 @@
 #include "display.h"
+#include "stdio.h"
+
+
 void clear_screen() {
-  // Implementation to clear the screen
+    printf("\033[1;1H\033[2J");
 }
+
+
+
+
+
