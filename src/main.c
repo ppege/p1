@@ -1,11 +1,16 @@
 #include "PlateDB.h"
 #include "data.h"
 #include "lot.h"
+#include "lotReader.h"
 #include "validate.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 int main() {
+
+  char *FileName = "test.lot";
+  readLotFromFile(FileName);
+  return 0;
   // lot.c example
   Lot *lot = create_lot(2, 6, 60, 1, 1);
   populate_lot(lot);
@@ -17,7 +22,6 @@ int main() {
       EV,
       {6.7, 4.2, 69},
   };
-  char *FileName = "../../test/test.txt";
   int lines = GetFileLines(FileName);
 
   struct car *CarArr = (struct car *)malloc(sizeof(struct car) * lines);
