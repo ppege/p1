@@ -7,6 +7,9 @@ target_include_directories(lot PUBLIC .)
 add_library(validate validate.c)
 target_include_directories(validate PUBLIC .)
 
+add_library(calculations calculations.c)
+target_include_directories(calculations PUBLIC .)
+
 add_library(display display.c)
 target_include_directories(display PUBLIC .)
 

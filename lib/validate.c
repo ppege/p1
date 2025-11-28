@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "validate.h"
 #include "data.h"
 
@@ -8,6 +9,7 @@ int validate_lot(const Lot *lot) {
   // 1. Each path must connect and each space must be accessible from at least one path.
   if (!paths_connected(lot)) return 0;
   // 2. Spaces must not overlap.
+  if (spaces_overlap(lot)) return 0;
   // 3. No obstacles (spaces) must encroach within 1.5 meters of either side of the path centerline.
   // 4. Spaces must be within 6-7 meters of a path (to be accessible)
   // 5. There must be exactly one entrance and one POI defined.
@@ -58,7 +60,8 @@ int paths_connected(const Lot *lot) {
     // causing the function to return 0.
   }
   free(endpoints);
-  return connected == lot->path_count;
+  return connected == lot->path_count; // returns 1 if every checked path has incremented connected,
+                                       // if not, then at least one path must be an orphan, so we return 0.
 }
 
 Location* get_all_endpoints(Path* paths, int path_count) {
@@ -72,3 +75,28 @@ Location* get_all_endpoints(Path* paths, int path_count) {
 int compare_locations(Location loc1, Location loc2) {
     return (loc1.x == loc2.x) && (loc1.y == loc2.y) && (loc1.level == loc2.level);
 }
+
+int spaces_overlap(const Lot *lot) {
+  // since we assume each space's location is at its bottom-left corner,
+  // we can check if any one space is encroaching upon another space
+  // simply by checking their bounding boxes.
+  // we must also use the rotation of the space (which is in degrees) to determine its bounding box.
+  for (int i = 0; i < lot->space_count; i++) {
+    Space space_a = lot->spaces[i];
+    Dimension dim_a = standardized_spaces[space_a.type];
+    for (int j = i + 1; j < lot->space_count; j++) {
+      Space space_b = lot->spaces[j];
+      Dimension dim_b = standardized_spaces[space_b.type];
+      // check if they are on the same level
+      if (space_a.location.level != space_b.location.level) continue;
+      // axis-aligned bounding box check
+      if (space_a.location.x < space_b.location.x + dim_b.width &&
+          space_a.location.x + dim_a.width > space_b.location.x &&
+          space_a.location.y < space_b.location.y + dim_b.height &&
+          space_a.location.y + dim_a.height > space_b.location.y) {
+        return 1; // overlap detected
+      }
+    }
+  }
+  return 0; // no overlaps found
+};

@@ -1,2 +1,2 @@
 add_executable(main main.c)
-target_link_libraries(main data lot validate PlateDB)
+target_link_libraries(main data lot validate calculations display PlateDB)
