@@ -13,7 +13,7 @@ typedef struct {
   double height;
 } Dimension;
 
-const Dimension standardized_spaces[4] = {
+static const Dimension standardized_spaces[4] = { // if this is not static we get MASSIVE ERRORS!!!
   [Standard]  = {2.5, 5.0},
   [Handicap]  = {3.6, 5.0},
   [Compact]   = {2.3, 4.5},
