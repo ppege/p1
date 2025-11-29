@@ -4,15 +4,41 @@
 #include <string.h>
 
 Space readSpace(char *line) {
+  char name[1];
+  double x, y, rotation;
+  int level, itype;
+  sscanf(line, "name=%s type=%d location(x=%lf y=%lf level=%d) rotation=%lf",
+         name, &itype, &x, &y, &level, &rotation);
 
+  SpaceType type = (SpaceType)itype;
+  printf("test\n");
+  printf("Read space: Name=%s, Type=%d, Location=(%.2f, %.2f %d),  "
+         "Rotation=%.2f\n",
+         name, type, x, y, level, rotation);
+  printf("test\n");
+  Space space = {.type = type, .location = {x, y, level}, .rotation = rotation};
+  printf("test\n");
+  strcpy(space.name, name);
+  printf("test\n");
+  // return space;
 };
 
 Path readPath(char *line) {
-
+  double vx, vy;
+  double sx, sy;
+  int level;
+  sscanf(line, "vec(x=%lf y=%lf) start_point(x=%lf y=%lf level=%d)", &vx, &vy,
+         &sx, &sy, &level);
+  Path path = {.vector = {vx, vy}, .start_point = {sx, sy, level}};
+  return path;
 };
 
 Location readLocation(char *line) {
-
+  double x, y;
+  int level;
+  sscanf(line, "x=%lf y=%lf level=%d", &x, &y, &level);
+  Location loc = {x, y, level};
+  return loc;
 };
 
 Lot readLotFromFile(char *filename) {
@@ -28,7 +54,6 @@ Lot readLotFromFile(char *filename) {
   // Opening file from name
   FILE *fptr = fopen(filename, "r");
   char buffer[67];
-  int amount = 0;
   int stage = 0;
   // Check if the file was opened
   //
@@ -49,51 +74,21 @@ Lot readLotFromFile(char *filename) {
         printf("This is a comment line\n");
         continue;
       }
-      printf("Amount is %d\n", amount);
-      if (amount > 0) {
-        // This is a data line, process it
-        // e.g., space, path, location data
-        printf("This is a data line\n");
-        if (stage == 1) {
-          // Process space data
-          Space space = readSpace(buffer);
-          // Add space to lot structure (not implemented here)
-          printf("Processed space data\n");
-        } else if (stage == 2) {
-          // Process path data
-          Path path = readPath(buffer);
-          // Add path to lot structure (not implemented here)
-          printf("Processed path data\n");
-        } else if (stage == 3) {
-          // Process location data
-          Location location = readLocation(buffer);
-          // Add location to lot structure (not implemented here)
-          printf("Processed location data\n");
-        } else {
-          // Unknown stage, handle error
-          printf("Unknown stage: %d\n", stage);
-          exit(1);
-        }
-        amount--;
-        continue;
-      }
+
       if (buffer[0] == '[') {
         // This is a header line, process it
         // e.g., [Spaces], [Paths], [Locations], etc.
-        if (strcmp(buffer, "[Spaces xxx]\n") <= 3) {
+        if (strcmp(buffer, "[Spaces]\n") == 0) {
           // Process spaces
-          sscanf(buffer, "[Spaces %d]\n", &amount);
           stage = 1;
-          printf("This is the spaces header with %d spaces\n", amount);
+          printf("This is the spaces header\n");
 
-        } else if (strcmp(buffer, "[Paths xxx]\n") <= 3) {
+        } else if (strcmp(buffer, "[Paths]\n") == 0) {
           // Process paths
-          sscanf(buffer, "[Paths %d]\n", &amount);
           stage = 2;
           printf("This is the paths header\n");
-        } else if (strcmp(buffer, "[Locations xxx]\n") <= 3) {
+        } else if (strcmp(buffer, "[Locations]\n") == 0) {
           // Process locations
-          sscanf(buffer, "[Locations %d]\n", &amount);
           stage = 3;
           printf("This is the locations header\n");
         } else {
@@ -101,8 +96,40 @@ Lot readLotFromFile(char *filename) {
           printf("Unknown header: |%s|\n", buffer);
           exit(1);
         }
+        continue;
       }
 
+      // This is a data line, process it
+      // e.g., space, path, location data
+      printf("This is a data line\n");
+      if (stage == 1) {
+        // Process space data
+        printf("Pre read space\n");
+        Space space = readSpace(buffer);
+        // Add space to lot structure (not implemented here)
+        printf("Processed space data\n");
+      } else if (stage == 2) {
+        // Process path data
+        Path path = readPath(buffer);
+        printf(
+            "Path: Vector (%.2f, %.2f), Start Point (%.2f, %.2f, Level %d)\n",
+            path.vector.x, path.vector.y, path.start_point.x,
+            path.start_point.y, path.start_point.level);
+        // Add path to lot structure (not implemented here)
+        printf("Processed path data\n");
+      } else if (stage == 3) {
+        // Process location data
+        Location location = readLocation(buffer);
+        printf("Location: (%.2f, %.2f, Level %d)\n", location.x, location.y,
+               location.level);
+        // Add location to lot structure (not implemented here)
+        printf("Processed location data\n");
+      } else {
+        // Unknown stage, handle error
+        printf("Unknown stage: %d\n", stage);
+        exit(1);
+        continue;
+      }
       printf("Line: |%s|", buffer);
     }
   } else {

@@ -2,11 +2,19 @@
 # Here we have some shit
 # Please ignore
 
-[Spaces 001]
+[Spaces]
 # This is a comment
 # Another comment line
-0.0 0.0 0.0 5.0 2.5 0.0
-[Paths 000]
+name=A1 type=1 location(x=2.5 y=1.25 level=1) rotation=180
+name=B2 type=1 loc(x=5.0 y=2.5 level=1) rotation=90
 
+
+
+[Paths]
+vec(x=2.0 y=0.0) start_point(x=2.5 y=1.25 level=0)
+
+[Locations]
+x=2.5 y=1.25 level=0
+x=5.0 y=2.5 level=1
 
 # comment
