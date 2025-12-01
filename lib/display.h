@@ -1,3 +1,4 @@
 #pragma once
 
-void clear_screen();
+int Scan_Plate(char plate_out[8]);
+
