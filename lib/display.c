@@ -38,3 +38,12 @@ int Scan_Plate(char plate_out[8]) {
   strcpy(plate_out, NumberPlate);
   return 0;
 }
+
+void clear_screen() {
+    printf("\033[1;1H\033[2J");
+}
+
+
+
+
+

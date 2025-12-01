@@ -8,11 +8,11 @@
 
 int main() {
   // lot.c example
-  Lot* lot = create_lot(2, 6, 60, 1, 1);
+  Lot *lot = create_lot(2, 6, 60, 1, 1);
   populate_lot(lot);
   print_lot(lot);
   free_lot(lot);
-  
+
   // lot file reading example
   Space space = {
       EV,
