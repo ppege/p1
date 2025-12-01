@@ -2,20 +2,17 @@
 #include "data.h"
 #include "lot.h"
 #include "lotReader.h"
-#include "validate.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 int main() {
+  Lot *lot = create_lot(0, 10, 10, 10, 10);
+  char *LotFileName = "test.lot";
+  readLotFromFile(LotFileName, lot);
 
-  char *FileName = "test.lot";
-  readLotFromFile(FileName);
-  return 0;
-  // lot.c example
-  Lot *lot = create_lot(2, 6, 60, 1, 1);
-  populate_lot(lot);
   print_lot(lot);
-  free_lot(lot);
+
+  char *FileName = "test/test.txt";
 
   // lot file reading example
   Space space = {
