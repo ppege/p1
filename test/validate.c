@@ -39,13 +39,13 @@ void test_spaces_overlap() {
 	Lot *lot = create_lot(1, 0, 2, 0, 0); // 1 level, 0 paths, 2 spaces
 	
 	// we assign the two spaces in a way where they overlap
-	lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 5, 0}, .rotation = 0.0, .name = "Space1" };
-	lot->spaces[1] = (Space){ .type = Standard, .location = (Location){6, 5, 0}, .rotation = 0.0, .name = "Space2" }; // Overlaps with Space1
+	lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 5, 0}, .rotation = 315.0, .name = "Space1" };
+	lot->spaces[1] = (Space){ .type = Standard, .location = (Location){10, 5, 0}, .rotation = 0.0, .name = "Space2" }; // Overlaps with Space1
 	
 	TEST_ASSERT_EQUAL_INT_MESSAGE(1, spaces_overlap(lot), "spaces should overlap here");
 
-	// modify to remove overlap
-	lot->spaces[1].location.x = 8; // Move Space2 to the right
+	// matching Space2's rotation to Space1's rotation makes them be right next to each other
+	lot->spaces[1].rotation = 315.0;
 	TEST_ASSERT_EQUAL_INT_MESSAGE(0, spaces_overlap(lot), "spaces should not overlap here");
 	free_lot(lot);
 }

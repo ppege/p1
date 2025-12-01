@@ -2,6 +2,7 @@
 #include "data.h"
 #include "calculations.h"
 #include <stdio.h>
+#include <string.h>
 
 void setUp() {}
 
@@ -19,16 +20,31 @@ void test_get_endpoint(void) {
 }
 
 void test_get_space_rectangle(void) {
-  Space space = {
+  Space test_space = {
     .type = Standard,
     .location = {10.0, 5.0, 0},
     .rotation = 45.0,
     .name = "Test Space"
   };
-  Rectangle rect = get_space_rectangle(&space);
-  printf("Corners of the rectangle:\n");
+
+  Rectangle rect = get_space_rectangle(&test_space);
+  Rectangle expected_rectangle = {
+    .corner = {
+      {10.00, 5.00},
+      {11.77, 6.77},
+      {8.23, 10.30},
+      {6.46, 8.54}
+    }
+  };
+
+  double delta = 1e-2;
   for (int i = 0; i < 4; i++) {
-    printf("Corner %d: (%.2f, %.2f)\n", i, rect.corner[i].x, rect.corner[i].y);
+    char message_x[50];
+    char message_y[50];
+    sprintf(message_x, "corner %d x coordinate incorrect", i);
+    sprintf(message_y, "corner %d y coordinate incorrect", i);
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(delta, expected_rectangle.corner[i].x, rect.corner[i].x, message_x);
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(delta, expected_rectangle.corner[i].y, rect.corner[i].y, message_y);
   }
 }
 

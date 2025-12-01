@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <float.h>
 #include "validate.h"
 #include "data.h"
+#include "calculations.h"
 
 int validate_lot(const Lot *lot) {
   // To validate a lot, the following rules must be checked:
@@ -60,8 +62,7 @@ int paths_connected(const Lot *lot) {
     // causing the function to return 0.
   }
   free(endpoints);
-  return connected == lot->path_count; // returns 1 if every checked path has incremented connected,
-                                       // if not, then at least one path must be an orphan, so we return 0.
+  return connected == lot->path_count; 
 }
 
 Location* get_all_endpoints(Path* paths, int path_count) {
@@ -77,24 +78,15 @@ int compare_locations(Location loc1, Location loc2) {
 }
 
 int spaces_overlap(const Lot *lot) {
-  // since we assume each space's location is at its bottom-left corner,
-  // we can check if any one space is encroaching upon another space
-  // simply by checking their bounding boxes.
-  // we must also use the rotation of the space (which is in degrees) to determine its bounding box.
+  // using get_space_rectangle we get the rectangles of each space
   for (int i = 0; i < lot->space_count; i++) {
-    Space space_a = lot->spaces[i];
-    Dimension dim_a = standardized_spaces[space_a.type];
+    Rectangle rect1 = get_space_rectangle(&lot->spaces[i]);
+    // we then wanna compare it to every other space's rectangle
     for (int j = i + 1; j < lot->space_count; j++) {
-      Space space_b = lot->spaces[j];
-      Dimension dim_b = standardized_spaces[space_b.type];
-      // check if they are on the same level
-      if (space_a.location.level != space_b.location.level) continue;
-      // axis-aligned bounding box check
-      if (space_a.location.x < space_b.location.x + dim_b.width &&
-          space_a.location.x + dim_a.width > space_b.location.x &&
-          space_a.location.y < space_b.location.y + dim_b.height &&
-          space_a.location.y + dim_a.height > space_b.location.y) {
-        return 1; // overlap detected
+      Rectangle rect2 = get_space_rectangle(&lot->spaces[j]);
+      // by the separating axis theorem, if we find one axis where they do not overlap, we can be sure there is no collision.
+      if (!separating_axis(&rect1, &rect2)) {
+        return 1; // overlap found
       }
     }
   }
