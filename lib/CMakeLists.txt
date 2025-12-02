@@ -9,6 +9,7 @@ target_include_directories(validate PUBLIC .)
 
 add_library(calculations calculations.c)
 target_include_directories(calculations PUBLIC .)
+target_link_libraries(calculations PRIVATE m)
 
 add_library(display display.c)
 target_include_directories(display PUBLIC .)
