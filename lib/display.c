@@ -2,6 +2,37 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
+// Top of the box with corners.
+void box_start(int width) {
+  printf("╭");
+  for (int i = 0; i < width; i++) printf("─");
+  printf("╮\n");
+}
+
+// Creates the side part and text within the box
+void box_line(const char *text, int width) {
+  int len = strlen(text);
+  int space = width - len;
+  printf("│%s", text);
+  for (int i = 0; i < space; i++) printf(" ");
+  printf("│\n");
+}
+
+// Parts the lines from each other :)
+void box_break(int width) {
+  printf("├");
+  for (int i = 0; i < width; i++) printf("─");
+  printf("┤\n");
+}
+
+//Ends the box
+void box_end(int width) {
+  printf("╰");
+  for (int i = 0; i < width; i++) printf("─");
+  printf("╯\n");
+}
 
 
 // Validates a plate string, returns 0 if valid, 1 if invalid
