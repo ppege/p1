@@ -4,37 +4,39 @@
 #include <string.h>
 
 
-// Function to read license plate and check the data file
+// Validates a plate string, returns 0 if valid, 1 if invalid
+int validate_plate(const char *plate) {
+  if (strlen(plate) != 7) {
+    return 1;
+  }
+  
+  if (!isalpha(plate[0]) || !isalpha(plate[1])) {
+    return 1;
+  }
+  
+  for (int i = 2; i < 7; i++) {
+    if (!isdigit(plate[i])) {
+      return 1;
+    }
+  }
+  
+  return 0;
+}
+
+// function to scan and validate a license plate
 int scan_plate(char plate_out[8]) {
   char NumberPlate[8];
 
   printf("Enter your license plate: ");
-  scanf("%s", NumberPlate);
+  scanf("%7s", NumberPlate);  // FIXED: limit input to 7 chars
   printf("Your license plate is: %s\n", NumberPlate);
 
-  // If-statement to check if the license plate consists of 7 integers
-  if (strlen(NumberPlate) != 7) {
+  if (validate_plate(NumberPlate) != 0) {
     printf("Your license plate is not valid\n");
     return 1;
   }
 
-  // Checking if the first two spots in the string is letters
-  if (!isalpha(NumberPlate[0]) || !isalpha(NumberPlate[1])) {
-    printf("Your license plate is not valid (First two must be letters)\n");
-    return 1;
-  }
-
-  // Checking if the last five spots are digits
-  for (int i = 2; i < 7; i++) {
-    if (!isdigit(NumberPlate[i])) {
-      printf("Your license plate is not valid (Last five must be digits)\n");
-      return 1;
-    }
-  }
-
-  // if everything is fine, the license plate is accepted.
   printf("Your numberplate is valid :): %s\n", NumberPlate);
-
   strcpy(plate_out, NumberPlate);
   return 0;
 }
