@@ -18,7 +18,7 @@ int main() {
       EV,
       {6.7, 4.2, 69},
   };
-  char *FileName = "../../test/test.txt";
+  char *FileName = "test/test.txt";
   int lines = GetFileLines(FileName);
 
   struct car *CarArr = (struct car *)malloc(sizeof(struct car) * lines);
@@ -38,13 +38,11 @@ int main() {
          // space_type_labels[space.type],
          space.type, space.location.x, space.location.y, space.location.level);
   char TempPlate[8];
-  Scan_Plate(TempPlate);
-  int Res = GetCarIndexFromPlate(CarArr, lines, TempPlate);
-  printf("Res: %d \n", Res);
-
-
-
-
+  if (!scan_plate(TempPlate)) {
+    int Res = GetCarIndexFromPlate(CarArr, lines, TempPlate);
+    printf("Res: %d \n", Res);
+  }
+  
   free(CarArr);
   return 0;
 }

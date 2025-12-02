@@ -1,0 +1,168 @@
+Start testing: Dec 02 16:43 CET
+----------------------------------------------------------
+1/6 Testing: Test_1
+1/6 Test: Test_1
+Command: "/Users/toof/uni/code/p1/build/test/test_1"
+Directory: /Users/toof/uni/code/p1/build/test
+"Test_1" start time: Dec 02 16:43 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/test.c:26:test_lines:PASS
+/Users/toof/uni/code/p1/test/test.c:27:test_num:PASS
+/Users/toof/uni/code/p1/test/test.c:28:test_double_67:PASS
+
+-----------------------
+3 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_1" end time: Dec 02 16:43 CET
+"Test_1" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/6 Testing: test_data
+2/6 Test: test_data
+Command: "/Users/toof/uni/code/p1/build/test/test_data"
+Directory: /Users/toof/uni/code/p1/build/test
+"test_data" start time: Dec 02 16:43 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/data.c:53:test_get_endpoint:PASS
+/Users/toof/uni/code/p1/test/data.c:54:test_get_space_rectangle:PASS
+
+-----------------------
+2 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_data" end time: Dec 02 16:43 CET
+"test_data" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/6 Testing: test_lot
+3/6 Test: test_lot
+Command: "/Users/toof/uni/code/p1/build/test/test_lot"
+Directory: /Users/toof/uni/code/p1/build/test
+"test_lot" start time: Dec 02 16:43 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/lot.c:20:test_create_lot:PASS
+
+-----------------------
+1 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_lot" end time: Dec 02 16:43 CET
+"test_lot" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/6 Testing: test_validate
+4/6 Test: test_validate
+Command: "/Users/toof/uni/code/p1/build/test/test_validate"
+Directory: /Users/toof/uni/code/p1/build/test
+"test_validate" start time: Dec 02 16:43 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/validate.c:490:test_paths_connected:PASS
+/Users/toof/uni/code/p1/test/validate.c:491:test_spaces_overlap:PASS
+/Users/toof/uni/code/p1/test/validate.c:492:test_spaces_encroach_path:PASS
+/Users/toof/uni/code/p1/test/validate.c:493:test_spaces_accessible:PASS
+/Users/toof/uni/code/p1/test/validate.c:494:test_has_valid_entrance_and_poi:PASS
+/Users/toof/uni/code/p1/test/validate.c:495:test_spaces_have_unique_names:PASS
+/Users/toof/uni/code/p1/test/validate.c:496:test_spaces_have_unique_names_empty:PASS
+/Users/toof/uni/code/p1/test/validate.c:497:test_spaces_have_unique_names_single:PASS
+/Users/toof/uni/code/p1/test/validate.c:498:test_has_correct_up_down_count_single_level:PASS
+/Users/toof/uni/code/p1/test/validate.c:499:test_has_correct_up_down_count_two_levels:PASS
+/Users/toof/uni/code/p1/test/validate.c:500:test_has_correct_up_down_count_three_levels:PASS
+/Users/toof/uni/code/p1/test/validate.c:501:test_has_correct_up_down_count_missing_up:PASS
+/Users/toof/uni/code/p1/test/validate.c:502:test_has_correct_up_down_count_missing_down:PASS
+/Users/toof/uni/code/p1/test/validate.c:503:test_has_correct_up_down_count_too_many:PASS
+/Users/toof/uni/code/p1/test/validate.c:504:test_levels_have_ups_and_downs_single_level:PASS
+/Users/toof/uni/code/p1/test/validate.c:505:test_levels_have_ups_and_downs_two_levels_valid:PASS
+/Users/toof/uni/code/p1/test/validate.c:506:test_levels_have_ups_and_downs_three_levels_valid:PASS
+/Users/toof/uni/code/p1/test/validate.c:507:test_levels_have_ups_and_downs_missing_up_on_level_0:PASS
+/Users/toof/uni/code/p1/test/validate.c:508:test_levels_have_ups_and_downs_missing_down_on_top:PASS
+/Users/toof/uni/code/p1/test/validate.c:509:test_levels_have_ups_and_downs_middle_level_missing_up:PASS
+/Users/toof/uni/code/p1/test/validate.c:510:test_validate_lot_valid:PASS
+/Users/toof/uni/code/p1/test/validate.c:511:test_validate_lot_zero_length_path:PASS
+/Users/toof/uni/code/p1/test/validate.c:512:test_validate_lot_disconnected_path:PASS
+/Users/toof/uni/code/p1/test/validate.c:513:test_validate_lot_overlapping_spaces:PASS
+/Users/toof/uni/code/p1/test/validate.c:514:test_validate_lot_space_encroaches_path:PASS
+/Users/toof/uni/code/p1/test/validate.c:515:test_validate_lot_space_not_accessible:PASS
+/Users/toof/uni/code/p1/test/validate.c:516:test_validate_lot_invalid_entrance:PASS
+/Users/toof/uni/code/p1/test/validate.c:517:test_validate_lot_invalid_poi:PASS
+/Users/toof/uni/code/p1/test/validate.c:518:test_validate_lot_duplicate_space_names:PASS
+/Users/toof/uni/code/p1/test/validate.c:519:test_validate_lot_wrong_up_down_count:PASS
+/Users/toof/uni/code/p1/test/validate.c:520:test_validate_lot_ups_downs_on_wrong_levels:PASS
+/Users/toof/uni/code/p1/test/validate.c:521:test_validate_lot_no_spaces:PASS
+
+-----------------------
+32 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_validate" end time: Dec 02 16:43 CET
+"test_validate" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/6 Testing: test_PlateDB
+5/6 Test: test_PlateDB
+Command: "/Users/toof/uni/code/p1/build/test/test_PlateDB"
+Directory: /Users/toof/uni/code/p1/build/test
+"test_PlateDB" start time: Dec 02 16:43 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/PlateDB.c:53:test_read_file_lines:PASS
+/Users/toof/uni/code/p1/test/PlateDB.c:54:test_read_line:PASS
+/Users/toof/uni/code/p1/test/PlateDB.c:55:test_read_file_to_struct:PASS
+Search plate found at: 0 
+Search plate found at: 1 
+Search plate found at: 2 
+/Users/toof/uni/code/p1/test/PlateDB.c:56:test_get_plate_from_index:PASS
+
+-----------------------
+4 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_PlateDB" end time: Dec 02 16:43 CET
+"test_PlateDB" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/6 Testing: test_lotReader
+6/6 Test: test_lotReader
+Command: "/Users/toof/uni/code/p1/build/test/test_lotReader"
+Directory: /Users/toof/uni/code/p1/build/test
+"test_lotReader" start time: Dec 02 16:43 CET
+Output:
+----------------------------------------------------------
+Created path: Vector=(12.00, 0.00), location=(1.00, 2.00, Level 0)
+/Users/toof/uni/code/p1/test/lotReader.c:41:test_read_path:PASS
+Created location: (2.50, 1.25, Level 0)
+/Users/toof/uni/code/p1/test/lotReader.c:42:test_read_location:PASS
+Created space: Name=A1, Type=0, Location=(1.00, 2.50 0),  Rotation=0.00
+/Users/toof/uni/code/p1/test/lotReader.c:43:test_read_space:PASS
+
+-----------------------
+3 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_lotReader" end time: Dec 02 16:43 CET
+"test_lotReader" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Dec 02 16:43 CET

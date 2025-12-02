@@ -5,7 +5,7 @@
 
 
 // Function to read license plate and check the data file
-int Scan_Plate(char plate_out[8]) {
+int scan_plate(char plate_out[8]) {
   char NumberPlate[8];
 
   printf("Enter your license plate: ");
@@ -13,14 +13,14 @@ int Scan_Plate(char plate_out[8]) {
   printf("Your license plate is: %s\n", NumberPlate);
 
   // If-statement to check if the license plate consists of 7 integers
-  if (strlen(NumberPlate) !=7) {
-  printf("Your license plate is not valid\n");
+  if (strlen(NumberPlate) != 7) {
+    printf("Your license plate is not valid\n");
     return 1;
   }
 
   // Checking if the first two spots in the string is letters
   if (!isalpha(NumberPlate[0]) || !isalpha(NumberPlate[1])) {
-    printf("Your license plate is not valid(First two must be letters)\n");
+    printf("Your license plate is not valid (First two must be letters)\n");
     return 1;
   }
 
