@@ -4,6 +4,7 @@
 #include "lotReader.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "display.h"
 
 int main() {
   Lot *lot = create_lot(0, 10, 10, 10, 10);
@@ -12,13 +13,12 @@ int main() {
 
   print_lot(lot);
 
-  char *FileName = "test/test.txt";
-
   // lot file reading example
   Space space = {
       EV,
       {6.7, 4.2, 69},
   };
+  char *FileName = "test/test.txt";
   int lines = GetFileLines(FileName);
 
   struct car *CarArr = (struct car *)malloc(sizeof(struct car) * lines);
@@ -37,9 +37,12 @@ int main() {
          "on floor %d\n",
          // space_type_labels[space.type],
          space.type, space.location.x, space.location.y, space.location.level);
-
+  char TempPlate[8];
+  if (!scan_plate(TempPlate)) {
+    int Res = GetCarIndexFromPlate(CarArr, lines, TempPlate);
+    printf("Res: %d \n", Res);
+  }
+  
   free(CarArr);
-
-  // that's it
   return 0;
 }

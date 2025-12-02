@@ -1,6 +1,45 @@
 #include "display.h"
-#include "stdio.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <string.h>
 
+
+// Validates a plate string, returns 0 if valid, 1 if invalid
+int validate_plate(const char *plate) {
+  if (strlen(plate) != 7) {
+    return 1;
+  }
+  
+  if (!isalpha(plate[0]) || !isalpha(plate[1])) {
+    return 1;
+  }
+  
+  for (int i = 2; i < 7; i++) {
+    if (!isdigit(plate[i])) {
+      return 1;
+    }
+  }
+  
+  return 0;
+}
+
+// function to scan and validate a license plate
+int scan_plate(char plate_out[8]) {
+  char NumberPlate[8];
+
+  printf("Enter your license plate: ");
+  scanf("%7s", NumberPlate);  // FIXED: limit input to 7 chars
+  printf("Your license plate is: %s\n", NumberPlate);
+
+  if (validate_plate(NumberPlate) != 0) {
+    printf("Your license plate is not valid\n");
+    return 1;
+  }
+
+  printf("Your numberplate is valid :): %s\n", NumberPlate);
+  strcpy(plate_out, NumberPlate);
+  return 0;
+}
 
 void clear_screen() {
     printf("\033[1;1H\033[2J");

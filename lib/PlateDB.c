@@ -17,7 +17,7 @@ int GetFileLines(char *FileName) {
       i++;
     }
   } else {
-    printf("ERROR: Cant open file!\n");
+    printf("ERROR: Cant open file %s!\n", FileName);
     exit(1);
   }
   // Closing file again
