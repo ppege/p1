@@ -50,9 +50,33 @@ void test_spaces_overlap() {
 	free_lot(lot);
 }
 
+void test_spaces_encroach_path() {
+	Lot *lot = create_lot(1, 2, 3, 0, 0); // 1 level, 2 paths, 3 spaces
+	double margin = 1.5;
+	lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){10, 10} }; // 45° up right from origo
+	lot->paths[1] = (Path){ .start_point = (Location){10, 10, 0}, .vector = (Vector){5, -5} }; // 45° down right from (10,10)
+	lot->spaces[0] = (Space){ .type = Standard, .location = (Location){12, 12, 0}, .rotation = 315.0, .name = "space0" };
+	lot->spaces[1] = (Space){ .type = Standard, .location = (Location){12, 6, 0}, .rotation = 225.0, .name = "space1" };
+	lot->spaces[2] = (Space){ .type = Standard, .location = (Location){8, 2, 0}, .rotation = 225.0, .name = "space2" };
+	TEST_ASSERT_EQUAL_INT_MESSAGE(1, spaces_encroach_path(lot, margin), "space should encroach the path here");
+
+	// we must move space1 just a smidge down, because the offset distance on the x and y axes
+	// depends on the path's angle. The actual perpendicular distance is still 1.5m,
+	// but for a 45° path, the offset is split: (1.06, 1.06) where sqrt(1.06² + 1.06²) is about 1.5. (diabolical)
+	lot->spaces[1].location = (Location){12, 5.5, 0};
+	TEST_ASSERT_EQUAL_INT_MESSAGE(0, spaces_encroach_path(lot, margin), "space should not encroach the path here");
+
+	// Test obvious encroachment: place a space directly on the path
+	lot->spaces[1].location = (Location){12, 7, 0}; // directly on path 1 centerline (y = -x + 20, at x=12 -> y=8)
+	TEST_ASSERT_EQUAL_INT_MESSAGE(1, spaces_encroach_path(lot, margin), "space on path centerline should definitely encroach");
+
+	free_lot(lot);
+}
+
 int main(void) {
 	UNITY_BEGIN();
 	RUN_TEST(test_paths_connected);
 	RUN_TEST(test_spaces_overlap);
+	RUN_TEST(test_spaces_encroach_path);
 	return UNITY_END();
 }
