@@ -39,7 +39,7 @@ ValidationResult validate_lot(const Lot *lot) {
   }
   
   // Rule 1: Each path must connect
-  if (! paths_connected(lot)) return ERR(PathNotConnected);
+  if (!paths_connected(lot)) return ERR(PathNotConnected);
   
   // Rule 2: Spaces must not overlap
   if (spaces_overlap(lot)) return ERR(SpacesOverlap);
@@ -48,16 +48,16 @@ ValidationResult validate_lot(const Lot *lot) {
   if (spaces_encroach_path(lot, PATH_CLEARANCE)) return ERR(SpacesEncroachPath);
   
   // Rule 4: Spaces must be within PATH_ACCESSIBILITY of a path
-  if (! spaces_accessible(lot, PATH_ACCESSIBILITY)) return ERR(SpacesInaccessible);
+  if (!spaces_accessible(lot, PATH_ACCESSIBILITY)) return ERR(SpacesInaccessible);
   
   // Rule 5: Must have valid entrance and POI
   if (!has_valid_entrance_and_poi(lot)) return ERR(InvalidEntranceOrPOI);
   
   // Rule 6: Every space must have a unique name
-  if (! spaces_have_unique_names(lot)) return ERR(DuplicateSpaceNames);
+  if (!spaces_have_unique_names(lot)) return ERR(DuplicateSpaceNames);
   
   // Rule 7: Must have correct number of ups and downs
-  if (! has_correct_up_down_count(lot)) return ERR(IncorrectUpDownCount);
+  if (!has_correct_up_down_count(lot)) return ERR(IncorrectUpDownCount);
   
   // Rule 8: Each level must have appropriate ups and downs
   if (!levels_have_ups_and_downs(lot)) return ERR(LevelsMissingUpsOrDowns);
@@ -127,6 +127,7 @@ int spaces_overlap(const Lot *lot) {
     Rectangle rect1 = get_space_rectangle(&lot->spaces[i]);
     // we then wanna compare it to every other space's rectangle
     for (int j = i + 1; j < lot->space_count; j++) {
+      if (lot->spaces[i].location.level != lot->spaces[j].location.level) { continue; } // only compare spaces on the same level
       Rectangle rect2 = get_space_rectangle(&lot->spaces[j]);
       // by the separating axis theorem, if we find one axis where they do not overlap, we can be sure there is no collision.
       if (!separating_axis(&rect1, &rect2)) {

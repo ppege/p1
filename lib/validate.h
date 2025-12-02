@@ -24,7 +24,7 @@ typedef struct {
   LotValidationError error;
 } ValidationResult;
 
-const char* validation_error_message(LotValidationError error)
+const char* validation_error_message(LotValidationError error);
 ValidationResult validate_lot(const Lot *lot);
 int paths_connected(const Lot *lot);
 Location* get_all_endpoints(Path* paths, int path_count);
