@@ -1,25 +1,18 @@
 #include "unity.h"
 #include "lot.h"
 
-void setUp() {
-}
+void setUp() {}
 
-void tearDown() {
-}
+void tearDown() {}
 
 void test_create_lot(void) {
-  int level_count = 2;
-  int path_count = 3;
-  int space_count = 30;
-  int up_count = 0;
-  int down_count = 0;
+  int level_count = 2, path_count = 3, space_count = 30, up_count = 0, down_count = 0;
   Lot* lot = create_lot(level_count, path_count, space_count, up_count, down_count);
-  TEST_ASSERT_EQUAL_INT(level_count, lot->level_count); 
-  TEST_ASSERT_EQUAL_INT(path_count, lot->path_count); 
-  TEST_ASSERT_EQUAL_INT(space_count, lot->space_count); 
-  TEST_ASSERT_EQUAL_INT(up_count, lot->up_count); 
-  TEST_ASSERT_EQUAL_INT(down_count, lot->down_count);
-  // TEST_ASSERT_EQUAL_INT(path_count * sizeof(Path), sizeof(lot->paths));
+  TEST_ASSERT_EQUAL_INT_MESSAGE(level_count, lot->level_count, "create_lot should have used the correct level count"); 
+  TEST_ASSERT_EQUAL_INT_MESSAGE(path_count, lot->path_count, "create_lot should have used the correct path count"); 
+  TEST_ASSERT_EQUAL_INT_MESSAGE(space_count, lot->space_count, "create_lot should have used the correct space count"); 
+  TEST_ASSERT_EQUAL_INT_MESSAGE(up_count, lot->up_count, "create_lot should have used the correct up count");
+  TEST_ASSERT_EQUAL_INT_MESSAGE(down_count, lot->down_count, "create_lot should have used the correct down count");
 }
 
 int main(void) {
