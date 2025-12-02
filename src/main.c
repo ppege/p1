@@ -1,24 +1,24 @@
 #include "PlateDB.h"
 #include "data.h"
 #include "lot.h"
-#include "validate.h"
+#include "lotReader.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "display.h"
 
 int main() {
-  // lot.c example
-  Lot *lot = create_lot(2, 6, 60, 1, 1);
-  populate_lot(lot);
+  Lot *lot = create_lot(0, 10, 10, 10, 10);
+  char *LotFileName = "test.lot";
+  readLotFromFile(LotFileName, lot);
+
   print_lot(lot);
-  free_lot(lot);
 
   // lot file reading example
   Space space = {
       EV,
       {6.7, 4.2, 69},
   };
-  char *FileName = "../../test/test.txt";
+  char *FileName = "test/test.txt";
   int lines = GetFileLines(FileName);
 
   struct car *CarArr = (struct car *)malloc(sizeof(struct car) * lines);
@@ -37,10 +37,6 @@ int main() {
          "on floor %d\n",
          // space_type_labels[space.type],
          space.type, space.location.x, space.location.y, space.location.level);
-  char TempPlate[8];
-  Scan_Plate(TempPlate);
-  int Res = GetCarIndexFromPlate(CarArr, lines, TempPlate);
-  printf("Res: %d \n", Res);
 
   BoxStart(40);
   BoxLine("HELLO BOIS", 40);
@@ -50,8 +46,12 @@ int main() {
   BoxLine("Her er pladserne 20 meter brede", 40);
   BoxEnd(40);
 
-
-
+  char TempPlate[8];
+  if (!scan_plate(TempPlate)) {
+    int Res = GetCarIndexFromPlate(CarArr, lines, TempPlate);
+    printf("Res: %d \n", Res);
+  }
+  
   free(CarArr);
   return 0;
 }

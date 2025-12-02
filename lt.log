@@ -1,0 +1,125 @@
+Start testing: Dec 02 17:12 CET
+----------------------------------------------------------
+1/5 Testing: Test_1
+1/5 Test: Test_1
+Command: "/Users/toof/uni/code/p1/build/test/test_1"
+Directory: /Users/toof/uni/code/p1/build/test
+"Test_1" start time: Dec 02 17:12 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/test.c:26:test_lines:PASS
+/Users/toof/uni/code/p1/test/test.c:27:test_num:PASS
+/Users/toof/uni/code/p1/test/test.c:28:test_double_67:PASS
+
+-----------------------
+3 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_1" end time: Dec 02 17:12 CET
+"Test_1" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/5 Testing: test_lot
+2/5 Test: test_lot
+Command: "/Users/toof/uni/code/p1/build/test/test_lot"
+Directory: /Users/toof/uni/code/p1/build/test
+"test_lot" start time: Dec 02 17:12 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/lot.c:27:test_create_lot:PASS
+
+-----------------------
+1 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_lot" end time: Dec 02 17:12 CET
+"test_lot" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/5 Testing: test_data
+3/5 Test: test_data
+Command: "/Users/toof/uni/code/p1/build/test/test_data"
+Directory: /Users/toof/uni/code/p1/build/test
+"test_data" start time: Dec 02 17:12 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/data.c:23:test_get_endpoint:PASS
+
+-----------------------
+1 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_data" end time: Dec 02 17:12 CET
+"test_data" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/5 Testing: test_PlateDB
+4/5 Test: test_PlateDB
+Command: "/Users/toof/uni/code/p1/build/test/test_PlateDB"
+Directory: /Users/toof/uni/code/p1/build/test
+"test_PlateDB" start time: Dec 02 17:12 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/PlateDB.c:53:test_read_file_lines:PASS
+/Users/toof/uni/code/p1/test/PlateDB.c:54:test_read_line:PASS
+/Users/toof/uni/code/p1/test/PlateDB.c:55:test_read_file_to_struct:PASS
+Search plate found at: 0 
+Search plate found at: 1 
+Search plate found at: 2 
+/Users/toof/uni/code/p1/test/PlateDB.c:56:test_get_plate_from_index:PASS
+
+-----------------------
+4 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_PlateDB" end time: Dec 02 17:12 CET
+"test_PlateDB" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/5 Testing: test_display
+5/5 Test: test_display
+Command: "/Users/toof/uni/code/p1/build/test/test_display"
+Directory: /Users/toof/uni/code/p1/build/test
+"test_display" start time: Dec 02 17:12 CET
+Output:
+----------------------------------------------------------
+/Users/toof/uni/code/p1/test/display.c:105:test_validate_plate_valid_uppercase:PASS
+/Users/toof/uni/code/p1/test/display.c:106:test_validate_plate_valid_lowercase:PASS
+/Users/toof/uni/code/p1/test/display.c:107:test_validate_plate_valid_mixed_case:PASS
+/Users/toof/uni/code/p1/test/display.c:110:test_validate_plate_too_short:PASS
+/Users/toof/uni/code/p1/test/display.c:111:test_validate_plate_too_long:PASS
+/Users/toof/uni/code/p1/test/display.c:114:test_validate_plate_first_char_not_letter:PASS
+/Users/toof/uni/code/p1/test/display.c:115:test_validate_plate_second_char_not_letter:PASS
+/Users/toof/uni/code/p1/test/display.c:116:test_validate_plate_both_first_chars_not_letters:PASS
+/Users/toof/uni/code/p1/test/display.c:119:test_validate_plate_third_char_not_digit:PASS
+/Users/toof/uni/code/p1/test/display.c:120:test_validate_plate_middle_char_not_digit:PASS
+/Users/toof/uni/code/p1/test/display.c:121:test_validate_plate_last_char_not_digit:PASS
+/Users/toof/uni/code/p1/test/display.c:122:test_validate_plate_all_letters:PASS
+/Users/toof/uni/code/p1/test/display.c:123:test_validate_plate_all_digits:PASS
+/Users/toof/uni/code/p1/test/display.c:126:test_validate_plate_boundary_digits:PASS
+/Users/toof/uni/code/p1/test/display.c:127:test_validate_plate_boundary_letters:PASS
+
+-----------------------
+15 Tests 0 Failures 0 Ignored 
+OK
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_display" end time: Dec 02 17:12 CET
+"test_display" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Dec 02 17:12 CET
