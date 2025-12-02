@@ -60,3 +60,6 @@ compile_commands.json
 
 # debug information files
 *.dwo
+
+# tands shit
+lt.log
