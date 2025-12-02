@@ -10,11 +10,18 @@ int main() {
   // lot.c example
   Lot* lot = create_lot(2, 6, 60, 1, 1);
   populate_lot(lot);
-  print_lot(lot);
-  print_overview(lot);
+  //print_lot(lot);
+  char** parking_lots = populated_arrays(lot);
+
+  print_overview(lot, parking_lots[0], 0);
+
+  print_overview(lot, parking_lots[1], 1);
+
+
+  overview_free(lot, parking_lots);
   free_lot(lot);
 
-  
+  /*
   // lot file reading example
   Space space = {
       EV,
@@ -42,7 +49,7 @@ int main() {
          space.type, space.location.x, space.location.y, space.location.level);
 
   free(CarArr);
-  
+  */
   // that's it
   return 0;
 }
