@@ -38,13 +38,13 @@ int main() {
          // space_type_labels[space.type],
          space.type, space.location.x, space.location.y, space.location.level);
 
-  BoxStart(40);
-  BoxLine("HELLO BOIS", 40);
-  BoxBreak(40);
-  BoxLine("Velkommen til kvindeparkering!", 40);
-  BoxBreak(40);
-  BoxLine("Her er pladserne 20 meter brede", 40);
-  BoxEnd(40);
+  box_start(40);
+  box_line("HELLO BOIS", 40);
+  box_break(40);
+  box_line("Velkommen til kvindeparkering!", 40);
+  box_break(40);
+  box_line("Her er pladserne 20 meter brede", 40);
+  box_end(40);
 
   char TempPlate[8];
   if (!scan_plate(TempPlate)) {
