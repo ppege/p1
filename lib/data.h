@@ -22,12 +22,11 @@ typedef struct {
 
 // const char* space_type_labels[4] = {"Standard", "Handicap", "Compact", "EV"};
 
-
 typedef struct {
   SpaceType type;
   Location location;
   double rotation; // in degrees
-  char* name;
+  char *name;
 } Space;
 
 typedef struct {
@@ -42,16 +41,26 @@ typedef struct {
 
 typedef struct {
   int level_count;
-  Path* paths;
+  Path *paths;
   int path_count;
-  Space* spaces;
+  Space *spaces;
   int space_count;
-  Location* ups;
+  Location *ups;
   int up_count;
-  Location* downs;
+  Location *downs;
   int down_count;
   Location entrance;
   Location POI;
 } Lot;
 
+typedef struct {
+  int CarIndex;
+  char *Space_Id;
+} Occupancy;
+
 Location get_endpoint(const Path *path);
+int GetOccupancyIndexFromSpace(Occupancy *occupancies, int occupancy_count,
+                               const char *Space_Id);
+int GetOccupancyIndexFromCar(Occupancy *occupancies, int occupancy_count,
+                             int CarIndex);
+int CheckInOrOut(Occupancy *occupancies, int occupancy_count, int CarIndex);

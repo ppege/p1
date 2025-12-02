@@ -12,6 +12,14 @@ int main() {
 
   print_lot(lot);
 
+  Occupancy *occupancies = calloc(sizeof(Occupancy), lot->space_count);
+  occupancies[0].CarIndex = 1;
+  occupancies[0].Space_Id = "A1";
+  printf("AHH: %d \n", CheckInOrOut(occupancies, lot->space_count, 3));
+
+  printf("Occupancy index for Space_Id B2: %d\n",
+         GetOccupancyIndexFromSpace(occupancies, lot->space_count, "B2"));
+
   char *FileName = "test/test.txt";
 
   // lot file reading example
