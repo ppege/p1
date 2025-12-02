@@ -1,7 +1,31 @@
 #pragma once
 #include <data.h>
 
-int validate_lot(const Lot *lot);
+typedef enum {
+  Ok,
+  Err
+} Result;
+
+typedef enum {
+  NoError,
+  ZeroLengthPath,
+  PathNotConnected,
+  SpacesOverlap,
+  SpacesEncroachPath,
+  SpacesInaccessible,
+  InvalidEntranceOrPOI,
+  DuplicateSpaceNames,
+  IncorrectUpDownCount,
+  LevelsMissingUpsOrDowns
+} LotValidationError;
+
+typedef struct {
+  Result result;
+  LotValidationError error;
+} ValidationResult;
+
+const char* validation_error_message(LotValidationError error)
+ValidationResult validate_lot(const Lot *lot);
 int paths_connected(const Lot *lot);
 Location* get_all_endpoints(Path* paths, int path_count);
 int compare_locations(Location loc1, Location loc2);

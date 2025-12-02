@@ -314,6 +314,196 @@ void test_levels_have_ups_and_downs_middle_level_missing_up() {
   free_lot(lot);
 }
 
+// === Full validate_lot() integration test ===
+
+void test_validate_lot_valid() {
+  // Create a fully valid 2-level parking lot
+  Lot *lot = create_lot(2, 4, 4, 1, 1);
+  
+  // Set entrance and POI
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){20, 0, 0};
+  
+  // Paths: two on each level forming an L-shape
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };   // level 0 horizontal
+  lot->paths[1] = (Path){ .start_point = (Location){20, 0, 0}, .vector = (Vector){0, 20} }; // level 0 vertical
+  lot->paths[2] = (Path){ .start_point = (Location){0, 0, 1}, .vector = (Vector){20, 0} };   // level 1 horizontal
+  lot->paths[3] = (Path){ .start_point = (Location){20, 0, 1}, .vector = (Vector){0, 20} }; // level 1 vertical
+  
+  // Ups and downs connecting the levels
+  lot->ups[0] = (Location){0, 0, 0};     // up on level 0 (at entrance)
+  lot->downs[0] = (Location){0, 0, 1};   // down on level 1
+  
+  // Spaces: not overlapping, not encroaching, accessible, unique names
+  lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 4, 0}, .rotation = 0, . name = "A1" };
+  lot->spaces[1] = (Space){ .type = Standard, .location = (Location){10, 4, 0}, .rotation = 0, .name = "A2" };
+  lot->spaces[2] = (Space){ .type = Standard, .location = (Location){5, 4, 1}, .rotation = 0, .name = "B1" };
+  lot->spaces[3] = (Space){ .type = Standard, .location = (Location){10, 4, 1}, .rotation = 0, .name = "B2" };
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, validate_lot(lot), "fully valid lot should pass");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_zero_length_path() {
+  // Rule 0: paths must have non-zero length
+  Lot *lot = create_lot(1, 1, 0, 0, 0);
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){0, 0, 0};
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){0, 0} }; // zero length! 
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "zero length path should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_disconnected_path() {
+  // Rule 1: paths must be connected
+  Lot *lot = create_lot(1, 2, 0, 0, 0);
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){10, 0, 0};
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){10, 0} };
+  lot->paths[1] = (Path){ .start_point = (Location){50, 50, 0}, .vector = (Vector){10, 0} }; // orphan path! 
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "disconnected path should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_overlapping_spaces() {
+  // Rule 2: spaces must not overlap
+  Lot *lot = create_lot(1, 1, 2, 0, 0);
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){10, 0, 0};
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
+  
+  // Two spaces at the same location = overlap
+  lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 4, 0}, .rotation = 0, .name = "A1" };
+  lot->spaces[1] = (Space){ .type = Standard, .location = (Location){5, 4, 0}, .rotation = 0, .name = "A2" };
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "overlapping spaces should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_space_encroaches_path() {
+  // Rule 3: spaces must not encroach within PATH_CLEARANCE of path
+  Lot *lot = create_lot(1, 1, 1, 0, 0);
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){10, 0, 0};
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
+  
+  // Space directly on the path centerline
+  lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 0, 0}, .rotation = 0, .name = "A1" };
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "space encroaching path should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_space_not_accessible() {
+  // Rule 4: spaces must be within PATH_ACCESSIBILITY of a path
+  Lot *lot = create_lot(1, 1, 1, 0, 0);
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){10, 0, 0};
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
+  
+  // Space way too far from any path
+  lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 50, 0}, .rotation = 0, .name = "A1" };
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "inaccessible space should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_invalid_entrance() {
+  // Rule 5: entrance must be on valid level
+  Lot *lot = create_lot(1, 1, 1, 0, 0);
+  lot->entrance = (Location){0, 0, 5}; // invalid level! 
+  lot->POI = (Location){10, 0, 0};
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
+  lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 4, 0}, .rotation = 0, .name = "A1" };
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "invalid entrance level should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_invalid_poi() {
+  // Rule 5: POI must be on valid level
+  Lot *lot = create_lot(1, 1, 1, 0, 0);
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){10, 0, 99}; // invalid level!
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
+  lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 4, 0}, .rotation = 0, .name = "A1" };
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "invalid POI level should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_duplicate_space_names() {
+  // Rule 6: space names must be unique
+  Lot *lot = create_lot(1, 1, 2, 0, 0);
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){10, 0, 0};
+  lot->paths[0] = (Path){ . start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
+  
+  // Same name for both spaces
+  lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 4, 0}, .rotation = 0, .name = "A1" };
+  lot->spaces[1] = (Space){ .type = Standard, .location = (Location){10, 4, 0}, .rotation = 0, .name = "A1" };
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "duplicate space names should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_wrong_up_down_count() {
+  // Rule 7: multi-level lot needs correct number of ups/downs
+  Lot *lot = create_lot(2, 2, 2, 0, 0); // 2 levels but 0 ups and 0 downs! 
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){10, 0, 0};
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
+  lot->paths[1] = (Path){ .start_point = (Location){0, 0, 1}, .vector = (Vector){20, 0} };
+  lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 4, 0}, .rotation = 0, .name = "A1" };
+  lot->spaces[1] = (Space){ .type = Standard, .location = (Location){5, 4, 1}, .rotation = 0, .name = "B1" };
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "missing ups/downs should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_ups_downs_on_wrong_levels() {
+  // Rule 8: ups/downs must be on correct levels
+  Lot *lot = create_lot(2, 2, 2, 1, 1);
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){10, 0, 0};
+  lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
+  lot->paths[1] = (Path){ .start_point = (Location){0, 0, 1}, .vector = (Vector){20, 0} };
+  lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 4, 0}, .rotation = 0, .name = "A1" };
+  lot->spaces[1] = (Space){ .type = Standard, .location = (Location){5, 4, 1}, .rotation = 0, .name = "B1" };
+  
+  // Both up and down on level 0 (level 1 has no down!)
+  lot->ups[0] = (Location){0, 0, 0};
+  lot->downs[0] = (Location){0, 0, 0}; // wrong! should be on level 1
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, validate_lot(lot), "ups/downs on wrong levels should fail");
+  
+  free_lot(lot);
+}
+
+void test_validate_lot_no_spaces() {
+  // Edge case: valid lot with no spaces
+  Lot *lot = create_lot(1, 1, 0, 0, 0);
+  lot->entrance = (Location){0, 0, 0};
+  lot->POI = (Location){10, 0, 0};
+  lot->paths[0] = (Path){ . start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
+  
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, validate_lot(lot), "lot with no spaces should be valid");
+  
+  free_lot(lot);
+}
+
 int main(void) {
 	UNITY_BEGIN();
 	RUN_TEST(test_paths_connected);
@@ -336,5 +526,17 @@ int main(void) {
 	RUN_TEST(test_levels_have_ups_and_downs_missing_up_on_level_0);
 	RUN_TEST(test_levels_have_ups_and_downs_missing_down_on_top);
 	RUN_TEST(test_levels_have_ups_and_downs_middle_level_missing_up);
+	RUN_TEST(test_validate_lot_valid);
+	RUN_TEST(test_validate_lot_zero_length_path);
+	RUN_TEST(test_validate_lot_disconnected_path);
+	RUN_TEST(test_validate_lot_overlapping_spaces);
+	RUN_TEST(test_validate_lot_space_encroaches_path);
+	RUN_TEST(test_validate_lot_space_not_accessible);
+	RUN_TEST(test_validate_lot_invalid_entrance);
+	RUN_TEST(test_validate_lot_invalid_poi);
+	RUN_TEST(test_validate_lot_duplicate_space_names);
+	RUN_TEST(test_validate_lot_wrong_up_down_count);
+	RUN_TEST(test_validate_lot_ups_downs_on_wrong_levels);
+	RUN_TEST(test_validate_lot_no_spaces);
 	return UNITY_END();
 }

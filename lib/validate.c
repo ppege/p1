@@ -9,34 +9,60 @@
 
 #define PATH_CLEARANCE 1.5
 #define PATH_ACCESSIBILITY 6.0
+#define OK (ValidationResult){ Ok, NoError }
+#define ERR(e) (ValidationResult){ Err, e }
 
-int validate_lot(const Lot *lot) {
-  // To validate a lot, the following rules must be checked:
-  // Rule 0. Each path must have a non-zero length. Checking this is trivial:
+const char* validation_error_message(LotValidationError error) {
+  switch (error) {
+    case NoError:                  return "No error";
+    case ZeroLengthPath:           return "A path has zero length";
+    case PathNotConnected:         return "Paths are not all connected";
+    case SpacesOverlap:            return "Some spaces overlap";
+    case SpacesEncroachPath:       return "A space encroaches on a path";
+    case SpacesInaccessible:       return "A space is not accessible from any path";
+    case InvalidEntranceOrPOI:     return "Entrance or POI is on an invalid level";
+    case DuplicateSpaceNames:      return "Duplicate space names found";
+    case IncorrectUpDownCount:     return "Incorrect number of ups/downs for level count";
+    case LevelsMissingUpsOrDowns:  return "Some levels are missing required ups or downs";
+    default:                       return "Unknown error";
+  }
+}
+
+ValidationResult validate_lot(const Lot *lot) {
+  // Rule 0: Each path must have a non-zero length
   for (int i = 0; i < lot->path_count; i++) {
-    double path_length = sqrt(lot->paths[i].vector.x * lot->paths[i].vector.x + lot->paths[i].vector.y * lot->paths[i].vector.y);
+    double path_length = sqrt(lot->paths[i].vector.x * lot->paths[i].vector.x + 
+                              lot->paths[i].vector.y * lot->paths[i].vector.y);
     if (path_length < DBL_EPSILON) {
-      return 0; // invalid path found
+      return ERR(ZeroLengthPath);
     }
   }
-  // Rule 1. Each path must connect and each space must be accessible from at least one path.
-  if (!paths_connected(lot)) return 0;
-  // Rule 2. Spaces must not overlap.
-  if (spaces_overlap(lot)) return 0;
-  // Rule 3. No obstacles (spaces) must encroach within PATH_CLEARANCE meters of either side of the path centerline.
-  if (spaces_encroach_path(lot, PATH_CLEARANCE)) return 0;
+  
+  // Rule 1: Each path must connect
+  if (! paths_connected(lot)) return ERR(PathNotConnected);
+  
+  // Rule 2: Spaces must not overlap
+  if (spaces_overlap(lot)) return ERR(SpacesOverlap);
+  
+  // Rule 3: No spaces encroach within PATH_CLEARANCE of path centerline
+  if (spaces_encroach_path(lot, PATH_CLEARANCE)) return ERR(SpacesEncroachPath);
+  
   // Rule 4: Spaces must be within PATH_ACCESSIBILITY of a path
-  if (!spaces_accessible(lot, PATH_ACCESSIBILITY)) return 0;
+  if (! spaces_accessible(lot, PATH_ACCESSIBILITY)) return ERR(SpacesInaccessible);
+  
   // Rule 5: Must have valid entrance and POI
-  if (!has_valid_entrance_and_poi(lot)) return 0;
+  if (!has_valid_entrance_and_poi(lot)) return ERR(InvalidEntranceOrPOI);
+  
   // Rule 6: Every space must have a unique name
-  if (!spaces_have_unique_names(lot)) return 0;
+  if (! spaces_have_unique_names(lot)) return ERR(DuplicateSpaceNames);
+  
   // Rule 7: Must have correct number of ups and downs
-  if (!has_correct_up_down_count(lot)) return 0;
+  if (! has_correct_up_down_count(lot)) return ERR(IncorrectUpDownCount);
+  
   // Rule 8: Each level must have appropriate ups and downs
-  if (!levels_have_ups_and_downs(lot)) return 0;
-  // If all rules are satisfied, return 1 (true). Otherwise, return 0 (false).
-  return 1;
+  if (!levels_have_ups_and_downs(lot)) return ERR(LevelsMissingUpsOrDowns);
+  
+  return OK;
 }
 
 int paths_connected(const Lot *lot) {
