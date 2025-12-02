@@ -8,3 +8,4 @@ int compare_locations(Location loc1, Location loc2);
 int spaces_overlap(const Lot *lot);
 int spaces_encroach_path(const Lot *lot, double margin);
 Rectangle get_path_corridor(const Path *path, double margin);
+int spaces_accessible(const Lot *lot, double max_distance);

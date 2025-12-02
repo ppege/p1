@@ -7,6 +7,7 @@
 #include "calculations.h"
 
 #define PATH_CLEARANCE 1.5
+#define PATH_ACCESSIBILITY 6.0
 
 int validate_lot(const Lot *lot) {
   // To validate a lot, the following rules must be checked:
@@ -24,6 +25,7 @@ int validate_lot(const Lot *lot) {
   // 3. No obstacles (spaces) must encroach within PATH_CLEARANCE meters of either side of the path centerline.
   if (spaces_encroach_path(lot, PATH_CLEARANCE)) return 0;
   // 4. Spaces must be within 6-7 meters of a path (to be accessible)
+  if (!spaces_accessible(lot, PATH_ACCESSIBILITY)) return 0;
   // 5. There must be exactly one entrance and one POI defined.
   // 6. Every space must have a unique name.
   // 7. If the amount of levels n is greater than 1, there must be n-1 ups and n-1 downs.
@@ -169,4 +171,31 @@ Rectangle get_path_corridor(const Path *path, double margin) {
   };
   
   return rect;
+}
+
+int spaces_accessible(const Lot *lot, double max_distance) {
+  // for each space, check if it overlaps with at least one path's accessibility corridor
+  for (int i = 0; i < lot->space_count; i++) {
+    Rectangle space_rect = get_space_rectangle(&lot->spaces[i]);
+    int accessible = 0;
+    
+    // check against each path
+    for (int j = 0; j < lot->path_count; j++) {
+      // only check paths on the same level as the space
+      if (lot->spaces[i].location.level != lot->paths[j].start_point.level) { continue; }
+      
+      Rectangle path_corridor = get_path_corridor(&lot->paths[j], max_distance);
+      
+      // if no separating axis found → space overlaps with corridor → accessible
+      if (!separating_axis(&path_corridor, &space_rect)) {
+        accessible = 1;
+        break;
+      }
+    }
+    
+    if (!accessible) {
+      return 0; // this space is not accessible from any path
+    }
+  }
+  return 1; // all spaces are accessible
 }

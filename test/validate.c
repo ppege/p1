@@ -73,10 +73,38 @@ void test_spaces_encroach_path() {
 	free_lot(lot);
 }
 
+void test_spaces_accessible() {
+    Lot *lot = create_lot(1, 2, 4, 0, 0); // 2 levels, 2 paths, 4 spaces
+    double max_distance = 6.0;
+    
+    // two paths forming an L shape
+    lot->paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };   // horizontal path along x-axis
+    lot->paths[1] = (Path){ .start_point = (Location){20, 0, 0}, .vector = (Vector){0, 20} }; // vertical path going up
+    
+    // spaces within 6m of a path - should be accessible
+    lot->spaces[0] = (Space){ .type = Standard, .location = (Location){5, 3, 0}, .rotation = 0.0, .name = "close1" };   // 3m from path 0
+    lot->spaces[1] = (Space){ .type = Standard, .location = (Location){10, 5, 0}, .rotation = 0.0, .name = "close2" };  // 5m from path 0
+    lot->spaces[2] = (Space){ .type = Standard, .location = (Location){22, 10, 0}, .rotation = 0.0, .name = "close3" }; // 2m from path 1
+    lot->spaces[3] = (Space){ .type = Standard, .location = (Location){15, 4, 0}, .rotation = 0.0, .name = "close4" };  // 4m from path 0
+    
+    TEST_ASSERT_EQUAL_INT_MESSAGE(1, spaces_accessible(lot, max_distance), "all spaces should be within 6m of a path");
+    
+    // move one space too far away - should fail
+    lot->spaces[3] = (Space){ .type = Standard, .location = (Location){10, 15, 0}, .rotation = 0.0, .name = "far" }; // ~10m from nearest path
+    TEST_ASSERT_EQUAL_INT_MESSAGE(0, spaces_accessible(lot, max_distance), "space 'far' should be inaccessible");
+    
+    // move it back, but to a different level. should fail (no paths on level 1)
+    lot->spaces[3] = (Space){ .type = Standard, .location = (Location){15, 4, 1}, .rotation = 0.0, .name = "wrong_level" };
+    TEST_ASSERT_EQUAL_INT_MESSAGE(0, spaces_accessible(lot, max_distance), "space on different level is not accessible");
+    
+    free_lot(lot);
+}
+
 int main(void) {
 	UNITY_BEGIN();
 	RUN_TEST(test_paths_connected);
 	RUN_TEST(test_spaces_overlap);
 	RUN_TEST(test_spaces_encroach_path);
+	RUN_TEST(test_spaces_accessible);
 	return UNITY_END();
 }
