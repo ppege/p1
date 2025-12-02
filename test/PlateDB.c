@@ -10,7 +10,7 @@ char *FileName = "../../test/test.txt";
 
 void test_read_file_lines(void) {
   int lines = GetFileLines(FileName);
-  TEST_ASSERT_EQUAL_INT_MESSAGE(3, lines,
+  TEST_ASSERT_EQUAL_INT_MESSAGE(112, lines,
                                 "Checking amount of lines in test file");
 }
 
