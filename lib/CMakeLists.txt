@@ -21,5 +21,9 @@ add_library(lotReader lotReader.c)
 target_link_libraries(lotReader lot)
 target_include_directories(lotReader PUBLIC .)
 
+add_library(image image.c)
+target_include_directories(image PUBLIC .)
+target_link_libraries(image PRIVATE m)
+
 add_library(Unity STATIC external/Unity/src/unity.c)
 target_include_directories(Unity PUBLIC external/Unity/src)
