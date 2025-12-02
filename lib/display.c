@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 // Function to read license plate and check the data file
@@ -38,3 +39,35 @@ int Scan_Plate(char plate_out[8]) {
   strcpy(plate_out, NumberPlate);
   return 0;
 }
+
+// Top of the box with corners.
+void BoxStart(int width) {
+  printf("╭");
+  for (int i = 0; i < width; i++) printf("─");
+  printf("╮\n");
+}
+
+// Creates the side part and text within the box
+void BoxLine(const char *text, int width) {
+  int len = strlen(text);
+  int space = width - len;
+  printf("│%s", text);
+  for (int i = 0; i < space; i++) printf(" ");
+  printf("│\n");
+}
+
+// Parts the lines from each other :)
+void BoxBreak(int width) {
+  printf("├");
+  for (int i = 0; i < width; i++) printf("─");
+  printf("┤\n");
+}
+
+//Ends the box
+void BoxEnd(int width) {
+  printf("╰");
+  for (int i = 0; i < width; i++) printf("─");
+  printf("╯\n");
+}
+
+

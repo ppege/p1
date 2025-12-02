@@ -42,6 +42,13 @@ int main() {
   int Res = GetCarIndexFromPlate(CarArr, lines, TempPlate);
   printf("Res: %d \n", Res);
 
+  BoxStart(40);
+  BoxLine("HELLO BOIS", 40);
+  BoxBreak(40);
+  BoxLine("Velkommen til kvindeparkering!", 40);
+  BoxBreak(40);
+  BoxLine("Her er pladserne 20 meter brede", 40);
+  BoxEnd(40);
 
 
 
