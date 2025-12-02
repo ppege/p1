@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
+#include <string.h>
 #include "validate.h"
 #include "data.h"
 #include "calculations.h"
@@ -11,25 +12,29 @@
 
 int validate_lot(const Lot *lot) {
   // To validate a lot, the following rules must be checked:
-  // 0. Each path must have a non-zero length. Checking this is trivial:
+  // Rule 0. Each path must have a non-zero length. Checking this is trivial:
   for (int i = 0; i < lot->path_count; i++) {
     double path_length = sqrt(lot->paths[i].vector.x * lot->paths[i].vector.x + lot->paths[i].vector.y * lot->paths[i].vector.y);
     if (path_length < DBL_EPSILON) {
       return 0; // invalid path found
     }
   }
-  // 1. Each path must connect and each space must be accessible from at least one path.
+  // Rule 1. Each path must connect and each space must be accessible from at least one path.
   if (!paths_connected(lot)) return 0;
-  // 2. Spaces must not overlap.
+  // Rule 2. Spaces must not overlap.
   if (spaces_overlap(lot)) return 0;
-  // 3. No obstacles (spaces) must encroach within PATH_CLEARANCE meters of either side of the path centerline.
+  // Rule 3. No obstacles (spaces) must encroach within PATH_CLEARANCE meters of either side of the path centerline.
   if (spaces_encroach_path(lot, PATH_CLEARANCE)) return 0;
-  // 4. Spaces must be within 6-7 meters of a path (to be accessible)
+  // Rule 4: Spaces must be within PATH_ACCESSIBILITY of a path
   if (!spaces_accessible(lot, PATH_ACCESSIBILITY)) return 0;
-  // 5. There must be exactly one entrance and one POI defined.
-  // 6. Every space must have a unique name.
-  // 7. If the amount of levels n is greater than 1, there must be n-1 ups and n-1 downs.
-  // 8. Each level must have an up and a down unless they lead to non existing levels. (each level must be accessible and reversible)
+  // Rule 5: Must have valid entrance and POI
+  if (!has_valid_entrance_and_poi(lot)) return 0;
+  // Rule 6: Every space must have a unique name
+  if (!spaces_have_unique_names(lot)) return 0;
+  // Rule 7: Must have correct number of ups and downs
+  if (!has_correct_up_down_count(lot)) return 0;
+  // Rule 8: Each level must have appropriate ups and downs
+  if (!levels_have_ups_and_downs(lot)) return 0;
   // If all rules are satisfied, return 1 (true). Otherwise, return 0 (false).
   return 1;
 }
@@ -198,4 +203,84 @@ int spaces_accessible(const Lot *lot, double max_distance) {
     }
   }
   return 1; // all spaces are accessible
+}
+
+int has_valid_entrance_and_poi(const Lot *lot) {
+  // Check entrance is on a valid level
+  if (lot->entrance.level < 0 || lot->entrance.level >= lot->level_count) {
+    return 0;
+  }
+
+  // Check POI is on a valid level
+  if (lot->POI.level < 0 || lot->POI.level >= lot->level_count) {
+    return 0;
+  }
+
+  return 1;
+}
+
+int spaces_have_unique_names(const Lot *lot) {
+  for (int i = 0; i < lot->space_count; i++) {
+    for (int j = i + 1; j < lot->space_count; j++) {
+      // compare names using strcmp
+      if (strcmp(lot->spaces[i].name, lot->spaces[j].name) == 0) {
+        return 0; // duplicate name found
+      }
+    }
+  }
+  return 1; // all names are unique
+}
+
+int has_correct_up_down_count(const Lot *lot) {
+  if (lot->level_count <= 1) {
+    return 1; // single level, no ups/downs needed
+  }
+  int required = lot->level_count - 1;
+  return (lot->up_count == required) && (lot->down_count == required);
+}
+
+int levels_have_ups_and_downs(const Lot *lot) {
+  if (lot->level_count <= 1) {
+    return 1; // single level, no ups/downs needed
+  }
+  
+  int *has_up = calloc(lot->level_count, sizeof(int));
+  int *has_down = calloc(lot->level_count, sizeof(int)); // calloc simply initializes every entry to 0 (false)
+  
+  // step 1: mark which levels have ups and downs
+  for (int i = 0; i < lot->up_count; i++) {
+    int level = lot->ups[i].level; // looping over every up's level
+    if (level >= 0 && level < lot->level_count) {
+      has_up[level] = 1;
+    }
+  }
+  for (int i = 0; i < lot->down_count; i++) {
+    int level = lot->downs[i].level; // looping over every down's level
+    if (level >= 0 && level < lot->level_count) {
+      has_down[level] = 1;
+    }
+  }
+  
+  // step 2: verify the levels have the required ups and downs
+  for (int i = 0; i < lot->level_count - 1; i++) {
+    // every level except the top must have an up
+    if (!has_up[i]) {
+      free(has_up);
+      free(has_down);
+      return 0;
+    }
+  }
+  
+  for (int i = 1; i < lot->level_count; i++) {
+    // every level except the bottom must have a down
+    if (!has_down[i]) {
+      free(has_up);
+      free(has_down);
+      return 0;
+    }
+  }
+
+  free(has_up);
+  free(has_down);
+  return 1;
 }

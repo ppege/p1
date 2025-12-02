@@ -9,3 +9,7 @@ int spaces_overlap(const Lot *lot);
 int spaces_encroach_path(const Lot *lot, double margin);
 Rectangle get_path_corridor(const Path *path, double margin);
 int spaces_accessible(const Lot *lot, double max_distance);
+int has_valid_entrance_and_poi(const Lot *lot);
+int spaces_have_unique_names(const Lot *lot);
+int has_correct_up_down_count(const Lot *lot);
+int levels_have_ups_and_downs(const Lot *lot);
