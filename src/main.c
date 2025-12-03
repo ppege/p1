@@ -14,9 +14,10 @@ int main() {
   readLotFromFile(LotFileName, lot);
 
   // Validate lot
-  if (validate_lot(lot).error != NoError) {
+  ValidationResult result = validate_lot(lot);
+  if (result.error != NoError) {
     printf("Lot validation failed with error: %s\n",
-           validation_error_message(validate_lot(lot).error));
+           validation_error_message(result.error));
     return 1;
   }
 
