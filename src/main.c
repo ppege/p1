@@ -6,7 +6,7 @@
 
 int main() {
   Lot *lot = create_lot(1, 1, 1, 1, 1);
-  char *LotFileName = "diagonal.lot";
+  char *LotFileName = "example.lot";
   readLotFromFile(LotFileName, lot);
   ValidationResult result = validate_lot(lot);
 
@@ -14,7 +14,7 @@ int main() {
     printf("Lot validation failed! %s\n", validation_error_message(result.error));
   }
 
-  lot_to_ppm_all_levels(lot, "parking", 100);
+  lot_to_ppm_all_levels(lot, "parking", 10);
 
   free_lot(lot);
   return 0;

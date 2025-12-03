@@ -56,38 +56,6 @@ static void set_pixel_alpha(Color *buffer, int img_width, int img_height,
 // Vector Math Helpers
 // ============================================================================
 
-static double vector_length(Vector v) {
-  return sqrt(vector_dot_product(v, v));
-}
-
-static Vector vector_scale(Vector v, double s) {
-  return (Vector){ v.x * s, v.y * s };
-}
-
-static Vector vector_add(Vector a, Vector b) {
-  return (Vector){ a.x + b.x, a.y + b.y };
-}
-
-static double point_to_segment_distance(Vector point, Vector seg_start, Vector seg_end) {
-  Vector seg = subtract_vectors(seg_end, seg_start);
-  double seg_length_sq = vector_dot_product(seg, seg);
-
-  if (seg_length_sq == 0.0) {
-    return vector_length(subtract_vectors(point, seg_start));
-  }
-
-  double t = vector_dot_product(subtract_vectors(point, seg_start), seg) / seg_length_sq;
-  if (t < 0.0) t = 0.0;
-  else if (t > 1.0) t = 1.0;
-
-  Vector closest = vector_add(seg_start, vector_scale(seg, t));
-  return vector_length(subtract_vectors(point, closest));
-}
-
-static double cross_product_2d(Vector a, Vector b) {
-  return a.x * b.y - a.y * b.x;
-}
-
 static double point_to_rect_edge_distance(const Rectangle *rect, Vector point) {
   double min_dist = 1e9;
 
@@ -359,11 +327,225 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
 }
 
 // ============================================================================
+// Text Rendering
+// ============================================================================
+
+// Add this static helper before draw_level_label
+
+static void draw_char(Color *buffer, int img_width, int img_height,
+                      const int *bitmap, int char_width, int char_height,
+                      int start_x, int start_y) {
+  for (int row = 0; row < char_height; row++) {
+    for (int col = 0; col < char_width; col++) {
+      if (bitmap[row] & (1 << (char_width - 1 - col))) {
+        set_pixel(buffer, img_width, img_height, start_x + col, start_y + row, COLOR_BLACK);
+      }
+    }
+  }
+}
+
+static void draw_text(Color *buffer, int img_width, int img_height,
+                      const char *text, int center_x, int center_y, Color color) {
+  const int char_width = 5;
+  const int char_height = 7;
+  const int spacing = 1;
+  
+  // Simple bitmap font for A-Z, 0-9
+  const int font[36][7] = {
+    // A-Z
+    {0b01110, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001}, // A
+    {0b11110, 0b10001, 0b10001, 0b11110, 0b10001, 0b10001, 0b11110}, // B
+    {0b01110, 0b10001, 0b10000, 0b10000, 0b10000, 0b10001, 0b01110}, // C
+    {0b11110, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b11110}, // D
+    {0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b11111}, // E
+    {0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b10000}, // F
+    {0b01110, 0b10001, 0b10000, 0b10111, 0b10001, 0b10001, 0b01110}, // G
+    {0b10001, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001}, // H
+    {0b01110, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110}, // I
+    {0b00111, 0b00010, 0b00010, 0b00010, 0b00010, 0b10010, 0b01100}, // J
+    {0b10001, 0b10010, 0b10100, 0b11000, 0b10100, 0b10010, 0b10001}, // K
+    {0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b11111}, // L
+    {0b10001, 0b11011, 0b10101, 0b10101, 0b10001, 0b10001, 0b10001}, // M
+    {0b10001, 0b11001, 0b10101, 0b10011, 0b10001, 0b10001, 0b10001}, // N
+    {0b01110, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01110}, // O
+    {0b11110, 0b10001, 0b10001, 0b11110, 0b10000, 0b10000, 0b10000}, // P
+    {0b01110, 0b10001, 0b10001, 0b10001, 0b10101, 0b10010, 0b01101}, // Q
+    {0b11110, 0b10001, 0b10001, 0b11110, 0b10100, 0b10010, 0b10001}, // R
+    {0b01110, 0b10001, 0b10000, 0b01110, 0b00001, 0b10001, 0b01110}, // S
+    {0b11111, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100}, // T
+    {0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01110}, // U
+    {0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01010, 0b00100}, // V
+    {0b10001, 0b10001, 0b10001, 0b10101, 0b10101, 0b10101, 0b01010}, // W
+    {0b10001, 0b10001, 0b01010, 0b00100, 0b01010, 0b10001, 0b10001}, // X
+    {0b10001, 0b10001, 0b01010, 0b00100, 0b00100, 0b00100, 0b00100}, // Y
+    {0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b10000, 0b11111}, // Z
+    // 0-9
+    {0b01110, 0b10001, 0b10011, 0b10101, 0b11001, 0b10001, 0b01110}, // 0
+    {0b00100, 0b01100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110}, // 1
+    {0b01110, 0b10001, 0b00001, 0b00110, 0b01000, 0b10000, 0b11111}, // 2
+    {0b01110, 0b10001, 0b00001, 0b00110, 0b00001, 0b10001, 0b01110}, // 3
+    {0b00010, 0b00110, 0b01010, 0b10010, 0b11111, 0b00010, 0b00010}, // 4
+    {0b11111, 0b10000, 0b11110, 0b00001, 0b00001, 0b10001, 0b01110}, // 5
+    {0b00110, 0b01000, 0b10000, 0b11110, 0b10001, 0b10001, 0b01110}, // 6
+    {0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b01000, 0b01000}, // 7
+    {0b01110, 0b10001, 0b10001, 0b01110, 0b10001, 0b10001, 0b01110}, // 8
+    {0b01110, 0b10001, 0b10001, 0b01111, 0b00001, 0b00010, 0b01100}  // 9
+  };
+
+  int len = strlen(text);
+  int total_width = len * char_width + (len - 1) * spacing;
+  int start_x = center_x - total_width / 2;
+  int start_y = center_y - char_height / 2;
+
+  for (int i = 0; i < len; i++) {
+    char c = text[i];
+    int font_index = -1;
+
+    if (c >= 'A' && c <= 'Z') {
+      font_index = c - 'A';
+    } else if (c >= 'a' && c <= 'z') {
+      font_index = c - 'a';
+    } else if (c >= '0' && c <= '9') {
+      font_index = 26 + (c - '0');
+    }
+
+    if (font_index >= 0) {
+      int x = start_x + i * (char_width + spacing);
+      for (int row = 0; row < char_height; row++) {
+        for (int col = 0; col < char_width; col++) {
+          if (font[font_index][row] & (1 << (char_width - 1 - col))) {
+            set_pixel(buffer, img_width, img_height, x + col, start_y + row, color);
+          }
+        }
+      }
+    }
+  }
+}
+
+void draw_space_label(Color *buffer, int img_width, int img_height,
+                      const Rectangle *pixel_rect, const char *name) {
+  if (! buffer || !pixel_rect || !name) return;
+
+  int max_chars = 4;
+  int len = strlen(name);
+  if (len > max_chars) return;
+
+  // Find center of rectangle
+  double center_x = 0.0;
+  double center_y = 0.0;
+  for (int i = 0; i < 4; i++) {
+    center_x += pixel_rect->corner[i].x;
+    center_y += pixel_rect->corner[i].y;
+  }
+  center_x /= 4.0;
+  center_y /= 4.0;
+
+  draw_text(buffer, img_width, img_height, name, (int)center_x, (int)center_y, COLOR_BLACK);
+}
+
+void draw_level_label(Color *buffer, int img_width, int img_height, int level, int margin) {
+  const int char_width = 5;
+  const int char_height = 7;
+  const int spacing = 1;
+  
+  const int letter_L[7] = {
+    0b10000,
+    0b10000,
+    0b10000,
+    0b10000,
+    0b10000,
+    0b10000,
+    0b11111
+  };
+  const int letter_e[7] = {
+    0b00000,
+    0b01110,
+    0b10001,
+    0b11111,
+    0b10000,
+    0b10001,
+    0b01110
+  };
+  const int letter_v[7] = {
+    0b00000,
+    0b00000,
+    0b10001,
+    0b10001,
+    0b10001,
+    0b01010,
+    0b00100
+  };
+  const int letter_l[7] = {
+    0b01100,
+    0b00100,
+    0b00100,
+    0b00100,
+    0b00100,
+    0b00100,
+    0b01110
+  };
+  const int letter_space[7] = {
+    0b00000,
+    0b00000,
+    0b00000,
+    0b00000,
+    0b00000,
+    0b00000,
+    0b00000
+  };
+  const int digits[10][7] = {
+    {0b01110, 0b10001, 0b10011, 0b10101, 0b11001, 0b10001, 0b01110},
+    {0b00100, 0b01100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110},
+    {0b01110, 0b10001, 0b00001, 0b00110, 0b01000, 0b10000, 0b11111},
+    {0b01110, 0b10001, 0b00001, 0b00110, 0b00001, 0b10001, 0b01110},
+    {0b00010, 0b00110, 0b01010, 0b10010, 0b11111, 0b00010, 0b00010},
+    {0b11111, 0b10000, 0b11110, 0b00001, 0b00001, 0b10001, 0b01110},
+    {0b00110, 0b01000, 0b10000, 0b11110, 0b10001, 0b10001, 0b01110},
+    {0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b01000, 0b01000},
+    {0b01110, 0b10001, 0b10001, 0b01110, 0b10001, 0b10001, 0b01110},
+    {0b01110, 0b10001, 0b10001, 0b01111, 0b00001, 0b00010, 0b01100}
+  };
+
+  int x = margin;
+  int y = margin;
+
+  draw_char(buffer, img_width, img_height, letter_L, char_width, char_height, x, y);
+  x += char_width + spacing;
+  draw_char(buffer, img_width, img_height, letter_e, char_width, char_height, x, y);
+  x += char_width + spacing;
+  draw_char(buffer, img_width, img_height, letter_v, char_width, char_height, x, y);
+  x += char_width + spacing;
+  draw_char(buffer, img_width, img_height, letter_e, char_width, char_height, x, y);
+  x += char_width + spacing;
+  draw_char(buffer, img_width, img_height, letter_l, char_width, char_height, x, y);
+  x += char_width + spacing;
+  draw_char(buffer, img_width, img_height, letter_space, char_width, char_height, x, y);
+  x += char_width + spacing;
+
+  if (level == 0) {
+    draw_char(buffer, img_width, img_height, digits[0], char_width, char_height, x, y);
+  } else {
+    int temp = level;
+    int digit_count = 0;
+    int level_digits[10];
+    
+    while (temp > 0) {
+      level_digits[digit_count++] = temp % 10;
+      temp /= 10;
+    }
+    
+    for (int i = digit_count - 1; i >= 0; i--) {
+      draw_char(buffer, img_width, img_height, digits[level_digits[i]], char_width, char_height, x, y);
+      x += char_width + spacing;
+    }
+  }
+}
+
+// ============================================================================
 // Scale Bar
 // ============================================================================
 
-void draw_scale_bar(Color *buffer, int img_width, int img_height,
-                    int pixels_per_unit, int margin) {
+void draw_scale_bar(Color *buffer, int img_width, int img_height, int pixels_per_unit, int margin) {
   int bar_length = pixels_per_unit;
   int bar_height = 6;
   int tick_height = 10;
@@ -539,6 +721,7 @@ int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_u
       Rectangle pixel_rect = world_to_pixel_rect(&world_rect, pixels_per_unit, min_x, max_y);
       Color fill = get_space_color(lot->spaces[i].type);
       draw_rectangle(buffer, img_width, img_height, &pixel_rect, &fill, &COLOR_BLACK, 2);
+      draw_space_label(buffer, img_width, img_height, &pixel_rect, lot->spaces[i].name);
     }
   }
 
@@ -578,6 +761,7 @@ int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_u
   #undef TO_PX_Y
 
   draw_scale_bar(buffer, img_width, img_height, pixels_per_unit, 15);
+  draw_level_label(buffer, img_width, img_height, level, 15);
 
   FILE *fp = fopen(filename, "wb");
   if (!fp) {
