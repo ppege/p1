@@ -23,7 +23,7 @@ target_include_directories(lotReader PUBLIC .)
 
 add_library(image image.c)
 target_include_directories(image PUBLIC .)
-target_link_libraries(image PRIVATE m)
+target_link_libraries(image PRIVATE calculations m)
 
 add_library(Unity STATIC external/Unity/src/unity.c)
 target_include_directories(Unity PUBLIC external/Unity/src)
