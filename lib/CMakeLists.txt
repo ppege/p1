@@ -12,6 +12,7 @@ target_include_directories(display PUBLIC .)
 
 add_library(overview overview.c)
 target_include_directories(overview PUBLIC .)
+target_link_libraries(overview data m display)
 
 add_library(PlateDB PlateDB.c)
 target_include_directories(PlateDB PUBLIC .)
