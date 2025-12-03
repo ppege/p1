@@ -1,57 +1,66 @@
 #include "PlateDB.h"
 #include "data.h"
+#include "display.h"
 #include "lot.h"
 #include "lotReader.h"
+#include "validate.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "display.h"
 
 int main() {
+  // Create lot and read .lot file
   Lot *lot = create_lot(0, 10, 10, 10, 10);
   char *LotFileName = "test.lot";
   readLotFromFile(LotFileName, lot);
 
-  print_lot(lot);
-
-  // lot file reading example
-  Space space = {
-      EV,
-      {6.7, 4.2, 69},
-  };
-  char *FileName = "test/test.txt";
-  int lines = GetFileLines(FileName);
-
-  struct car *CarArr = (struct car *)malloc(sizeof(struct car) * lines);
-  ReadFile(CarArr, lines, FileName);
-
-  // Checking all the plates in the array
-  for (int i = 0; i < lines; i++) {
-    printf("Plate: %s type: %d\n", CarArr[i].plate, CarArr[i].carType);
+  // Validate lot
+  if (validate_lot(lot).error != NoError) {
+    printf("Lot validation failed with error: %s\n",
+           validation_error_message(validate_lot(lot).error));
+    return 1;
   }
 
-  // Testing the seaching function
-  char plate[8] = "EZ69420";
-  printf("Plate index: %d \n", GetCarIndexFromPlate(CarArr, lines, plate));
+  // Create plateDB and read it from file
+  char *PlateDBFileName = "test/test.txt";
+  int lines = GetFileLines(PlateDBFileName);
+  car *CarArr = (car *)malloc(sizeof(car) * lines);
 
-  printf("The type of the space is %d and the location is on x=%lf y=%lf and "
-         "on floor %d\n",
-         // space_type_labels[space.type],
-         space.type, space.location.x, space.location.y, space.location.level);
+  ReadFile(CarArr, lines, PlateDBFileName);
 
-  box_start(40);
-  box_line("HELLO BOIS", 40);
-  box_break(40);
-  box_line("Velkommen til kvindeparkering!", 40);
-  box_break(40);
-  box_line("Her er pladserne 20 meter brede", 40);
-  box_end(40);
+  while (1) {
+    // Get a quick overview of the lot
+    // print_lot(lot);
 
-  char TempPlate[8];
-  if (!scan_plate(TempPlate)) {
+    clear_screen();
+
+    int box_width = 40;
+
+    box_start(box_width);
+    box_line("Welcome to the parking lot!", box_width);
+    box_break(box_width);
+    box_line("Here we have a total of 69 parking spaces!", box_width);
+    box_end(box_width);
+
+    char TempPlate[8];
+    if (scan_plate(TempPlate)) {
+      printf("Plate is not valid. Please try again with a valid plate.\n");
+      continue;
+    }
     int Res = GetCarIndexFromPlate(CarArr, lines, TempPlate);
-    printf("Res: %d \n", Res);
+    if (Res == -1) {
+      printf("Car with plate %s not found in database.\n", TempPlate);
+      continue;
+    }
+    printf("Car with plate %s found in database.\n", TempPlate);
+
+    // Check the car in/out
+    // If the car is checked in, check it out and then continue
+    // If the car is not checked in, check it in
+    //  Then display the parking lot and find a space for the car
+    //  Display the navigation to the space
+    // End by saying goodbye to the user
   }
-  
+
   free(CarArr);
   return 0;
 }
