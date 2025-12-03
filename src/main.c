@@ -12,8 +12,6 @@ int main() {
 
   if (result.result == Err) {
     printf("Lot validation failed! %s\n", validation_error_message(result.error));
-    free_lot(lot);
-    return 1;
   }
 
   lot_to_ppm_all_levels(lot, "parking", 100);

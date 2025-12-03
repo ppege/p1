@@ -1,7 +1,6 @@
 # ================================================
 # Diagonal Parking Lot - 2-Level Garage
 # ================================================
-# Features 45-degree angled parking spaces
 
 [POI]
 x=0.0 y=0.0 level=0
@@ -11,60 +10,58 @@ x=0.0 y=0.0 level=0
 
 [Spaces]
 # === LEVEL 0 ===
-# Row A: 45-degree angle, left side of path
-# Spaces angled at 45 degrees, need more horizontal spacing
-name=A1 type=0 location(x=-14.0 y=4.0 level=0) rotation=45
-name=A2 type=0 location(x=-10.0 y=4.0 level=0) rotation=45
-name=A3 type=0 location(x=-6.0 y=4.0 level=0) rotation=45
-name=A4 type=0 location(x=6.0 y=4.0 level=0) rotation=45
-name=A5 type=0 location(x=10.0 y=4.0 level=0) rotation=45
-name=A6 type=0 location(x=14.0 y=4.0 level=0) rotation=45
+name=A1 type=0 location(x=-20.0 y=5.0 level=0) rotation=45
+name=A2 type=0 location(x=-16.0 y=5.0 level=0) rotation=45
+name=A3 type=0 location(x=-12.0 y=5.0 level=0) rotation=45
+name=A4 type=0 location(x=-8.0 y=5.0 level=0) rotation=45
+name=A5 type=0 location(x=8.0 y=5.0 level=0) rotation=45
+name=A6 type=0 location(x=12.0 y=5.0 level=0) rotation=45
+name=A7 type=0 location(x=16.0 y=5.0 level=0) rotation=45
+name=A8 type=0 location(x=20.0 y=5.0 level=0) rotation=45
 
-# Row B: 225-degree angle (opposite direction), facing row A
-name=B1 type=0 location(x=-14.0 y=20.0 level=0) rotation=225
-name=B2 type=0 location(x=-10.0 y=20.0 level=0) rotation=225
-name=B3 type=0 location(x=-6.0 y=20.0 level=0) rotation=225
-name=B4 type=0 location(x=6.0 y=20.0 level=0) rotation=225
-name=B5 type=0 location(x=10.0 y=20.0 level=0) rotation=225
-name=B6 type=0 location(x=14.0 y=20.0 level=0) rotation=225
+name=B1 type=0 location(x=-20.0 y=21.0 level=0) rotation=135
+name=B2 type=0 location(x=-16.0 y=21.0 level=0) rotation=135
+name=B3 type=0 location(x=-12.0 y=21.0 level=0) rotation=135
+name=B4 type=0 location(x=-8.0 y=21.0 level=0) rotation=135
+name=B5 type=0 location(x=8.0 y=21.0 level=0) rotation=135
+name=B6 type=0 location(x=12.0 y=21.0 level=0) rotation=135
+name=B7 type=0 location(x=16.0 y=21.0 level=0) rotation=135
+name=B8 type=0 location(x=20.0 y=21.0 level=0) rotation=135
 
 # === LEVEL 1 ===
-# Row C: 45-degree angle
-name=C1 type=0 location(x=-14.0 y=4.0 level=1) rotation=45
-name=C2 type=0 location(x=-10.0 y=4.0 level=1) rotation=45
-name=C3 type=0 location(x=-6.0 y=4.0 level=1) rotation=45
-name=C4 type=0 location(x=6.0 y=4.0 level=1) rotation=45
-name=C5 type=0 location(x=10.0 y=4.0 level=1) rotation=45
-name=C6 type=0 location(x=14.0 y=4.0 level=1) rotation=45
+name=C1 type=0 location(x=-20.0 y=5.0 level=1) rotation=45
+name=C2 type=0 location(x=-16.0 y=5.0 level=1) rotation=45
+name=C3 type=0 location(x=-12.0 y=5.0 level=1) rotation=45
+name=C4 type=0 location(x=-8.0 y=5.0 level=1) rotation=45
+name=C5 type=0 location(x=8.0 y=5.0 level=1) rotation=45
+name=C6 type=0 location(x=12.0 y=5.0 level=1) rotation=45
+name=C7 type=0 location(x=16.0 y=5.0 level=1) rotation=45
+name=C8 type=0 location(x=20.0 y=5.0 level=1) rotation=45
 
-# Row D: 225-degree angle
-name=D1 type=0 location(x=-14.0 y=20.0 level=1) rotation=225
-name=D2 type=0 location(x=-10.0 y=20.0 level=1) rotation=225
-name=D3 type=0 location(x=-6.0 y=20.0 level=1) rotation=225
-name=D4 type=0 location(x=6.0 y=20.0 level=1) rotation=225
-name=D5 type=0 location(x=10.0 y=20.0 level=1) rotation=225
-name=D6 type=0 location(x=14.0 y=20.0 level=1) rotation=225
+name=D1 type=0 location(x=-20.0 y=21.0 level=1) rotation=135
+name=D2 type=0 location(x=-16.0 y=21.0 level=1) rotation=135
+name=D3 type=0 location(x=-12.0 y=21.0 level=1) rotation=135
+name=D4 type=0 location(x=-8.0 y=21.0 level=1) rotation=135
+name=D5 type=0 location(x=8.0 y=21.0 level=1) rotation=135
+name=D6 type=0 location(x=12.0 y=21.0 level=1) rotation=135
+name=D7 type=0 location(x=16.0 y=21.0 level=1) rotation=135
+name=D8 type=0 location(x=20.0 y=21.0 level=1) rotation=135
 
 [Paths]
-# Level 0: Entrance to junction
-vec(x=0.0 y=12.0) location(x=0.0 y=0.0 level=0)
-# Level 0: Horizontal paths between rows
-vec(x=-18.0 y=0.0) location(x=0.0 y=12.0 level=0)
-vec(x=18.0 y=0.0) location(x=0.0 y=12.0 level=0)
-# Level 0: Junction to ramp
-vec(x=0.0 y=12.0) location(x=0.0 y=12.0 level=0)
+vec(x=0.0 y=13.0) location(x=0.0 y=0.0 level=0)
+vec(x=-23.0 y=0.0) location(x=0.0 y=13.0 level=0)
+vec(x=23.0 y=0.0) location(x=0.0 y=13.0 level=0)
+vec(x=0.0 y=13.0) location(x=0.0 y=13.0 level=0)
 
-# Level 1: From down to junction
-vec(x=0.0 y=-12.0) location(x=0.0 y=24.0 level=1)
-# Level 1: Horizontal paths
-vec(x=-18.0 y=0.0) location(x=0.0 y=12.0 level=1)
-vec(x=18.0 y=0.0) location(x=0.0 y=12.0 level=1)
+vec(x=0.0 y=-13.0) location(x=0.0 y=26.0 level=1)
+vec(x=-23.0 y=0.0) location(x=0.0 y=13.0 level=1)
+vec(x=23.0 y=0.0) location(x=0.0 y=13.0 level=1)
 
 [Ups]
-x=0.0 y=24.0 level=0
+x=0.0 y=26.0 level=0
 
 [Downs]
-x=0.0 y=24.0 level=1
+x=0.0 y=26.0 level=1
 
 [Locations]
-x=0.0 y=12.0 level=0
+x=0.0 y=13.0 level=0

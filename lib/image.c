@@ -1,5 +1,6 @@
 #include "image.h"
 #include "data.h"
+#include "calculations.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,11 +31,11 @@ static Color blend_colors(Color bg, Color fg, double alpha) {
   if (alpha < 0.0) alpha = 0.0;
   if (alpha > 1.0) alpha = 1.0;
 
-  Color result;
-  result.r = (unsigned char)(bg.r * (1.0 - alpha) + fg.r * alpha);
-  result.g = (unsigned char)(bg.g * (1.0 - alpha) + fg.g * alpha);
-  result.b = (unsigned char)(bg.b * (1.0 - alpha) + fg.b * alpha);
-  return result;
+  return (Color){
+    .r = (unsigned char)(bg.r * (1.0 - alpha) + fg.r * alpha),
+    .g = (unsigned char)(bg.g * (1.0 - alpha) + fg.g * alpha),
+    .b = (unsigned char)(bg.b * (1.0 - alpha) + fg.b * alpha)
+  };
 }
 
 static void set_pixel(Color *buffer, int img_width, int img_height, int x, int y, Color color) {
@@ -47,13 +48,61 @@ static void set_pixel_alpha(Color *buffer, int img_width, int img_height,
                             int x, int y, Color color, double alpha) {
   if (x >= 0 && x < img_width && y >= 0 && y < img_height) {
     Color bg = get_pixel(buffer, img_width, img_height, x, y);
-    Color blended = blend_colors(bg, color, alpha);
-    set_pixel(buffer, img_width, img_height, x, y, blended);
+    set_pixel(buffer, img_width, img_height, x, y, blend_colors(bg, color, alpha));
   }
 }
 
 // ============================================================================
-// Math Helpers
+// Vector Math Helpers
+// ============================================================================
+
+static double vector_length(Vector v) {
+  return sqrt(vector_dot_product(v, v));
+}
+
+static Vector vector_scale(Vector v, double s) {
+  return (Vector){ v.x * s, v.y * s };
+}
+
+static Vector vector_add(Vector a, Vector b) {
+  return (Vector){ a.x + b.x, a.y + b.y };
+}
+
+static double point_to_segment_distance(Vector point, Vector seg_start, Vector seg_end) {
+  Vector seg = subtract_vectors(seg_end, seg_start);
+  double seg_length_sq = vector_dot_product(seg, seg);
+
+  if (seg_length_sq == 0.0) {
+    return vector_length(subtract_vectors(point, seg_start));
+  }
+
+  double t = vector_dot_product(subtract_vectors(point, seg_start), seg) / seg_length_sq;
+  if (t < 0.0) t = 0.0;
+  else if (t > 1.0) t = 1.0;
+
+  Vector closest = vector_add(seg_start, vector_scale(seg, t));
+  return vector_length(subtract_vectors(point, closest));
+}
+
+static double cross_product_2d(Vector a, Vector b) {
+  return a.x * b.y - a.y * b.x;
+}
+
+static double point_to_rect_edge_distance(const Rectangle *rect, Vector point) {
+  double min_dist = 1e9;
+
+  for (int i = 0; i < 4; i++) {
+    int j = (i + 1) % 4;
+    double dist = point_to_segment_distance(point, rect->corner[i], rect->corner[j]);
+    if (dist < min_dist) {
+      min_dist = dist;
+    }
+  }
+  return min_dist;
+}
+
+// ============================================================================
+// Wu's Algorithm Helpers
 // ============================================================================
 
 static double fpart(double x) {
@@ -64,51 +113,6 @@ static double rfpart(double x) {
   return 1.0 - fpart(x);
 }
 
-static double cross_product(Vector p0, Vector p1, Vector p2) {
-  return (p1.x - p0.x) * (p2.y - p0.y) - (p1.y - p0.y) * (p2.x - p0.x);
-}
-
-static double point_to_segment_distance(double px, double py,
-                                         double x0, double y0,
-                                         double x1, double y1) {
-  double dx = x1 - x0;
-  double dy = y1 - y0;
-  double len_sq = dx * dx + dy * dy;
-
-  if (len_sq == 0.0) {
-    double dpx = px - x0;
-    double dpy = py - y0;
-    return sqrt(dpx * dpx + dpy * dpy);
-  }
-
-  double t = ((px - x0) * dx + (py - y0) * dy) / len_sq;
-  if (t < 0.0) t = 0.0;
-  if (t > 1.0) t = 1.0;
-
-  double proj_x = x0 + t * dx;
-  double proj_y = y0 + t * dy;
-  double dpx = px - proj_x;
-  double dpy = py - proj_y;
-
-  return sqrt(dpx * dpx + dpy * dpy);
-}
-
-static double point_to_rect_edge_distance(Vector corners[4], double px, double py) {
-  double min_dist = 1e9;
-
-  for (int i = 0; i < 4; i++) {
-    int j = (i + 1) % 4;
-    double dist = point_to_segment_distance(px, py,
-                                             corners[i].x, corners[i].y,
-                                             corners[j].x, corners[j].y);
-    if (dist < min_dist) {
-      min_dist = dist;
-    }
-  }
-
-  return min_dist;
-}
-
 // ============================================================================
 // Drawing Functions
 // ============================================================================
@@ -116,29 +120,24 @@ static double point_to_rect_edge_distance(Vector corners[4], double px, double p
 void draw_line(Color *buffer, int img_width, int img_height,
                double x0, double y0, double x1, double y1,
                Color color, int thickness) {
-  // For thickness > 1, draw multiple parallel lines
   if (thickness > 1) {
-    double dx = x1 - x0;
-    double dy = y1 - y0;
-    double len = sqrt(dx * dx + dy * dy);
-
+    Vector dir = { x1 - x0, y1 - y0 };
+    double len = vector_length(dir);
     if (len == 0.0) return;
 
-    // Perpendicular unit vector
-    double px = -dy / len;
-    double py = dx / len;
+    Vector perp = vector_scale(normal_vector(dir), 1.0 / len);
 
     for (int t = -thickness / 2; t <= thickness / 2; t++) {
-      double offset = (double)t;
+      Vector offset = vector_scale(perp, (double)t);
       draw_line(buffer, img_width, img_height,
-                x0 + px * offset, y0 + py * offset,
-                x1 + px * offset, y1 + py * offset,
+                x0 + offset.x, y0 + offset.y,
+                x1 + offset.x, y1 + offset.y,
                 color, 1);
     }
     return;
   }
 
-  // Wu's algorithm for single-pixel anti-aliased line
+  // Wu's algorithm
   int steep = fabs(y1 - y0) > fabs(x1 - x0);
 
   if (steep) {
@@ -207,11 +206,7 @@ void draw_line(Color *buffer, int img_width, int img_height,
   }
 }
 
-void draw_circle(Color *buffer, int img_width, int img_height,
-                 double cx, double cy, double radius,
-                 const Color *fill_color,
-                 const Color *outline_color,
-                 int outline_thickness) {
+void draw_circle(Color *buffer, int img_width, int img_height, double cx, double cy, double radius, const Color *fill_color, const Color *outline_color, int outline_thickness) {
   if (!buffer) return;
 
   int padding = outline_thickness + 2;
@@ -225,11 +220,11 @@ void draw_circle(Color *buffer, int img_width, int img_height,
   if (end_x >= img_width) end_x = img_width - 1;
   if (end_y >= img_height) end_y = img_height - 1;
 
+  Vector center = { cx, cy };
   double half_thickness = (double)outline_thickness / 2.0;
 
   for (int py = start_y; py <= end_y; py++) {
     for (int px = start_x; px <= end_x; px++) {
-      // Supersampling 4x4
       double fill_coverage = 0.0;
       double outline_coverage = 0.0;
       int samples = 4;
@@ -237,28 +232,24 @@ void draw_circle(Color *buffer, int img_width, int img_height,
 
       for (int sy = 0; sy < samples; sy++) {
         for (int sx = 0; sx < samples; sx++) {
-          double sample_x = (double)px + ((double)sx + 0.5) / (double)samples;
-          double sample_y = (double)py + ((double)sy + 0.5) / (double)samples;
+          Vector sample = {
+            (double)px + ((double)sx + 0.5) / (double)samples,
+            (double)py + ((double)sy + 0.5) / (double)samples
+          };
 
-          double dx = sample_x - cx;
-          double dy = sample_y - cy;
-          double dist = sqrt(dx * dx + dy * dy);
+          double dist = vector_length(subtract_vectors(sample, center));
 
           if (dist <= radius) {
-            // Inside circle
             double edge_dist = radius - dist;
             if (outline_color && edge_dist <= (double)outline_thickness) {
               outline_coverage += sample_weight;
             } else if (fill_color) {
               fill_coverage += sample_weight;
             }
-          } else {
-            // Outside but check anti-aliased edge
-            if (outline_color && dist <= radius + half_thickness + 1.0) {
-              double aa_alpha = 1.0 - (dist - radius - half_thickness);
-              if (aa_alpha > 0.0 && aa_alpha <= 1.0) {
-                outline_coverage += sample_weight * aa_alpha;
-              }
+          } else if (outline_color && dist <= radius + half_thickness + 1.0) {
+            double aa_alpha = 1.0 - (dist - radius - half_thickness);
+            if (aa_alpha > 0.0 && aa_alpha <= 1.0) {
+              outline_coverage += sample_weight * aa_alpha;
             }
           }
         }
@@ -281,17 +272,12 @@ void draw_circle(Color *buffer, int img_width, int img_height,
   }
 }
 
-void draw_rectangle(Color *buffer, int img_width, int img_height,
-                    const Rectangle *rect,
-                    const Color *fill_color,
-                    const Color *outline_color,
-                    int outline_thickness) {
+void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangle *rect, const Color *fill_color, const Color *outline_color, int outline_thickness) {
   if (!buffer || !rect) return;
 
-  double min_x = rect->corner[0].x;
-  double max_x = rect->corner[0].x;
-  double min_y = rect->corner[0].y;
-  double max_y = rect->corner[0].y;
+  // Find bounding box
+  double min_x = rect->corner[0].x, max_x = rect->corner[0].x;
+  double min_y = rect->corner[0].y, max_y = rect->corner[0].y;
 
   for (int i = 1; i < 4; i++) {
     if (rect->corner[i].x < min_x) min_x = rect->corner[i].x;
@@ -311,19 +297,6 @@ void draw_rectangle(Color *buffer, int img_width, int img_height,
   if (end_x >= img_width) end_x = img_width - 1;
   if (end_y >= img_height) end_y = img_height - 1;
 
-  Vector corners[4];
-  for (int i = 0; i < 4; i++) {
-    corners[i] = rect->corner[i];
-  }
-
-  // Determine winding order by checking sign of cross product for first edge
-  // Use center point of rectangle to test
-  double center_x = (corners[0].x + corners[1].x + corners[2].x + corners[3].x) / 4.0;
-  double center_y = (corners[0].y + corners[1].y + corners[2].y + corners[3].y) / 4.0;
-  Vector center = {center_x, center_y};
-  double test_cross = cross_product(corners[0], corners[1], center);
-  int expect_negative = (test_cross < 0);
-
   double half_thickness = (double)outline_thickness / 2.0;
 
   for (int py = start_y; py <= end_y; py++) {
@@ -335,29 +308,21 @@ void draw_rectangle(Color *buffer, int img_width, int img_height,
 
       for (int sy = 0; sy < samples; sy++) {
         for (int sx = 0; sx < samples; sx++) {
-          double sample_x = (double)px + ((double)sx + 0.5) / (double)samples;
-          double sample_y = (double)py + ((double)sy + 0.5) / (double)samples;
+          Vector sample = {
+            (double)px + ((double)sx + 0.5) / (double)samples,
+            (double)py + ((double)sy + 0.5) / (double)samples
+          };
 
-          double edge_dist = point_to_rect_edge_distance(corners, sample_x, sample_y);
+          double edge_dist = point_to_rect_edge_distance(rect, sample);
 
+          // Check if inside 
           int inside = 1;
           for (int i = 0; i < 4; i++) {
-            int j = (i + 1) % 4;
-            Vector p0 = corners[i];
-            Vector p1 = corners[j];
-            Vector p = {sample_x, sample_y};
-            double cross = cross_product(p0, p1, p);
-            // Check against expected sign based on winding order
-            if (expect_negative) {
-              if (cross > 0) {
-                inside = 0;
-                break;
-              }
-            } else {
-              if (cross < 0) {
-                inside = 0;
-                break;
-              }
+            Vector edge = subtract_vectors(rect->corner[(i + 1) % 4], rect->corner[i]);
+            Vector to_point = subtract_vectors(sample, rect->corner[i]);
+            if (cross_product_2d(edge, to_point) > 0) {
+              inside = 0;
+              break;
             }
           }
 
@@ -367,12 +332,10 @@ void draw_rectangle(Color *buffer, int img_width, int img_height,
             } else if (fill_color) {
               fill_coverage += sample_weight;
             }
-          } else {
-            if (outline_color && edge_dist <= half_thickness + 1.0) {
-              double aa_alpha = 1.0 - (edge_dist - half_thickness);
-              if (aa_alpha > 0.0 && aa_alpha <= 1.0) {
-                outline_coverage += sample_weight * aa_alpha;
-              }
+          } else if (outline_color && edge_dist <= half_thickness + 1.0) {
+            double aa_alpha = 1.0 - (edge_dist - half_thickness);
+            if (aa_alpha > 0.0 && aa_alpha <= 1.0) {
+              outline_coverage += sample_weight * aa_alpha;
             }
           }
         }
@@ -396,16 +359,67 @@ void draw_rectangle(Color *buffer, int img_width, int img_height,
 }
 
 // ============================================================================
+// Scale Bar
+// ============================================================================
+
+void draw_scale_bar(Color *buffer, int img_width, int img_height,
+                    int pixels_per_unit, int margin) {
+  int bar_length = pixels_per_unit;
+  int bar_height = 6;
+  int tick_height = 10;
+
+  int x_start = margin;
+  int y_bar = img_height - margin - tick_height;
+
+  // Horizontal bar
+  for (int y = y_bar; y < y_bar + bar_height; y++) {
+    for (int x = x_start; x < x_start + bar_length; x++) {
+      set_pixel(buffer, img_width, img_height, x, y, COLOR_BLACK);
+    }
+  }
+
+  // Left tick
+  for (int y = y_bar - (tick_height - bar_height); y < y_bar + bar_height; y++) {
+    for (int x = x_start; x < x_start + 2; x++) {
+      set_pixel(buffer, img_width, img_height, x, y, COLOR_BLACK);
+    }
+  }
+
+  // Right tick
+  for (int y = y_bar - (tick_height - bar_height); y < y_bar + bar_height; y++) {
+    for (int x = x_start + bar_length - 2; x < x_start + bar_length; x++) {
+      set_pixel(buffer, img_width, img_height, x, y, COLOR_BLACK);
+    }
+  }
+
+  // Draw "1"
+  int one_x = x_start + (bar_length / 2);
+  int one_y = y_bar - tick_height - 12;
+  int one_height = 10;
+  int one_width = 6;
+
+  for (int y = one_y; y < one_y + one_height; y++) {
+    set_pixel(buffer, img_width, img_height, one_x, y, COLOR_BLACK);
+    set_pixel(buffer, img_width, img_height, one_x + 1, y, COLOR_BLACK);
+  }
+
+  for (int x = one_x - 2; x < one_x + one_width - 2; x++) {
+    set_pixel(buffer, img_width, img_height, x, one_y + one_height - 1, COLOR_BLACK);
+    set_pixel(buffer, img_width, img_height, x, one_y + one_height - 2, COLOR_BLACK);
+  }
+
+  set_pixel(buffer, img_width, img_height, one_x - 1, one_y + 1, COLOR_BLACK);
+  set_pixel(buffer, img_width, img_height, one_x - 2, one_y + 2, COLOR_BLACK);
+}
+
+// ============================================================================
 // Lot Rendering
 // ============================================================================
 
-static void calculate_lot_bounds(const Lot *lot, int level,
-                                  double *min_x, double *min_y,
-                                  double *max_x, double *max_y) {
+static void calculate_lot_bounds(const Lot *lot, int level, double *min_x, double *min_y, double *max_x, double *max_y) {
   *min_x = *min_y = 1e9;
   *max_x = *max_y = -1e9;
 
-  // Check spaces using get_space_rectangle
   for (int i = 0; i < lot->space_count; i++) {
     if (lot->spaces[i].location.level == level) {
       Rectangle rect = get_space_rectangle(&lot->spaces[i]);
@@ -418,26 +432,20 @@ static void calculate_lot_bounds(const Lot *lot, int level,
     }
   }
 
-  // Check paths
   for (int i = 0; i < lot->path_count; i++) {
     if (lot->paths[i].start_point.level == level) {
-      double x1 = lot->paths[i].start_point.x;
-      double y1 = lot->paths[i].start_point.y;
-      double x2 = x1 + lot->paths[i].vector.x;
-      double y2 = y1 + lot->paths[i].vector.y;
-
-      if (x1 < *min_x) *min_x = x1;
-      if (x2 < *min_x) *min_x = x2;
-      if (x1 > *max_x) *max_x = x1;
-      if (x2 > *max_x) *max_x = x2;
-      if (y1 < *min_y) *min_y = y1;
-      if (y2 < *min_y) *min_y = y2;
-      if (y1 > *max_y) *max_y = y1;
-      if (y2 > *max_y) *max_y = y2;
+      Location end = get_endpoint(&lot->paths[i]);
+      if (lot->paths[i].start_point.x < *min_x) *min_x = lot->paths[i].start_point.x;
+      if (lot->paths[i].start_point.x > *max_x) *max_x = lot->paths[i].start_point.x;
+      if (lot->paths[i].start_point.y < *min_y) *min_y = lot->paths[i].start_point.y;
+      if (lot->paths[i].start_point.y > *max_y) *max_y = lot->paths[i].start_point.y;
+      if (end.x < *min_x) *min_x = end.x;
+      if (end.x > *max_x) *max_x = end.x;
+      if (end.y < *min_y) *min_y = end.y;
+      if (end.y > *max_y) *max_y = end.y;
     }
   }
 
-  // Check entrance
   if (lot->entrance.level == level) {
     if (lot->entrance.x < *min_x) *min_x = lot->entrance.x;
     if (lot->entrance.x > *max_x) *max_x = lot->entrance.x;
@@ -445,7 +453,6 @@ static void calculate_lot_bounds(const Lot *lot, int level,
     if (lot->entrance.y > *max_y) *max_y = lot->entrance.y;
   }
 
-  // Check POI
   if (lot->POI.level == level) {
     if (lot->POI.x < *min_x) *min_x = lot->POI.x;
     if (lot->POI.x > *max_x) *max_x = lot->POI.x;
@@ -453,7 +460,6 @@ static void calculate_lot_bounds(const Lot *lot, int level,
     if (lot->POI.y > *max_y) *max_y = lot->POI.y;
   }
 
-  // Check ups
   for (int i = 0; i < lot->up_count; i++) {
     if (lot->ups[i].level == level) {
       if (lot->ups[i].x < *min_x) *min_x = lot->ups[i].x;
@@ -463,7 +469,6 @@ static void calculate_lot_bounds(const Lot *lot, int level,
     }
   }
 
-  // Check downs
   for (int i = 0; i < lot->down_count; i++) {
     if (lot->downs[i].level == level) {
       if (lot->downs[i].x < *min_x) *min_x = lot->downs[i].x;
@@ -473,18 +478,13 @@ static void calculate_lot_bounds(const Lot *lot, int level,
     }
   }
 
-  // Add padding
-  double padding = 2.0;
-  *min_x -= padding;
-  *min_y -= padding;
-  *max_x += padding;
-  *max_y += padding;
+  *min_x -= 2.0;
+  *min_y -= 2.0;
+  *max_x += 2.0;
+  *max_y += 2.0;
 }
 
-// Convert world-space Rectangle to pixel-space Rectangle
-static Rectangle world_to_pixel_rect(const Rectangle *world_rect,
-                                      double pixels_per_unit,
-                                      double min_x, double max_y) {
+static Rectangle world_to_pixel_rect(const Rectangle *world_rect, double pixels_per_unit, double min_x, double max_y) {
   Rectangle pixel_rect;
   for (int i = 0; i < 4; i++) {
     pixel_rect.corner[i].x = (world_rect->corner[i].x - min_x) * pixels_per_unit;
@@ -493,108 +493,46 @@ static Rectangle world_to_pixel_rect(const Rectangle *world_rect,
   return pixel_rect;
 }
 
-// ============================================================================
-// Scale Bar
-// ============================================================================
-
-void draw_scale_bar(Color *buffer, int img_width, int img_height,
-                    int pixels_per_unit, int margin) {
-  int bar_length = pixels_per_unit;
-  int bar_height = 6;
-  int tick_height = 10;
-
-  // Position in bottom-left corner
-  int x_start = margin;
-  int y_bar = img_height - margin - tick_height;
-
-  // Draw horizontal bar
-  for (int y = y_bar; y < y_bar + bar_height; y++) {
-    for (int x = x_start; x < x_start + bar_length; x++) {
-      set_pixel(buffer, img_width, img_height, x, y, COLOR_BLACK);
-    }
-  }
-
-  // Draw left tick
-  for (int y = y_bar - (tick_height - bar_height); y < y_bar + bar_height; y++) {
-    for (int x = x_start; x < x_start + 2; x++) {
-      set_pixel(buffer, img_width, img_height, x, y, COLOR_BLACK);
-    }
-  }
-
-  // Draw right tick
-  for (int y = y_bar - (tick_height - bar_height); y < y_bar + bar_height; y++) {
-    for (int x = x_start + bar_length - 2; x < x_start + bar_length; x++) {
-      set_pixel(buffer, img_width, img_height, x, y, COLOR_BLACK);
-    }
-  }
-
-  // Draw "1" as a simple vertical line with a base
-  int one_x = x_start + (bar_length / 2);
-  int one_y = y_bar - tick_height - 12;
-  int one_height = 10;
-  int one_width = 6;
-
-  // Vertical stroke
-  for (int y = one_y; y < one_y + one_height; y++) {
-    set_pixel(buffer, img_width, img_height, one_x, y, COLOR_BLACK);
-    set_pixel(buffer, img_width, img_height, one_x + 1, y, COLOR_BLACK);
-  }
-
-  // Bottom base
-  for (int x = one_x - 2; x < one_x + one_width - 2; x++) {
-    set_pixel(buffer, img_width, img_height, x, one_y + one_height - 1, COLOR_BLACK);
-    set_pixel(buffer, img_width, img_height, x, one_y + one_height - 2, COLOR_BLACK);
-  }
-
-  // Top serif
-  set_pixel(buffer, img_width, img_height, one_x - 1, one_y + 1, COLOR_BLACK);
-  set_pixel(buffer, img_width, img_height, one_x - 2, one_y + 2, COLOR_BLACK);
-}
-
 int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_unit) {
-  if (!lot || !filename || pixels_per_unit <= 0) {
-    return -1;
-  }
+  if (!lot || !filename || pixels_per_unit <= 0) return -1;
 
-  // Calculate bounds
   double min_x, min_y, max_x, max_y;
   calculate_lot_bounds(lot, level, &min_x, &min_y, &max_x, &max_y);
 
-  // Calculate image dimensions
   int img_width = (int)((max_x - min_x) * pixels_per_unit);
   int img_height = (int)((max_y - min_y) * pixels_per_unit);
 
-  if (img_width <= 0 || img_height <= 0) {
-    return -1;
-  }
+  if (img_width <= 0 || img_height <= 0) return -1;
 
-  // Allocate image buffer
   Color *buffer = malloc(img_width * img_height * sizeof(Color));
-  if (!buffer) {
-    return -1;
-  }
+  if (!buffer) return -1;
 
-  // Fill with background color
   for (int i = 0; i < img_width * img_height; i++) {
     buffer[i] = COLOR_BACKGROUND;
   }
 
-  // Coordinate conversion macros
-  #define WORLD_TO_PIXEL_X(wx) (((wx) - min_x) * pixels_per_unit)
-  #define WORLD_TO_PIXEL_Y(wy) ((max_y - (wy)) * pixels_per_unit)
+  #define TO_PX_X(wx) (((wx) - min_x) * pixels_per_unit)
+  #define TO_PX_Y(wy) ((max_y - (wy)) * pixels_per_unit)
 
   // Draw paths
   for (int i = 0; i < lot->path_count; i++) {
     if (lot->paths[i].start_point.level == level) {
-      double x0 = WORLD_TO_PIXEL_X(lot->paths[i].start_point.x);
-      double y0 = WORLD_TO_PIXEL_Y(lot->paths[i].start_point.y);
-      double x1 = WORLD_TO_PIXEL_X(lot->paths[i].start_point.x + lot->paths[i].vector.x);
-      double y1 = WORLD_TO_PIXEL_Y(lot->paths[i].start_point.y + lot->paths[i].vector.y);
-      draw_line(buffer, img_width, img_height, x0, y0, x1, y1, COLOR_PATH, 5);
+      Location end = get_endpoint(&lot->paths[i]);
+      draw_line(
+        buffer,
+        img_width,
+        img_height,
+        TO_PX_X(lot->paths[i].start_point.x),
+        TO_PX_Y(lot->paths[i].start_point.y),
+        TO_PX_X(end.x),
+        TO_PX_Y(end.y),
+        COLOR_PATH,
+        5
+      );
     }
   }
 
-  // Draw spaces using get_space_rectangle
+  // Draw spaces
   for (int i = 0; i < lot->space_count; i++) {
     if (lot->spaces[i].location.level == level) {
       Rectangle world_rect = get_space_rectangle(&lot->spaces[i]);
@@ -606,47 +544,41 @@ int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_u
 
   // Draw entrance
   if (lot->entrance.level == level) {
-    double cx = WORLD_TO_PIXEL_X(lot->entrance.x);
-    double cy = WORLD_TO_PIXEL_Y(lot->entrance.y);
-    draw_circle(buffer, img_width, img_height, cx, cy, pixels_per_unit * 0.8,
-                &COLOR_ENTRANCE, &COLOR_BLACK, 2);
+    draw_circle(buffer, img_width, img_height,
+                TO_PX_X(lot->entrance.x), TO_PX_Y(lot->entrance.y),
+                pixels_per_unit * 0.8, &COLOR_ENTRANCE, &COLOR_BLACK, 2);
   }
 
   // Draw POI
   if (lot->POI.level == level) {
-    double cx = WORLD_TO_PIXEL_X(lot->POI.x);
-    double cy = WORLD_TO_PIXEL_Y(lot->POI.y);
-    draw_circle(buffer, img_width, img_height, cx, cy, pixels_per_unit * 0.6,
-                &COLOR_POI, &COLOR_BLACK, 2);
+    draw_circle(buffer, img_width, img_height,
+                TO_PX_X(lot->POI.x), TO_PX_Y(lot->POI.y),
+                pixels_per_unit * 0.6, &COLOR_POI, &COLOR_BLACK, 2);
   }
 
   // Draw ups
   for (int i = 0; i < lot->up_count; i++) {
     if (lot->ups[i].level == level) {
-      double cx = WORLD_TO_PIXEL_X(lot->ups[i].x);
-      double cy = WORLD_TO_PIXEL_Y(lot->ups[i].y);
-      draw_circle(buffer, img_width, img_height, cx, cy, pixels_per_unit * 0.5,
-                  &COLOR_UP, &COLOR_BLACK, 2);
+      draw_circle(buffer, img_width, img_height,
+                  TO_PX_X(lot->ups[i].x), TO_PX_Y(lot->ups[i].y),
+                  pixels_per_unit * 0.5, &COLOR_UP, &COLOR_BLACK, 2);
     }
   }
 
   // Draw downs
   for (int i = 0; i < lot->down_count; i++) {
     if (lot->downs[i].level == level) {
-      double cx = WORLD_TO_PIXEL_X(lot->downs[i].x);
-      double cy = WORLD_TO_PIXEL_Y(lot->downs[i].y);
-      draw_circle(buffer, img_width, img_height, cx, cy, pixels_per_unit * 0.5,
-                  &COLOR_DOWN, &COLOR_BLACK, 2);
+      draw_circle(buffer, img_width, img_height,
+                  TO_PX_X(lot->downs[i].x), TO_PX_Y(lot->downs[i].y),
+                  pixels_per_unit * 0.5, &COLOR_DOWN, &COLOR_BLACK, 2);
     }
   }
 
-  #undef WORLD_TO_PIXEL_X
-  #undef WORLD_TO_PIXEL_Y
+  #undef TO_PX_X
+  #undef TO_PX_Y
 
-  // Draw scale bar in bottom-left corner
   draw_scale_bar(buffer, img_width, img_height, pixels_per_unit, 15);
 
-  // Write PPM file
   FILE *fp = fopen(filename, "wb");
   if (!fp) {
     free(buffer);
@@ -654,7 +586,6 @@ int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_u
   }
 
   fprintf(fp, "P6\n%d %d\n255\n", img_width, img_height);
-
   for (int i = 0; i < img_width * img_height; i++) {
     fputc(buffer[i].r, fp);
     fputc(buffer[i].g, fp);
@@ -667,9 +598,7 @@ int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_u
 }
 
 int lot_to_ppm_all_levels(const Lot *lot, const char *base_filename, int pixels_per_unit) {
-  if (!lot || !base_filename) {
-    return -1;
-  }
+  if (!lot || !base_filename) return -1;
 
   char filename[256];
   for (int level = 0; level < lot->level_count; level++) {
