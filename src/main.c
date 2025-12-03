@@ -11,11 +11,16 @@ int main() {
   Lot* lot = create_lot(2, 6, 60, 1, 1);
   populate_lot(lot);
   //print_lot(lot);
-  char** parking_lots = populated_arrays(lot);
+  char** parking_lots = populated_arrays(lot, 3);
 
-  print_overview(lot, parking_lots[0], 0);
+  insert_parking_spot(lot, parking_lots, 0);
 
-  print_overview(lot, parking_lots[1], 1);
+  print_overview(lot, parking_lots, 0);
+
+  insert_parking_spot(lot, parking_lots, 1);
+
+  print_overview(lot, parking_lots, 1);
+
 
 
   overview_free(lot, parking_lots);
