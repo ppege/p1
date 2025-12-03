@@ -61,7 +61,7 @@ void readLotFromFile(char *filename, Lot *lot) {
   FILE *fptr = fopen(filename, "r");
 
   // Buffer to hold each line and counting variables
-  char buffer[67];
+  char buffer[420];
   int stage = 0;
   int SpaceCount = 0;
   int PathCount = 0;
