@@ -283,7 +283,7 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
 
           double edge_dist = point_to_rect_edge_distance(rect, sample);
 
-          // Check if inside 
+          // Check if sample point is inside rectangle
           int inside = 1;
           for (int i = 0; i < 4; i++) {
             Vector edge = subtract_vectors(rect->corner[(i + 1) % 4], rect->corner[i]);
