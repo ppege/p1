@@ -423,7 +423,7 @@ static void draw_text(Color *buffer, int img_width, int img_height,
 
 void draw_space_label(Color *buffer, int img_width, int img_height,
                       const Rectangle *pixel_rect, const char *name) {
-  if (! buffer || !pixel_rect || !name) return;
+  if (!buffer || !pixel_rect || !name) return;
 
   int max_chars = 4;
   int len = strlen(name);
