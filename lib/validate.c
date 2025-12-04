@@ -31,8 +31,7 @@ const char* validation_error_message(LotValidationError error) {
 ValidationResult validate_lot(const Lot *lot) {
   // Rule 0: Each path must have a non-zero length
   for (int i = 0; i < lot->path_count; i++) {
-    double path_length = sqrt(lot->paths[i].vector.x * lot->paths[i].vector.x + 
-                              lot->paths[i].vector.y * lot->paths[i].vector.y);
+    double path_length = sqrt(lot->paths[i].vector.x * lot->paths[i].vector.x + lot->paths[i].vector.y * lot->paths[i].vector.y);
     if (path_length < DBL_EPSILON) {
       return ERR(ZeroLengthPath);
     }

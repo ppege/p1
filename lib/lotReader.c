@@ -1,5 +1,4 @@
 #include "data.h"
-#include "lot.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,7 +48,6 @@ Path readPath(char *line) {
          "Level %d)\n",
          path.vector.x, path.vector.y, path.start_point.x, path.start_point.y,
          path.start_point.level);
-
   return path;
 };
 
@@ -73,7 +71,7 @@ void readLotFromFile(char *filename, Lot *lot) {
   FILE *fptr = fopen(filename, "r");
 
   // Buffer to hold each line and counting variables
-  char buffer[67];
+  char buffer[80];
   int stage = 0;
   int SpaceCount = 0;
   int PathCount = 0;

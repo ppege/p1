@@ -26,6 +26,38 @@ Vector rotate_vector(Vector v, double angle_radians) {
   };
 };
 
+double vector_length(Vector v) {
+  return sqrt(vector_dot_product(v, v));
+}
+
+Vector vector_scale(Vector v, double s) {
+  return (Vector){ v.x * s, v.y * s };
+}
+
+Vector vector_add(Vector a, Vector b) {
+  return (Vector){ a.x + b.x, a.y + b.y };
+}
+
+double point_to_segment_distance(Vector point, Vector seg_start, Vector seg_end) {
+  Vector seg = subtract_vectors(seg_end, seg_start);
+  double seg_length_sq = vector_dot_product(seg, seg);
+
+  if (seg_length_sq == 0.0) {
+    return vector_length(subtract_vectors(point, seg_start));
+  }
+
+  double t = vector_dot_product(subtract_vectors(point, seg_start), seg) / seg_length_sq;
+  if (t < 0.0) t = 0.0;
+  else if (t > 1.0) t = 1.0;
+
+  Vector closest = vector_add(seg_start, vector_scale(seg, t));
+  return vector_length(subtract_vectors(point, closest));
+}
+
+double cross_product_2d(Vector a, Vector b) {
+  return a.x * b.y - a.y * b.x;
+}
+
 double degrees_to_radians(double degrees) {
   return degrees * (M_PI / 180.0);
 }
