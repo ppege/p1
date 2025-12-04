@@ -330,7 +330,6 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
 // Text Rendering
 // ============================================================================
 
-// Add this static helper before draw_level_label
 
 static void draw_char(Color *buffer, int img_width, int img_height,
                       const int *bitmap, int char_width, int char_height,
