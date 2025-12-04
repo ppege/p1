@@ -58,5 +58,5 @@ typedef struct {
   Location POI;
 } Lot;
 
-Location get_endpoint(const Path *path);
-Rectangle get_space_rectangle(const Space *space);
+Location get_endpoint(const Path path);
+Rectangle get_space_rectangle(const Space space);

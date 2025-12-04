@@ -19,10 +19,15 @@ target_include_directories(PlateDB PUBLIC .)
 
 add_library(lotReader lotReader.c)
 target_include_directories(lotReader PUBLIC .)
+target_link_libraries(lotReader PUBLIC lot)
 
 add_library(image image.c)
 target_include_directories(image PUBLIC .)
 target_link_libraries(image PUBLIC data lot calculations)
+
+add_library(nav nav.c)
+target_include_directories(nav PUBLIC .)
+target_link_libraries(nav PUBLIC data calculations validate)
 
 add_library(Unity STATIC external/Unity/src/unity.c)
 target_include_directories(Unity PUBLIC external/Unity/src)

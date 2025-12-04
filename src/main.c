@@ -5,16 +5,15 @@
 #include "validate.h"
 
 int main() {
-  Lot *lot = create_lot(1, 1, 1, 1, 1);
-  char *LotFileName = "example.lot";
-  readLotFromFile(LotFileName, lot);
+  char *filename = "diagonal.lot";
+  Lot lot = lot_from_file(filename);
   ValidationResult result = validate_lot(lot);
 
   if (result.result == Err) {
     printf("Lot validation failed! %s\n", validation_error_message(result.error));
   }
 
-  lot_to_ppm_all_levels(lot, "parking", 10);
+  lot_to_ppm_all_levels(lot, "parking", 30);
 
   free_lot(lot);
   return 0;

@@ -1,9 +1,10 @@
 #include "data.h"
+#include "lot.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-Space readSpace(char *line) {
+static Space readSpace(char *line) {
   // Reading a space from a line
   // It consists of name, type, location(x,y,level), rotation
   char name[3];
@@ -29,7 +30,7 @@ Space readSpace(char *line) {
   return space;
 };
 
-Path readPath(char *line) {
+static Path readPath(char *line) {
   // Reading a path from a line
   // It consists of vector(x,y) and location(x,y,level)
   double vx, vy;
@@ -51,7 +52,7 @@ Path readPath(char *line) {
   return path;
 };
 
-Location readLocation(char *line) {
+static Location readLocation(char *line) {
   // Reading a location from a line
   double x, y;
   int level;
@@ -66,7 +67,74 @@ Location readLocation(char *line) {
   return loc;
 };
 
-void readLotFromFile(char *filename, Lot *lot) {
+int count_levels(Lot lot) {
+  // to find the level count we must find the number of unique levels in paths and spaces
+  int level_count = 0;
+  // this ensures we have space even if EVERY location in the lot is a unique level lmao
+  int *levels = malloc(sizeof(int) * (lot.space_count + lot.path_count + lot.up_count + lot.down_count));
+  for (int i = 0; i < lot.space_count; i++) {
+    int level = lot.spaces[i].location.level;
+    // check if level is already in levels
+    int found = 0;
+    for (int j = 0; j < level_count; j++) {
+      if (levels[j] == level) {
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      levels[level_count++] = level;
+    }
+  }
+  for (int i = 0; i < lot.path_count; i++) {
+    int level = lot.paths[i].start_point.level;
+    // check if level is already in levels
+    int found = 0;
+    for (int j = 0; j < level_count; j++) {
+      if (levels[j] == level) {
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      levels[level_count++] = level;
+    }
+  }
+  for (int i = 0; i < lot.up_count; i++) {
+    int level = lot.ups[i].level;
+    // check if level is already in levels
+    int found = 0;
+    for (int j = 0; j < level_count; j++) {
+      if (levels[j] == level) {
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      levels[level_count++] = level;
+    }
+  }
+  for (int i = 0; i < lot.down_count; i++) {
+    int level = lot.downs[i].level;
+    // check if level is already in levels
+    int found = 0;
+    for (int j = 0; j < level_count; j++) {
+      if (levels[j] == level) {
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      levels[level_count++] = level;
+    }
+  }
+  free(levels);
+  return level_count;
+}
+
+Lot lot_from_file(char *filename) {
+  // initialize a lot struct with 1 of everything
+  Lot lot = create_lot(1, 1, 1, 1, 1);
   // Opening the file for reading
   FILE *fptr = fopen(filename, "r");
 
@@ -124,20 +192,20 @@ void readLotFromFile(char *filename, Lot *lot) {
     if (stage == 1) {
       // Process space data
       Space space = readSpace(buffer);
-      lot->spaces[SpaceCount++] = space;
-      if (SpaceCount == lot->space_count) {
+      lot.spaces[SpaceCount++] = space;
+      if (SpaceCount == lot.space_count) {
         // Resize the spaces array if needed
-        lot->space_count += 25;
-        lot->spaces = realloc(lot->spaces, lot->space_count * sizeof(Space));
+        lot.space_count += 25;
+        lot.spaces = realloc(lot.spaces, lot.space_count * sizeof(Space));
       }
     } else if (stage == 2) {
       // Process path data
       Path path = readPath(buffer);
-      lot->paths[PathCount++] = path;
-      if (PathCount == lot->path_count) {
+      lot.paths[PathCount++] = path;
+      if (PathCount == lot.path_count) {
         // Resize the paths array if needed
-        lot->path_count += 25;
-        lot->paths = realloc(lot->paths, lot->path_count * sizeof(Path));
+        lot.path_count += 25;
+        lot.paths = realloc(lot.paths, lot.path_count * sizeof(Path));
       }
     } else if (stage > 2 && stage < 8) {
       // It has to be stage 3,4,5,6 or 7 since they are all just a location
@@ -145,25 +213,25 @@ void readLotFromFile(char *filename, Lot *lot) {
       // Process location data
       Location location = readLocation(buffer);
       if (stage == 4) {
-        lot->ups[UpCount++] = location;
-        if (UpCount == lot->up_count) {
+        lot.ups[UpCount++] = location;
+        if (UpCount == lot.up_count) {
           // Resize the ups array if needed
-          lot->up_count += 10;
-          lot->ups = realloc(lot->ups, lot->up_count * sizeof(Location));
+          lot.up_count += 10;
+          lot.ups = realloc(lot.ups, lot.up_count * sizeof(Location));
         }
       } else if (stage == 5) {
-        lot->downs[DownCount++] = location;
-        if (DownCount == lot->down_count) {
+        lot.downs[DownCount++] = location;
+        if (DownCount == lot.down_count) {
           // Resize the downs array if needed
-          lot->down_count += 10;
-          lot->downs = realloc(lot->downs, lot->down_count * sizeof(Location));
+          lot.down_count += 10;
+          lot.downs = realloc(lot.downs, lot.down_count * sizeof(Location));
         }
       } else if (stage == 6) {
         // POI
-        lot->POI = location;
+        lot.POI = location;
       } else if (stage == 7) {
         // Entrance
-        lot->entrance = location;
+        lot.entrance = location;
       }
     } else {
       // Unknown stage, handle error
@@ -174,20 +242,20 @@ void readLotFromFile(char *filename, Lot *lot) {
   }
 
   // Updating the counts in the lot
-  lot->space_count = SpaceCount;
-  lot->path_count = PathCount;
-  lot->up_count = UpCount;
-  lot->down_count = DownCount;
+  lot.space_count = SpaceCount;
+  lot.path_count = PathCount;
+  lot.up_count = UpCount;
+  lot.down_count = DownCount;
   // Resizing the arrays to fit the actual counts
-  lot->spaces = realloc(lot->spaces, lot->space_count * sizeof(Space));
-  lot->paths = realloc(lot->paths, lot->path_count * sizeof(Path));
-  lot->ups = realloc(lot->ups, lot->up_count * sizeof(Location));
-  lot->downs = realloc(lot->downs, lot->down_count * sizeof(Location));
+  lot.spaces = realloc(lot.spaces, lot.space_count * sizeof(Space));
+  lot.paths = realloc(lot.paths, lot.path_count * sizeof(Path));
+  lot.ups = realloc(lot.ups, lot.up_count * sizeof(Location));
+  lot.downs = realloc(lot.downs, lot.down_count * sizeof(Location));
 
-  // There is only one up per level and then the ground level
-  // Hence level count is up_count + 1
-  lot->level_count = lot->up_count + 1;
+  // we call this ridiculous helper function to count the unique levels in the lot
+  lot.level_count = count_levels(lot);
 
   // Closing file again
   fclose(fptr);
+  return lot;
 }

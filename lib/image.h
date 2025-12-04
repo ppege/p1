@@ -58,9 +58,9 @@ void draw_scale_bar(Color *buffer, int img_width, int img_height,
 /**
  * Write a Lot to a PPM file for a specific level.
  */
-int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_unit);
+int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_unit);
 
 /**
  * Write all levels of a Lot to separate PPM files. 
  */
-int lot_to_ppm_all_levels(const Lot *lot, const char *base_filename, int pixels_per_unit);
+int lot_to_ppm_all_levels(const Lot lot, const char *base_filename, int pixels_per_unit);

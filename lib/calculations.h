@@ -13,6 +13,4 @@ double point_to_segment_distance(Vector point, Vector seg_start, Vector seg_end)
 double cross_product_2d(Vector a, Vector b);
 double degrees_to_radians(double degrees);
 
-void project_onto_axis(Rectangle* rect, Vector axis, float* min, float* max);
-int projections_overlap(float min1, float max1, float min2, float max2);
-int separating_axis(Rectangle* rect1, Rectangle* rect2);
+int separating_axis(Rectangle rect1, Rectangle rect2);

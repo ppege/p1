@@ -13,7 +13,7 @@ void test_get_endpoint(void) {
     .vector = {3.0, 4.0},
     .start_point = {1.0, 2.0, 0}
   };
-  Location endpoint = get_endpoint(&path);
+  Location endpoint = get_endpoint(path);
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(4.0, endpoint.x, "get_endpoint should have found the correct endpoint x");
   TEST_ASSERT_EQUAL_FLOAT_MESSAGE(6.0, endpoint.y, "get_endpoint should have found the correct endpoint y");
   TEST_ASSERT_EQUAL_INT_MESSAGE(0, endpoint.level, "get_endpoint should have found the correct endpoint level");
@@ -27,7 +27,7 @@ void test_get_space_rectangle(void) {
     .name = "Test Space"
   };
 
-  Rectangle rect = get_space_rectangle(&test_space);
+  Rectangle rect = get_space_rectangle(test_space);
   Rectangle expected_rectangle = {
     .corner = {
       {10.00, 5.00},

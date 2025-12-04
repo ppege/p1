@@ -597,13 +597,13 @@ void draw_scale_bar(Color *buffer, int img_width, int img_height, int pixels_per
 // Lot Rendering
 // ============================================================================
 
-static void calculate_lot_bounds(const Lot *lot, int level, double *min_x, double *min_y, double *max_x, double *max_y) {
+static void calculate_lot_bounds(const Lot lot, int level, double *min_x, double *min_y, double *max_x, double *max_y) {
   *min_x = *min_y = 1e9;
   *max_x = *max_y = -1e9;
 
-  for (int i = 0; i < lot->space_count; i++) {
-    if (lot->spaces[i].location.level == level) {
-      Rectangle rect = get_space_rectangle(&lot->spaces[i]);
+  for (int i = 0; i < lot.space_count; i++) {
+    if (lot.spaces[i].location.level == level) {
+      Rectangle rect = get_space_rectangle(lot.spaces[i]);
       for (int j = 0; j < 4; j++) {
         if (rect.corner[j].x < *min_x) *min_x = rect.corner[j].x;
         if (rect.corner[j].x > *max_x) *max_x = rect.corner[j].x;
@@ -613,13 +613,13 @@ static void calculate_lot_bounds(const Lot *lot, int level, double *min_x, doubl
     }
   }
 
-  for (int i = 0; i < lot->path_count; i++) {
-    if (lot->paths[i].start_point.level == level) {
-      Location end = get_endpoint(&lot->paths[i]);
-      if (lot->paths[i].start_point.x < *min_x) *min_x = lot->paths[i].start_point.x;
-      if (lot->paths[i].start_point.x > *max_x) *max_x = lot->paths[i].start_point.x;
-      if (lot->paths[i].start_point.y < *min_y) *min_y = lot->paths[i].start_point.y;
-      if (lot->paths[i].start_point.y > *max_y) *max_y = lot->paths[i].start_point.y;
+  for (int i = 0; i < lot.path_count; i++) {
+    if (lot.paths[i].start_point.level == level) {
+      Location end = get_endpoint(lot.paths[i]);
+      if (lot.paths[i].start_point.x < *min_x) *min_x = lot.paths[i].start_point.x;
+      if (lot.paths[i].start_point.x > *max_x) *max_x = lot.paths[i].start_point.x;
+      if (lot.paths[i].start_point.y < *min_y) *min_y = lot.paths[i].start_point.y;
+      if (lot.paths[i].start_point.y > *max_y) *max_y = lot.paths[i].start_point.y;
       if (end.x < *min_x) *min_x = end.x;
       if (end.x > *max_x) *max_x = end.x;
       if (end.y < *min_y) *min_y = end.y;
@@ -627,35 +627,35 @@ static void calculate_lot_bounds(const Lot *lot, int level, double *min_x, doubl
     }
   }
 
-  if (lot->entrance.level == level) {
-    if (lot->entrance.x < *min_x) *min_x = lot->entrance.x;
-    if (lot->entrance.x > *max_x) *max_x = lot->entrance.x;
-    if (lot->entrance.y < *min_y) *min_y = lot->entrance.y;
-    if (lot->entrance.y > *max_y) *max_y = lot->entrance.y;
+  if (lot.entrance.level == level) {
+    if (lot.entrance.x < *min_x) *min_x = lot.entrance.x;
+    if (lot.entrance.x > *max_x) *max_x = lot.entrance.x;
+    if (lot.entrance.y < *min_y) *min_y = lot.entrance.y;
+    if (lot.entrance.y > *max_y) *max_y = lot.entrance.y;
   }
 
-  if (lot->POI.level == level) {
-    if (lot->POI.x < *min_x) *min_x = lot->POI.x;
-    if (lot->POI.x > *max_x) *max_x = lot->POI.x;
-    if (lot->POI.y < *min_y) *min_y = lot->POI.y;
-    if (lot->POI.y > *max_y) *max_y = lot->POI.y;
+  if (lot.POI.level == level) {
+    if (lot.POI.x < *min_x) *min_x = lot.POI.x;
+    if (lot.POI.x > *max_x) *max_x = lot.POI.x;
+    if (lot.POI.y < *min_y) *min_y = lot.POI.y;
+    if (lot.POI.y > *max_y) *max_y = lot.POI.y;
   }
 
-  for (int i = 0; i < lot->up_count; i++) {
-    if (lot->ups[i].level == level) {
-      if (lot->ups[i].x < *min_x) *min_x = lot->ups[i].x;
-      if (lot->ups[i].x > *max_x) *max_x = lot->ups[i].x;
-      if (lot->ups[i].y < *min_y) *min_y = lot->ups[i].y;
-      if (lot->ups[i].y > *max_y) *max_y = lot->ups[i].y;
+  for (int i = 0; i < lot.up_count; i++) {
+    if (lot.ups[i].level == level) {
+      if (lot.ups[i].x < *min_x) *min_x = lot.ups[i].x;
+      if (lot.ups[i].x > *max_x) *max_x = lot.ups[i].x;
+      if (lot.ups[i].y < *min_y) *min_y = lot.ups[i].y;
+      if (lot.ups[i].y > *max_y) *max_y = lot.ups[i].y;
     }
   }
 
-  for (int i = 0; i < lot->down_count; i++) {
-    if (lot->downs[i].level == level) {
-      if (lot->downs[i].x < *min_x) *min_x = lot->downs[i].x;
-      if (lot->downs[i].x > *max_x) *max_x = lot->downs[i].x;
-      if (lot->downs[i].y < *min_y) *min_y = lot->downs[i].y;
-      if (lot->downs[i].y > *max_y) *max_y = lot->downs[i].y;
+  for (int i = 0; i < lot.down_count; i++) {
+    if (lot.downs[i].level == level) {
+      if (lot.downs[i].x < *min_x) *min_x = lot.downs[i].x;
+      if (lot.downs[i].x > *max_x) *max_x = lot.downs[i].x;
+      if (lot.downs[i].y < *min_y) *min_y = lot.downs[i].y;
+      if (lot.downs[i].y > *max_y) *max_y = lot.downs[i].y;
     }
   }
 
@@ -665,17 +665,17 @@ static void calculate_lot_bounds(const Lot *lot, int level, double *min_x, doubl
   *max_y += 2.0;
 }
 
-static Rectangle world_to_pixel_rect(const Rectangle *world_rect, double pixels_per_unit, double min_x, double max_y) {
+static Rectangle world_to_pixel_rect(const Rectangle world_rect, double pixels_per_unit, double min_x, double max_y) {
   Rectangle pixel_rect;
   for (int i = 0; i < 4; i++) {
-    pixel_rect.corner[i].x = (world_rect->corner[i].x - min_x) * pixels_per_unit;
-    pixel_rect.corner[i].y = (max_y - world_rect->corner[i].y) * pixels_per_unit;
+    pixel_rect.corner[i].x = (world_rect.corner[i].x - min_x) * pixels_per_unit;
+    pixel_rect.corner[i].y = (max_y - world_rect.corner[i].y) * pixels_per_unit;
   }
   return pixel_rect;
 }
 
-int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_unit) {
-  if (!lot || !filename || pixels_per_unit <= 0) return -1;
+int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_unit) {
+  if (!filename || pixels_per_unit <= 0) return -1;
 
   double min_x, min_y, max_x, max_y;
   calculate_lot_bounds(lot, level, &min_x, &min_y, &max_x, &max_y);
@@ -696,15 +696,15 @@ int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_u
   #define TO_PX_Y(wy) ((max_y - (wy)) * pixels_per_unit)
 
   // Draw paths
-  for (int i = 0; i < lot->path_count; i++) {
-    if (lot->paths[i].start_point.level == level) {
-      Location end = get_endpoint(&lot->paths[i]);
+  for (int i = 0; i < lot.path_count; i++) {
+    if (lot.paths[i].start_point.level == level) {
+      Location end = get_endpoint(lot.paths[i]);
       draw_line(
         buffer,
         img_width,
         img_height,
-        TO_PX_X(lot->paths[i].start_point.x),
-        TO_PX_Y(lot->paths[i].start_point.y),
+        TO_PX_X(lot.paths[i].start_point.x),
+        TO_PX_Y(lot.paths[i].start_point.y),
         TO_PX_X(end.x),
         TO_PX_Y(end.y),
         COLOR_PATH,
@@ -714,44 +714,44 @@ int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_u
   }
 
   // Draw spaces
-  for (int i = 0; i < lot->space_count; i++) {
-    if (lot->spaces[i].location.level == level) {
-      Rectangle world_rect = get_space_rectangle(&lot->spaces[i]);
-      Rectangle pixel_rect = world_to_pixel_rect(&world_rect, pixels_per_unit, min_x, max_y);
-      Color fill = get_space_color(lot->spaces[i].type);
+  for (int i = 0; i < lot.space_count; i++) {
+    if (lot.spaces[i].location.level == level) {
+      Rectangle world_rect = get_space_rectangle(lot.spaces[i]);
+      Rectangle pixel_rect = world_to_pixel_rect(world_rect, pixels_per_unit, min_x, max_y);
+      Color fill = get_space_color(lot.spaces[i].type);
       draw_rectangle(buffer, img_width, img_height, &pixel_rect, &fill, &COLOR_BLACK, 2);
-      draw_space_label(buffer, img_width, img_height, &pixel_rect, lot->spaces[i].name);
+      draw_space_label(buffer, img_width, img_height, &pixel_rect, lot.spaces[i].name);
     }
   }
 
   // Draw entrance
-  if (lot->entrance.level == level) {
+  if (lot.entrance.level == level) {
     draw_circle(buffer, img_width, img_height,
-                TO_PX_X(lot->entrance.x), TO_PX_Y(lot->entrance.y),
+                TO_PX_X(lot.entrance.x), TO_PX_Y(lot.entrance.y),
                 pixels_per_unit * 0.8, &COLOR_ENTRANCE, &COLOR_BLACK, 2);
   }
 
   // Draw POI
-  if (lot->POI.level == level) {
+  if (lot.POI.level == level) {
     draw_circle(buffer, img_width, img_height,
-                TO_PX_X(lot->POI.x), TO_PX_Y(lot->POI.y),
+                TO_PX_X(lot.POI.x), TO_PX_Y(lot.POI.y),
                 pixels_per_unit * 0.6, &COLOR_POI, &COLOR_BLACK, 2);
   }
 
   // Draw ups
-  for (int i = 0; i < lot->up_count; i++) {
-    if (lot->ups[i].level == level) {
+  for (int i = 0; i < lot.up_count; i++) {
+    if (lot.ups[i].level == level) {
       draw_circle(buffer, img_width, img_height,
-                  TO_PX_X(lot->ups[i].x), TO_PX_Y(lot->ups[i].y),
+                  TO_PX_X(lot.ups[i].x), TO_PX_Y(lot.ups[i].y),
                   pixels_per_unit * 0.5, &COLOR_UP, &COLOR_BLACK, 2);
     }
   }
 
   // Draw downs
-  for (int i = 0; i < lot->down_count; i++) {
-    if (lot->downs[i].level == level) {
+  for (int i = 0; i < lot.down_count; i++) {
+    if (lot.downs[i].level == level) {
       draw_circle(buffer, img_width, img_height,
-                  TO_PX_X(lot->downs[i].x), TO_PX_Y(lot->downs[i].y),
+                  TO_PX_X(lot.downs[i].x), TO_PX_Y(lot.downs[i].y),
                   pixels_per_unit * 0.5, &COLOR_DOWN, &COLOR_BLACK, 2);
     }
   }
@@ -780,11 +780,11 @@ int lot_to_ppm(const Lot *lot, const char *filename, int level, int pixels_per_u
   return 0;
 }
 
-int lot_to_ppm_all_levels(const Lot *lot, const char *base_filename, int pixels_per_unit) {
-  if (!lot || !base_filename) return -1;
+int lot_to_ppm_all_levels(const Lot lot, const char *base_filename, int pixels_per_unit) {
+  if (!base_filename) return -1;
 
   char filename[256];
-  for (int level = 0; level < lot->level_count; level++) {
+  for (int level = 0; level < lot.level_count; level++) {
     snprintf(filename, sizeof(filename), "%s_level%d.ppm", base_filename, level);
     if (lot_to_ppm(lot, filename, level, pixels_per_unit) != 0) {
       return -1;
