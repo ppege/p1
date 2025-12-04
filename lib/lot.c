@@ -2,6 +2,7 @@
 #include "data.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Function to create a Lot
 Lot create_lot(int level_count, int path_count, int space_count, int up_count, int down_count) {
@@ -56,5 +57,14 @@ void print_lot(const Lot lot) {
     printf("  Down %d: (%.2f, %.2f, Level %d)\n",
            i, lot.downs[i].x, lot.downs[i].y, lot.downs[i].level);
   }
+}
+
+Space* space_by_name(const Lot lot, const char* name) {
+  for (int i = 0; i < lot.space_count; i++) {
+    if (strcmp(lot.spaces[i].name, name) == 0) {
+      return &lot.spaces[i];
+    }
+  }
+  return NULL;
 }
 

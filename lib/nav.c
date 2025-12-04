@@ -38,12 +38,11 @@ Location closest_point_on_path(const Path path, const Space space) {
   return (Location){closest.x, closest.y, path.start_point.level};
 }
 
-Path* availabe_paths(const Lot lot, const Space space) {
+Path* available_paths(const Lot lot, const Space space, double max_distance, int* out_count) {
   Path* good_paths = malloc(sizeof(Path) * lot.path_count);
   int count = 0;
 
   // use code from validation rule 4 to see which paths can access this space
-  double max_distance = 6.0;
   Rectangle space_rect = get_space_rectangle(space);
   for (int i = 0; i < lot.path_count; i++) {
     if (space.location.level != lot.paths[i].start_point.level) { continue; }
@@ -53,5 +52,6 @@ Path* availabe_paths(const Lot lot, const Space space) {
       count++;
     }
   }
+  *out_count = count;
   return realloc(good_paths, sizeof(Path) * count);
 }

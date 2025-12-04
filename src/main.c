@@ -5,8 +5,7 @@
 #include "validate.h"
 
 int main() {
-  char *filename = "diagonal.lot";
-  Lot lot = lot_from_file(filename);
+  Lot lot = lot_from_file("test/test.lot");
   ValidationResult result = validate_lot(lot);
 
   if (result.result == Err) {
