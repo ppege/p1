@@ -1,0 +1,67 @@
+# ================================================
+# Diagonal Parking Lot - 2-Level Garage
+# ================================================
+
+[POI]
+x=0.0 y=0.0 level=0
+
+[Entrance]
+x=0.0 y=0.0 level=0
+
+[Spaces]
+# === LEVEL 0 ===
+name=A1 type=0 location(x=-20.0 y=5.0 level=0) rotation=45
+name=A2 type=0 location(x=-16.0 y=5.0 level=0) rotation=45
+name=A3 type=0 location(x=-12.0 y=5.0 level=0) rotation=45
+name=A4 type=0 location(x=-8.0 y=5.0 level=0) rotation=45
+name=A5 type=0 location(x=8.0 y=5.0 level=0) rotation=45
+name=A6 type=0 location(x=12.0 y=5.0 level=0) rotation=45
+name=A7 type=0 location(x=16.0 y=5.0 level=0) rotation=45
+name=A8 type=0 location(x=20.0 y=5.0 level=0) rotation=45
+
+name=B1 type=0 location(x=-20.0 y=21.0 level=0) rotation=135
+name=B2 type=0 location(x=-16.0 y=21.0 level=0) rotation=135
+name=B3 type=0 location(x=-12.0 y=21.0 level=0) rotation=135
+name=B4 type=0 location(x=-8.0 y=21.0 level=0) rotation=135
+name=B5 type=0 location(x=8.0 y=21.0 level=0) rotation=135
+name=B6 type=0 location(x=12.0 y=21.0 level=0) rotation=135
+name=B7 type=0 location(x=16.0 y=21.0 level=0) rotation=135
+name=B8 type=0 location(x=20.0 y=21.0 level=0) rotation=135
+
+# === LEVEL 1 ===
+name=C1 type=0 location(x=-20.0 y=5.0 level=1) rotation=45
+name=C2 type=0 location(x=-16.0 y=5.0 level=1) rotation=45
+name=C3 type=0 location(x=-12.0 y=5.0 level=1) rotation=45
+name=C4 type=0 location(x=-8.0 y=5.0 level=1) rotation=45
+name=C5 type=0 location(x=8.0 y=5.0 level=1) rotation=45
+name=C6 type=0 location(x=12.0 y=5.0 level=1) rotation=45
+name=C7 type=0 location(x=16.0 y=5.0 level=1) rotation=45
+name=C8 type=0 location(x=20.0 y=5.0 level=1) rotation=45
+
+name=D1 type=0 location(x=-20.0 y=21.0 level=1) rotation=135
+name=D2 type=0 location(x=-16.0 y=21.0 level=1) rotation=135
+name=D3 type=0 location(x=-12.0 y=21.0 level=1) rotation=135
+name=D4 type=0 location(x=-8.0 y=21.0 level=1) rotation=135
+name=D5 type=0 location(x=8.0 y=21.0 level=1) rotation=135
+name=D6 type=0 location(x=12.0 y=21.0 level=1) rotation=135
+name=D7 type=0 location(x=16.0 y=21.0 level=1) rotation=135
+name=D8 type=0 location(x=20.0 y=21.0 level=1) rotation=135
+
+[Paths]
+vec(x=0.0 y=13.0) location(x=0.0 y=0.0 level=0)
+vec(x=-23.0 y=0.0) location(x=0.0 y=13.0 level=0)
+vec(x=23.0 y=0.0) location(x=0.0 y=13.0 level=0)
+vec(x=0.0 y=13.0) location(x=0.0 y=13.0 level=0)
+
+vec(x=0.0 y=-13.0) location(x=0.0 y=26.0 level=1)
+vec(x=-23.0 y=0.0) location(x=0.0 y=13.0 level=1)
+vec(x=23.0 y=0.0) location(x=0.0 y=13.0 level=1)
+
+[Ups]
+x=0.0 y=26.0 level=0
+
+[Downs]
+x=0.0 y=26.0 level=1
+
+[Locations]
+x=0.0 y=13.0 level=0

@@ -1,24 +1,19 @@
-# Welcome to my parking lot file
-# Here we have some shit
-# Please ignore
-
 [POI]
-x=2.5 y=1.25 level=0
+x=10 y=0 level=0
 
 [Entrance]
-x=2.5 y=1.25 level=0
+x=10 y=0 level=0
 
 [Spaces]
-# This is a comment
-# Another comment line
-name=A1 type=1 location(x=2.5 y=1.25 level=1) rotation=180
-name=B2 type=1 location(x=5.0 y=2.5 level=1) rotation=90
-
-
+name=A1 type=0 location(x=12 y=5 level=0) rotation=270
+name=A2 type=0 location(x=12 y=7.5 level=0) rotation=270
+name=B1 type=0 location(x=8 y=2.5 level=0) rotation=90
+name=B2 type=0 location(x=8 y=5 level=0) rotation=90
 
 [Paths]
-vec(x=2.0 y=0.0) start_point(x=2.5 y=1.25 level=0)
+vec(x=0 y=10) location(x=10 y=0 level=0)
 
+<<<<<<< HEAD
 [Ups]
 x=2.5 y=1.25 level=0
 x=2.5 y=1.25 level=0

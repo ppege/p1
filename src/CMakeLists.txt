@@ -1,2 +1,2 @@
 add_executable(main main.c)
-target_link_libraries(main data lot validate PlateDB lotReader)
+target_link_libraries(main image lotReader validate)
