@@ -28,6 +28,7 @@ typedef struct {
   Location location;
   double rotation; // in degrees
   char *name;
+  int occupied; // -1 for unoccupied, else CarIndex
 } Space;
 
 typedef struct {
@@ -58,15 +59,5 @@ typedef struct {
   Location POI;
 } Lot;
 
-typedef struct {
-  int CarIndex;
-  char *Space_Id;
-} Occupancy;
-
 Location get_endpoint(const Path *path);
-int GetOccupancyIndexFromSpace(Occupancy *occupancies, int occupancy_count,
-                               const char *Space_Id);
-int GetOccupancyIndexFromCar(Occupancy *occupancies, int occupancy_count,
-                             int CarIndex);
-int CheckInOrOut(Occupancy *occupancies, int occupancy_count, int CarIndex);
 Rectangle get_space_rectangle(const Space *space);
