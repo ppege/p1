@@ -22,10 +22,10 @@ static Space readSpace(char *line) {
                  .rotation = rotation,
                  .name = strdup(name)};
 
-  printf("Created space: Name=%s, Type=%d, Location=(%.2f, %.2f %d),  "
-         "Rotation=%.2f\n",
-         space.name, space.type, space.location.x, space.location.y,
-         space.location.level, space.rotation);
+  // printf("Created space: Name=%s, Type=%d, Location=(%.2f, %.2f %d),  "
+  //        "Rotation=%.2f\n",
+  //        space.name, space.type, space.location.x, space.location.y,
+  //        space.location.level, space.rotation);
 
   return space;
 };
@@ -45,10 +45,10 @@ static Path readPath(char *line) {
   Path path = {.vector = {vx, vy},
                .start_point = {location_x, location_y, level}};
 
-  printf("Created path: Vector=(%.2f, %.2f), location=(%.2f, %.2f, "
-         "Level %d)\n",
-         path.vector.x, path.vector.y, path.start_point.x, path.start_point.y,
-         path.start_point.level);
+  // printf("Created path: Vector=(%.2f, %.2f), location=(%.2f, %.2f, "
+  //        "Level %d)\n",
+  //        path.vector.x, path.vector.y, path.start_point.x, path.start_point.y,
+  //        path.start_point.level);
   return path;
 };
 
@@ -63,74 +63,9 @@ static Location readLocation(char *line) {
   // Updating the values
   Location loc = {x, y, level};
 
-  printf("Created location: (%.2f, %.2f, Level %d)\n", loc.x, loc.y, loc.level);
+  // printf("Created location: (%.2f, %.2f, Level %d)\n", loc.x, loc.y, loc.level);
   return loc;
 };
-
-int count_levels(Lot lot) {
-  // to find the level count we must find the number of unique levels in paths and spaces
-  int level_count = 0;
-  // this ensures we have space even if EVERY location in the lot is a unique level lmao
-  int *levels = malloc(sizeof(int) * (lot.space_count + lot.path_count + lot.up_count + lot.down_count));
-  for (int i = 0; i < lot.space_count; i++) {
-    int level = lot.spaces[i].location.level;
-    // check if level is already in levels
-    int found = 0;
-    for (int j = 0; j < level_count; j++) {
-      if (levels[j] == level) {
-        found = 1;
-        break;
-      }
-    }
-    if (!found) {
-      levels[level_count++] = level;
-    }
-  }
-  for (int i = 0; i < lot.path_count; i++) {
-    int level = lot.paths[i].start_point.level;
-    // check if level is already in levels
-    int found = 0;
-    for (int j = 0; j < level_count; j++) {
-      if (levels[j] == level) {
-        found = 1;
-        break;
-      }
-    }
-    if (!found) {
-      levels[level_count++] = level;
-    }
-  }
-  for (int i = 0; i < lot.up_count; i++) {
-    int level = lot.ups[i].level;
-    // check if level is already in levels
-    int found = 0;
-    for (int j = 0; j < level_count; j++) {
-      if (levels[j] == level) {
-        found = 1;
-        break;
-      }
-    }
-    if (!found) {
-      levels[level_count++] = level;
-    }
-  }
-  for (int i = 0; i < lot.down_count; i++) {
-    int level = lot.downs[i].level;
-    // check if level is already in levels
-    int found = 0;
-    for (int j = 0; j < level_count; j++) {
-      if (levels[j] == level) {
-        found = 1;
-        break;
-      }
-    }
-    if (!found) {
-      levels[level_count++] = level;
-    }
-  }
-  free(levels);
-  return level_count;
-}
 
 Lot lot_from_file(char *filename) {
   // initialize a lot struct with 1 of everything

@@ -68,3 +68,67 @@ Space* space_by_name(const Lot lot, const char* name) {
   return NULL;
 }
 
+int count_levels(const Lot lot) {
+  // to find the level count we must find the number of unique levels in paths and spaces
+  int level_count = 0;
+  // this ensures we have space even if EVERY location in the lot is a unique level lmao
+  int *levels = malloc(sizeof(int) * (lot.space_count + lot.path_count + lot.up_count + lot.down_count));
+  for (int i = 0; i < lot.space_count; i++) {
+    int level = lot.spaces[i].location.level;
+    // check if level is already in levels
+    int found = 0;
+    for (int j = 0; j < level_count; j++) {
+      if (levels[j] == level) {
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      levels[level_count++] = level;
+    }
+  }
+  for (int i = 0; i < lot.path_count; i++) {
+    int level = lot.paths[i].start_point.level;
+    // check if level is already in levels
+    int found = 0;
+    for (int j = 0; j < level_count; j++) {
+      if (levels[j] == level) {
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      levels[level_count++] = level;
+    }
+  }
+  for (int i = 0; i < lot.up_count; i++) {
+    int level = lot.ups[i].level;
+    // check if level is already in levels
+    int found = 0;
+    for (int j = 0; j < level_count; j++) {
+      if (levels[j] == level) {
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      levels[level_count++] = level;
+    }
+  }
+  for (int i = 0; i < lot.down_count; i++) {
+    int level = lot.downs[i].level;
+    // check if level is already in levels
+    int found = 0;
+    for (int j = 0; j < level_count; j++) {
+      if (levels[j] == level) {
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      levels[level_count++] = level;
+    }
+  }
+  free(levels);
+  return level_count;
+}
