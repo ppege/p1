@@ -37,4 +37,7 @@ Rectangle get_space_rectangle(const Space space) {
   return rect; // we now have the absolute coordinates of every corner of the space given.
 }
 
+int compare_locations(Location loc1, Location loc2) {
+    return (loc1.x == loc2.x) && (loc1.y == loc2.y) && (loc1.level == loc2.level);
+}
 

@@ -44,6 +44,9 @@ typedef struct {
   Location start_point;
 } Path;
 
+static const double path_clearance = 1.5;
+static const double path_accessibility = 6.0;
+
 typedef struct {
   int level_count;
   Path* paths;
@@ -60,3 +63,4 @@ typedef struct {
 
 Location get_endpoint(const Path path);
 Rectangle get_space_rectangle(const Space space);
+int compare_locations(Location loc1, Location loc2);

@@ -12,7 +12,9 @@ int main() {
     printf("Lot validation failed! %s\n", validation_error_message(result.error));
   }
 
-  lot_to_ppm_all_levels(lot, "parking", 30);
+  int standard_size = 30;
+
+  lot_to_ppm_all_levels(lot, "parking", standard_size);
 
   free_lot(lot);
   return 0;

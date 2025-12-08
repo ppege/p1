@@ -22,13 +22,13 @@ static const Color COLOR_DOWN       = {139, 69, 19};    // Brown
 static const Color COLOR_BLACK      = {0, 0, 0};        // Black
 
 void draw_level_label(Color *buffer, int img_width, int img_height, int level, int margin);
-void draw_space_label(Color *buffer, int img_width, int img_height, const Rectangle *pixel_rect, const char *name);
+void draw_space_label(Color *buffer, int img_width, int img_height, const Rectangle pixel_rect, const char *name);
 
 /**
  * Draw a rectangle with outline and fill using Wu's anti-aliasing algorithm. 
  */
 void draw_rectangle(Color *buffer, int img_width, int img_height,
-                    const Rectangle *rect,
+                    const Rectangle rect,
                     const Color *fill_color,
                     const Color *outline_color,
                     int outline_thickness);

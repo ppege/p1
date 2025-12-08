@@ -7,8 +7,6 @@
 #include "data.h"
 #include "calculations.h"
 
-#define PATH_CLEARANCE 1.5
-#define PATH_ACCESSIBILITY 6.0
 #define OK (ValidationResult){ Ok, NoError }
 #define ERR(e) (ValidationResult){ Err, e }
 
@@ -24,6 +22,7 @@ const char* validation_error_message(LotValidationError error) {
     case DuplicateSpaceNames:      return "Duplicate space names found";
     case IncorrectUpDownCount:     return "Incorrect number of ups/downs for level count";
     case LevelsMissingUpsOrDowns:  return "Some levels are missing required ups or downs";
+    case SpaceNameTooLong:         return "A space name exceeds the maximum length of 10 characters";
     default:                       return "Unknown error";
   }
 }
@@ -44,10 +43,10 @@ ValidationResult validate_lot(const Lot lot) {
   if (spaces_overlap(lot)) return ERR(SpacesOverlap);
   
   // Rule 3: No spaces encroach within PATH_CLEARANCE of path centerline
-  if (spaces_encroach_path(lot, PATH_CLEARANCE)) return ERR(SpacesEncroachPath);
+  if (spaces_encroach_path(lot, path_clearance)) return ERR(SpacesEncroachPath);
   
   // Rule 4: Spaces must be within PATH_ACCESSIBILITY of a path
-  if (!spaces_accessible(lot, PATH_ACCESSIBILITY)) return ERR(SpacesInaccessible);
+  if (!spaces_accessible(lot, path_accessibility)) return ERR(SpacesInaccessible);
   
   // Rule 5: Must have valid entrance and POI
   if (!has_valid_entrance_and_poi(lot)) return ERR(InvalidEntranceOrPOI);
@@ -60,6 +59,13 @@ ValidationResult validate_lot(const Lot lot) {
   
   // Rule 8: Each level must have appropriate ups and downs
   if (!levels_have_ups_and_downs(lot)) return ERR(LevelsMissingUpsOrDowns);
+
+  // Rule 9: Space name length must not exceed 10 characters
+  for (int i = 0; i < lot.space_count; i++) {
+    if (strlen(lot.spaces[i].name) > 10) {
+      return ERR(SpaceNameTooLong);
+    }
+  }
   
   return OK;
 }
@@ -116,9 +122,6 @@ Location* get_all_endpoints(Path* paths, int path_count) {
   return endpoints;
 }
 
-int compare_locations(Location loc1, Location loc2) {
-    return (loc1.x == loc2.x) && (loc1.y == loc2.y) && (loc1.level == loc2.level);
-}
 
 int spaces_overlap(const Lot lot) {
   // using get_space_rectangle we get the rectangles of each space

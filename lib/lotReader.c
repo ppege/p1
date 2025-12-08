@@ -7,12 +7,12 @@
 static Space readSpace(char *line) {
   // Reading a space from a line
   // It consists of name, type, location(x,y,level), rotation
-  char name[3];
+  char name[11];
   double x, y, rotation;
   int level, itype;
 
   // Getting info from the line
-  sscanf(line, "name=%s type=%d location(x=%lf y=%lf level=%d) rotation=%lf",
+  sscanf(line, "name=%10s type=%d location(x=%lf y=%lf level=%d) rotation=%lf",
          name, &itype, &x, &y, &level, &rotation);
 
   // Updating the values
