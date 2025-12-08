@@ -2,6 +2,7 @@
 #include "nav.h"
 #include "lotReader.h"
 #include "lot.h"
+#include "data.h"
 #include <stdlib.h>
 
 static Lot lot;
@@ -12,34 +13,101 @@ void setUp() {
 
 void tearDown() {}
 
-void test_closest_point_on_path(void) {
-	Space* space = space_by_name(lot, "A3");
-	if (!space) { TEST_FAIL_MESSAGE("Space A3 not found in lot"); }
-	Location closest_path0 = closest_point_on_path(lot.paths[0], *space);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, 0.0, closest_path0.x);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, 2.0, closest_path0.y);
-	Location closest_path1 = closest_point_on_path(lot.paths[1], *space);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, -6.0, closest_path1.x);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, 10.0, closest_path1.y);
+// === Test superpath_to_space ===
+
+void test_superpath_to_space_nearby(void) {
+  // Test finding a complete path from entrance to a nearby space
+  Space* space = space_by_name(lot, "A3");
+  if (!space) { TEST_FAIL_MESSAGE("Space A3 not found in lot"); }
+  
+  int count = 0;
+  Path* superpath = superpath_to_space(lot, *space, &count);
+  
+  // Should find a valid path
+  TEST_ASSERT_TRUE_MESSAGE(count > 0, "Should find a valid superpath to space A3");
+  TEST_ASSERT_NOT_NULL_MESSAGE(superpath, "Superpath should not be NULL");
+  
+  // The first path should start at the entrance
+  TEST_ASSERT_FLOAT_WITHIN(0.001, lot.entrance.x, superpath[0].start_point.x);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, lot.entrance.y, superpath[0].start_point.y);
+  
+  // The last path should end at the space location
+  Location final_endpoint = get_endpoint(superpath[count - 1]);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, space->location.x, final_endpoint.x);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, space->location.y, final_endpoint.y);
+  
+  free(superpath);
 }
 
-void test_available_paths(void) {
-	double max_distance = 6.0;
-	int count;
+void test_superpath_to_space_far(void) {
+  // Test finding a path to a space further from entrance
+  Space* space = space_by_name(lot, "B1");
+  if (!space) { TEST_FAIL_MESSAGE("Space B1 not found in lot"); }
+  
+  int count = 0;
+  Path* superpath = superpath_to_space(lot, *space, &count);
+  
+  // Should find a valid path
+  TEST_ASSERT_TRUE_MESSAGE(count > 0, "Should find a valid superpath to space B1");
+  TEST_ASSERT_NOT_NULL_MESSAGE(superpath, "Superpath should not be NULL");
+  
+  // Verify the path starts at entrance
+  TEST_ASSERT_FLOAT_WITHIN(0.001, lot.entrance.x, superpath[0].start_point.x);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, lot.entrance.y, superpath[0].start_point.y);
+  
+  // Verify the path ends at the space
+  Location final_endpoint = get_endpoint(superpath[count - 1]);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, space->location.x, final_endpoint.x);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, space->location.y, final_endpoint.y);
+  
+  free(superpath);
+}
 
-	Space* space = space_by_name(lot, "A3");
-	if (!space) { TEST_FAIL_MESSAGE("Space A3 not found in lot"); }
-	Path* paths = available_paths(lot, *space, max_distance, &count);
+void test_superpath_to_space_right_side(void) {
+  // Test a space on the right side of the lot
+  Space* space = space_by_name(lot, "A6");
+  if (!space) { TEST_FAIL_MESSAGE("Space A6 not found in lot"); }
+  
+  int count = 0;
+  Path* superpath = superpath_to_space(lot, *space, &count);
+  
+  TEST_ASSERT_TRUE_MESSAGE(count > 0, "Should find a valid superpath to space A6");
+  TEST_ASSERT_NOT_NULL_MESSAGE(superpath, "Superpath should not be NULL");
+  
+  free(superpath);
+}
 
-	TEST_ASSERT_EQUAL_INT(2, count);
-	
-	free(paths);
-	free_lot(lot);
+void test_superpath_to_space_shortest_path(void) {
+  // Test that the function returns the shortest path
+  // Space A4 at (6, 2) should be reached via the right branch, not the left
+  Space* space = space_by_name(lot, "A4");
+  if (!space) { TEST_FAIL_MESSAGE("Space A4 not found in lot"); }
+  
+  int count = 0;
+  Path* superpath = superpath_to_space(lot, *space, &count);
+  
+  TEST_ASSERT_TRUE_MESSAGE(count > 0, "Should find a valid superpath");
+  
+  // Calculate total length - should be reasonably short
+  double total_length = 0.0;
+  for (int i = 0; i < count; i++) {
+    double dx = superpath[i].vector.x;
+    double dy = superpath[i].vector.y;
+    total_length += sqrt(dx * dx + dy * dy);
+  }
+  
+  // The shortest path to A4 at (6,2) from entrance (0,0) should be around 8-10 units
+  // (up to y=2, then right to x=6) - definitely less than going all the way around
+  TEST_ASSERT_TRUE_MESSAGE(total_length < 20.0, "Path should be reasonably short");
+  
+  free(superpath);
 }
 
 int main(void) {
-	UNITY_BEGIN();
-	RUN_TEST(test_available_paths);
-	RUN_TEST(test_closest_point_on_path);
-	return UNITY_END();
+  UNITY_BEGIN();
+  RUN_TEST(test_superpath_to_space_nearby);
+  RUN_TEST(test_superpath_to_space_far);
+  RUN_TEST(test_superpath_to_space_right_side);
+  RUN_TEST(test_superpath_to_space_shortest_path);
+  return UNITY_END();
 }

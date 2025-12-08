@@ -4,7 +4,7 @@
 #include "validate.h"
 #include "data.h"
 
-Location closest_point_on_path(const Path path, const Space space) {
+static Location closest_point_on_path(const Path path, const Space space) {
   // Get the endpoint of the path segment
   Location endpoint = get_endpoint(path);
   
@@ -38,7 +38,7 @@ Location closest_point_on_path(const Path path, const Space space) {
   return (Location){closest.x, closest.y, path.start_point.level};
 }
 
-Path get_subpath(const Path path, const Location endpoint) {
+static Path get_subpath(const Path path, const Location endpoint) {
   if (endpoint.level != path.start_point.level) {
     return path; // must be same level
   }
@@ -53,7 +53,7 @@ Path get_subpath(const Path path, const Location endpoint) {
   };
 }
 
-Path get_turnpath(const Location subpath_endpoint, const Space destination_space) {
+static Path get_turnpath(const Location subpath_endpoint, const Space destination_space) {
   if (subpath_endpoint.level != destination_space.location.level) {
     return (Path){
       .start_point = subpath_endpoint,
@@ -72,7 +72,7 @@ Path get_turnpath(const Location subpath_endpoint, const Space destination_space
   };
 }
 
-Path* available_paths(const Lot lot, const Space space, double max_distance, int* out_count) {
+static Path* available_paths(const Lot lot, const Space space, double max_distance, int* out_count) {
   Path* good_paths = malloc(sizeof(Path) * lot.path_count);
   int count = 0;
 
@@ -221,4 +221,5 @@ Path* superpath_to_space(const Lot lot, const Space space, int* out_count) {
     free(superpath); // clean up the superpath from follow_to_entrance
   }
   free(available);
+  return best_superpath;
 }
