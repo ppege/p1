@@ -1,5 +1,5 @@
 # ================================================
-# Four Story Garage - 4-Level Parking Structure
+# Four Story Garage - 4-Level Realistic Parking Structure
 # ================================================
 
 [POI]
@@ -9,323 +9,331 @@ x=0.0 y=0.0 level=0
 x=0.0 y=0.0 level=0
 
 [Spaces]
-# === LEVEL 0 ===
-name=A1 type=0 location(x=-68.0 y=5.0 level=0) rotation=45
-name=A2 type=0 location(x=-64.0 y=5.0 level=0) rotation=45
-name=A3 type=0 location(x=-60.0 y=5.0 level=0) rotation=45
-name=A4 type=0 location(x=-56.0 y=5.0 level=0) rotation=45
-name=A5 type=0 location(x=-52.0 y=5.0 level=0) rotation=45
-name=A6 type=0 location(x=-48.0 y=5.0 level=0) rotation=45
-name=A7 type=0 location(x=-44.0 y=5.0 level=0) rotation=45
-name=A8 type=0 location(x=-40.0 y=5.0 level=0) rotation=45
-name=A9 type=0 location(x=-36.0 y=5.0 level=0) rotation=45
-name=A10 type=0 location(x=-32.0 y=5.0 level=0) rotation=45
-name=A11 type=0 location(x=-28.0 y=5.0 level=0) rotation=45
-name=A12 type=0 location(x=-24.0 y=5.0 level=0) rotation=45
-name=A13 type=0 location(x=-20.0 y=5.0 level=0) rotation=45
-name=A14 type=0 location(x=-16.0 y=5.0 level=0) rotation=45
-name=A15 type=0 location(x=-12.0 y=5.0 level=0) rotation=45
-name=A16 type=0 location(x=-8.0 y=5.0 level=0) rotation=45
-name=A17 type=0 location(x=-4.0 y=5.0 level=0) rotation=45
-name=A18 type=0 location(x=4.0 y=5.0 level=0) rotation=45
-name=A19 type=0 location(x=8.0 y=5.0 level=0) rotation=45
-name=A20 type=0 location(x=12.0 y=5.0 level=0) rotation=45
-name=A21 type=0 location(x=16.0 y=5.0 level=0) rotation=45
-name=A22 type=0 location(x=20.0 y=5.0 level=0) rotation=45
-name=A23 type=0 location(x=24.0 y=5.0 level=0) rotation=45
-name=A24 type=0 location(x=28.0 y=5.0 level=0) rotation=45
-name=A25 type=0 location(x=32.0 y=5.0 level=0) rotation=45
-name=A26 type=0 location(x=36.0 y=5.0 level=0) rotation=45
-name=A27 type=0 location(x=40.0 y=5.0 level=0) rotation=45
-name=A28 type=0 location(x=44.0 y=5.0 level=0) rotation=45
-name=A29 type=0 location(x=48.0 y=5.0 level=0) rotation=45
-name=A30 type=0 location(x=52.0 y=5.0 level=0) rotation=45
-name=A31 type=0 location(x=56.0 y=5.0 level=0) rotation=45
-name=A32 type=0 location(x=60.0 y=5.0 level=0) rotation=45
-name=A33 type=0 location(x=64.0 y=5.0 level=0) rotation=45
-name=A34 type=0 location(x=68.0 y=5.0 level=0) rotation=45
+# === LEVEL 0 - 68 spaces ===
+# Row A - perpendicular (17 spaces)
+name=A1 type=0 location(x=-68.0 y=3.0 level=0) rotation=0
+name=A2 type=0 location(x=-64.0 y=3.0 level=0) rotation=0
+name=A3 type=0 location(x=-60.0 y=3.0 level=0) rotation=0
+name=A4 type=0 location(x=-56.0 y=3.0 level=0) rotation=0
+name=A5 type=0 location(x=-52.0 y=3.0 level=0) rotation=0
+name=A6 type=0 location(x=-48.0 y=3.0 level=0) rotation=0
+name=A7 type=0 location(x=-44.0 y=3.0 level=0) rotation=0
+name=A8 type=0 location(x=-40.0 y=3.0 level=0) rotation=0
+name=A9 type=0 location(x=-36.0 y=3.0 level=0) rotation=0
+name=AA type=0 location(x=-32.0 y=3.0 level=0) rotation=0
+name=AB type=0 location(x=-28.0 y=3.0 level=0) rotation=0
+name=AC type=0 location(x=-24.0 y=3.0 level=0) rotation=0
+name=AD type=0 location(x=-20.0 y=3.0 level=0) rotation=0
+name=AE type=0 location(x=-16.0 y=3.0 level=0) rotation=0
+name=AF type=0 location(x=-12.0 y=3.0 level=0) rotation=0
+name=AG type=0 location(x=-8.0 y=3.0 level=0) rotation=0
+name=AH type=0 location(x=-4.0 y=3.0 level=0) rotation=0
 
-name=B1 type=0 location(x=-68.0 y=21.0 level=0) rotation=135
-name=B2 type=0 location(x=-64.0 y=21.0 level=0) rotation=135
-name=B3 type=0 location(x=-60.0 y=21.0 level=0) rotation=135
-name=B4 type=0 location(x=-56.0 y=21.0 level=0) rotation=135
-name=B5 type=0 location(x=-52.0 y=21.0 level=0) rotation=135
-name=B6 type=0 location(x=-48.0 y=21.0 level=0) rotation=135
-name=B7 type=0 location(x=-44.0 y=21.0 level=0) rotation=135
-name=B8 type=0 location(x=-40.0 y=21.0 level=0) rotation=135
-name=B9 type=0 location(x=-36.0 y=21.0 level=0) rotation=135
-name=B10 type=0 location(x=-32.0 y=21.0 level=0) rotation=135
-name=B11 type=0 location(x=-28.0 y=21.0 level=0) rotation=135
-name=B12 type=0 location(x=-24.0 y=21.0 level=0) rotation=135
-name=B13 type=0 location(x=-20.0 y=21.0 level=0) rotation=135
-name=B14 type=0 location(x=-16.0 y=21.0 level=0) rotation=135
-name=B15 type=0 location(x=-12.0 y=21.0 level=0) rotation=135
-name=B16 type=0 location(x=-8.0 y=21.0 level=0) rotation=135
-name=B17 type=0 location(x=-4.0 y=21.0 level=0) rotation=135
-name=B18 type=0 location(x=4.0 y=21.0 level=0) rotation=135
-name=B19 type=0 location(x=8.0 y=21.0 level=0) rotation=135
-name=B20 type=0 location(x=12.0 y=21.0 level=0) rotation=135
-name=B21 type=0 location(x=16.0 y=21.0 level=0) rotation=135
-name=B22 type=0 location(x=20.0 y=21.0 level=0) rotation=135
-name=B23 type=0 location(x=24.0 y=21.0 level=0) rotation=135
-name=B24 type=0 location(x=28.0 y=21.0 level=0) rotation=135
-name=B25 type=0 location(x=32.0 y=21.0 level=0) rotation=135
-name=B26 type=0 location(x=36.0 y=21.0 level=0) rotation=135
-name=B27 type=0 location(x=40.0 y=21.0 level=0) rotation=135
-name=B28 type=0 location(x=44.0 y=21.0 level=0) rotation=135
-name=B29 type=0 location(x=48.0 y=21.0 level=0) rotation=135
-name=B30 type=0 location(x=52.0 y=21.0 level=0) rotation=135
-name=B31 type=0 location(x=56.0 y=21.0 level=0) rotation=135
-name=B32 type=0 location(x=60.0 y=21.0 level=0) rotation=135
-name=B33 type=0 location(x=64.0 y=21.0 level=0) rotation=135
-name=B34 type=0 location(x=68.0 y=21.0 level=0) rotation=135
+# Row B - perpendicular (17 spaces)
+name=B1 type=0 location(x=4.0 y=3.0 level=0) rotation=0
+name=B2 type=0 location(x=8.0 y=3.0 level=0) rotation=0
+name=B3 type=0 location(x=12.0 y=3.0 level=0) rotation=0
+name=B4 type=0 location(x=16.0 y=3.0 level=0) rotation=0
+name=B5 type=0 location(x=20.0 y=3.0 level=0) rotation=0
+name=B6 type=0 location(x=24.0 y=3.0 level=0) rotation=0
+name=B7 type=0 location(x=28.0 y=3.0 level=0) rotation=0
+name=B8 type=0 location(x=32.0 y=3.0 level=0) rotation=0
+name=B9 type=0 location(x=36.0 y=3.0 level=0) rotation=0
+name=BA type=0 location(x=40.0 y=3.0 level=0) rotation=0
+name=BB type=0 location(x=44.0 y=3.0 level=0) rotation=0
+name=BC type=0 location(x=48.0 y=3.0 level=0) rotation=0
+name=BD type=0 location(x=52.0 y=3.0 level=0) rotation=0
+name=BE type=0 location(x=56.0 y=3.0 level=0) rotation=0
+name=BF type=0 location(x=60.0 y=3.0 level=0) rotation=0
+name=BG type=0 location(x=64.0 y=3.0 level=0) rotation=0
+name=BH type=0 location(x=68.0 y=3.0 level=0) rotation=0
 
-# === LEVEL 1 ===
-name=C1 type=0 location(x=-68.0 y=5.0 level=1) rotation=45
-name=C2 type=0 location(x=-64.0 y=5.0 level=1) rotation=45
-name=C3 type=0 location(x=-60.0 y=5.0 level=1) rotation=45
-name=C4 type=0 location(x=-56.0 y=5.0 level=1) rotation=45
-name=C5 type=0 location(x=-52.0 y=5.0 level=1) rotation=45
-name=C6 type=0 location(x=-48.0 y=5.0 level=1) rotation=45
-name=C7 type=0 location(x=-44.0 y=5.0 level=1) rotation=45
-name=C8 type=0 location(x=-40.0 y=5.0 level=1) rotation=45
-name=C9 type=0 location(x=-36.0 y=5.0 level=1) rotation=45
-name=C10 type=0 location(x=-32.0 y=5.0 level=1) rotation=45
-name=C11 type=0 location(x=-28.0 y=5.0 level=1) rotation=45
-name=C12 type=0 location(x=-24.0 y=5.0 level=1) rotation=45
-name=C13 type=0 location(x=-20.0 y=5.0 level=1) rotation=45
-name=C14 type=0 location(x=-16.0 y=5.0 level=1) rotation=45
-name=C15 type=0 location(x=-12.0 y=5.0 level=1) rotation=45
-name=C16 type=0 location(x=-8.0 y=5.0 level=1) rotation=45
-name=C17 type=0 location(x=-4.0 y=5.0 level=1) rotation=45
-name=C18 type=0 location(x=4.0 y=5.0 level=1) rotation=45
-name=C19 type=0 location(x=8.0 y=5.0 level=1) rotation=45
-name=C20 type=0 location(x=12.0 y=5.0 level=1) rotation=45
-name=C21 type=0 location(x=16.0 y=5.0 level=1) rotation=45
-name=C22 type=0 location(x=20.0 y=5.0 level=1) rotation=45
-name=C23 type=0 location(x=24.0 y=5.0 level=1) rotation=45
-name=C24 type=0 location(x=28.0 y=5.0 level=1) rotation=45
-name=C25 type=0 location(x=32.0 y=5.0 level=1) rotation=45
-name=C26 type=0 location(x=36.0 y=5.0 level=1) rotation=45
-name=C27 type=0 location(x=40.0 y=5.0 level=1) rotation=45
-name=C28 type=0 location(x=44.0 y=5.0 level=1) rotation=45
-name=C29 type=0 location(x=48.0 y=5.0 level=1) rotation=45
-name=C30 type=0 location(x=52.0 y=5.0 level=1) rotation=45
-name=C31 type=0 location(x=56.0 y=5.0 level=1) rotation=45
-name=C32 type=0 location(x=60.0 y=5.0 level=1) rotation=45
-name=C33 type=0 location(x=64.0 y=5.0 level=1) rotation=45
-name=C34 type=0 location(x=68.0 y=5.0 level=1) rotation=45
+# Row C - perpendicular opposite (17 spaces)
+name=C1 type=0 location(x=-68.0 y=28.0 level=0) rotation=180
+name=C2 type=0 location(x=-64.0 y=28.0 level=0) rotation=180
+name=C3 type=0 location(x=-60.0 y=28.0 level=0) rotation=180
+name=C4 type=0 location(x=-56.0 y=28.0 level=0) rotation=180
+name=C5 type=0 location(x=-52.0 y=28.0 level=0) rotation=180
+name=C6 type=0 location(x=-48.0 y=28.0 level=0) rotation=180
+name=C7 type=0 location(x=-44.0 y=28.0 level=0) rotation=180
+name=C8 type=0 location(x=-40.0 y=28.0 level=0) rotation=180
+name=C9 type=0 location(x=-36.0 y=28.0 level=0) rotation=180
+name=CA type=0 location(x=-32.0 y=28.0 level=0) rotation=180
+name=CB type=0 location(x=-28.0 y=28.0 level=0) rotation=180
+name=CC type=0 location(x=-24.0 y=28.0 level=0) rotation=180
+name=CD type=0 location(x=-20.0 y=28.0 level=0) rotation=180
+name=CE type=0 location(x=-16.0 y=28.0 level=0) rotation=180
+name=CF type=0 location(x=-12.0 y=28.0 level=0) rotation=180
+name=CG type=0 location(x=-8.0 y=28.0 level=0) rotation=180
+name=CH type=0 location(x=-4.0 y=28.0 level=0) rotation=180
 
-name=D1 type=0 location(x=-68.0 y=21.0 level=1) rotation=135
-name=D2 type=0 location(x=-64.0 y=21.0 level=1) rotation=135
-name=D3 type=0 location(x=-60.0 y=21.0 level=1) rotation=135
-name=D4 type=0 location(x=-56.0 y=21.0 level=1) rotation=135
-name=D5 type=0 location(x=-52.0 y=21.0 level=1) rotation=135
-name=D6 type=0 location(x=-48.0 y=21.0 level=1) rotation=135
-name=D7 type=0 location(x=-44.0 y=21.0 level=1) rotation=135
-name=D8 type=0 location(x=-40.0 y=21.0 level=1) rotation=135
-name=D9 type=0 location(x=-36.0 y=21.0 level=1) rotation=135
-name=D10 type=0 location(x=-32.0 y=21.0 level=1) rotation=135
-name=D11 type=0 location(x=-28.0 y=21.0 level=1) rotation=135
-name=D12 type=0 location(x=-24.0 y=21.0 level=1) rotation=135
-name=D13 type=0 location(x=-20.0 y=21.0 level=1) rotation=135
-name=D14 type=0 location(x=-16.0 y=21.0 level=1) rotation=135
-name=D15 type=0 location(x=-12.0 y=21.0 level=1) rotation=135
-name=D16 type=0 location(x=-8.0 y=21.0 level=1) rotation=135
-name=D17 type=0 location(x=-4.0 y=21.0 level=1) rotation=135
-name=D18 type=0 location(x=4.0 y=21.0 level=1) rotation=135
-name=D19 type=0 location(x=8.0 y=21.0 level=1) rotation=135
-name=D20 type=0 location(x=12.0 y=21.0 level=1) rotation=135
-name=D21 type=0 location(x=16.0 y=21.0 level=1) rotation=135
-name=D22 type=0 location(x=20.0 y=21.0 level=1) rotation=135
-name=D23 type=0 location(x=24.0 y=21.0 level=1) rotation=135
-name=D24 type=0 location(x=28.0 y=21.0 level=1) rotation=135
-name=D25 type=0 location(x=32.0 y=21.0 level=1) rotation=135
-name=D26 type=0 location(x=36.0 y=21.0 level=1) rotation=135
-name=D27 type=0 location(x=40.0 y=21.0 level=1) rotation=135
-name=D28 type=0 location(x=44.0 y=21.0 level=1) rotation=135
-name=D29 type=0 location(x=48.0 y=21.0 level=1) rotation=135
-name=D30 type=0 location(x=52.0 y=21.0 level=1) rotation=135
-name=D31 type=0 location(x=56.0 y=21.0 level=1) rotation=135
-name=D32 type=0 location(x=60.0 y=21.0 level=1) rotation=135
-name=D33 type=0 location(x=64.0 y=21.0 level=1) rotation=135
-name=D34 type=0 location(x=68.0 y=21.0 level=1) rotation=135
+# Row D - perpendicular opposite (17 spaces)
+name=D1 type=0 location(x=4.0 y=28.0 level=0) rotation=180
+name=D2 type=0 location(x=8.0 y=28.0 level=0) rotation=180
+name=D3 type=0 location(x=12.0 y=28.0 level=0) rotation=180
+name=D4 type=0 location(x=16.0 y=28.0 level=0) rotation=180
+name=D5 type=0 location(x=20.0 y=28.0 level=0) rotation=180
+name=D6 type=0 location(x=24.0 y=28.0 level=0) rotation=180
+name=D7 type=0 location(x=28.0 y=28.0 level=0) rotation=180
+name=D8 type=0 location(x=32.0 y=28.0 level=0) rotation=180
+name=D9 type=0 location(x=36.0 y=28.0 level=0) rotation=180
+name=DA type=0 location(x=40.0 y=28.0 level=0) rotation=180
+name=DB type=0 location(x=44.0 y=28.0 level=0) rotation=180
+name=DC type=0 location(x=48.0 y=28.0 level=0) rotation=180
+name=DD type=0 location(x=52.0 y=28.0 level=0) rotation=180
+name=DE type=0 location(x=56.0 y=28.0 level=0) rotation=180
+name=DF type=0 location(x=60.0 y=28.0 level=0) rotation=180
+name=DG type=0 location(x=64.0 y=28.0 level=0) rotation=180
+name=DH type=0 location(x=68.0 y=28.0 level=0) rotation=180
 
-# === LEVEL 2 ===
-name=E1 type=0 location(x=-68.0 y=5.0 level=2) rotation=45
-name=E2 type=0 location(x=-64.0 y=5.0 level=2) rotation=45
-name=E3 type=0 location(x=-60.0 y=5.0 level=2) rotation=45
-name=E4 type=0 location(x=-56.0 y=5.0 level=2) rotation=45
-name=E5 type=0 location(x=-52.0 y=5.0 level=2) rotation=45
-name=E6 type=0 location(x=-48.0 y=5.0 level=2) rotation=45
-name=E7 type=0 location(x=-44.0 y=5.0 level=2) rotation=45
-name=E8 type=0 location(x=-40.0 y=5.0 level=2) rotation=45
-name=E9 type=0 location(x=-36.0 y=5.0 level=2) rotation=45
-name=E10 type=0 location(x=-32.0 y=5.0 level=2) rotation=45
-name=E11 type=0 location(x=-28.0 y=5.0 level=2) rotation=45
-name=E12 type=0 location(x=-24.0 y=5.0 level=2) rotation=45
-name=E13 type=0 location(x=-20.0 y=5.0 level=2) rotation=45
-name=E14 type=0 location(x=-16.0 y=5.0 level=2) rotation=45
-name=E15 type=0 location(x=-12.0 y=5.0 level=2) rotation=45
-name=E16 type=0 location(x=-8.0 y=5.0 level=2) rotation=45
-name=E17 type=0 location(x=-4.0 y=5.0 level=2) rotation=45
-name=E18 type=0 location(x=4.0 y=5.0 level=2) rotation=45
-name=E19 type=0 location(x=8.0 y=5.0 level=2) rotation=45
-name=E20 type=0 location(x=12.0 y=5.0 level=2) rotation=45
-name=E21 type=0 location(x=16.0 y=5.0 level=2) rotation=45
-name=E22 type=0 location(x=20.0 y=5.0 level=2) rotation=45
-name=E23 type=0 location(x=24.0 y=5.0 level=2) rotation=45
-name=E24 type=0 location(x=28.0 y=5.0 level=2) rotation=45
-name=E25 type=0 location(x=32.0 y=5.0 level=2) rotation=45
-name=E26 type=0 location(x=36.0 y=5.0 level=2) rotation=45
-name=E27 type=0 location(x=40.0 y=5.0 level=2) rotation=45
-name=E28 type=0 location(x=44.0 y=5.0 level=2) rotation=45
-name=E29 type=0 location(x=48.0 y=5.0 level=2) rotation=45
-name=E30 type=0 location(x=52.0 y=5.0 level=2) rotation=45
-name=E31 type=0 location(x=56.0 y=5.0 level=2) rotation=45
-name=E32 type=0 location(x=60.0 y=5.0 level=2) rotation=45
-name=E33 type=0 location(x=64.0 y=5.0 level=2) rotation=45
-name=E34 type=0 location(x=68.0 y=5.0 level=2) rotation=45
+# === LEVEL 1 - 68 spaces ===
+name=1A type=0 location(x=-68.0 y=3.0 level=1) rotation=0
+name=1B type=0 location(x=-64.0 y=3.0 level=1) rotation=0
+name=1C type=0 location(x=-60.0 y=3.0 level=1) rotation=0
+name=1D type=0 location(x=-56.0 y=3.0 level=1) rotation=0
+name=1E type=0 location(x=-52.0 y=3.0 level=1) rotation=0
+name=1F type=0 location(x=-48.0 y=3.0 level=1) rotation=0
+name=1G type=0 location(x=-44.0 y=3.0 level=1) rotation=0
+name=1H type=0 location(x=-40.0 y=3.0 level=1) rotation=0
+name=1I type=0 location(x=-36.0 y=3.0 level=1) rotation=0
+name=1J type=0 location(x=-32.0 y=3.0 level=1) rotation=0
+name=1K type=0 location(x=-28.0 y=3.0 level=1) rotation=0
+name=1L type=0 location(x=-24.0 y=3.0 level=1) rotation=0
+name=1M type=0 location(x=-20.0 y=3.0 level=1) rotation=0
+name=1N type=0 location(x=-16.0 y=3.0 level=1) rotation=0
+name=1O type=0 location(x=-12.0 y=3.0 level=1) rotation=0
+name=1P type=0 location(x=-8.0 y=3.0 level=1) rotation=0
+name=1Q type=0 location(x=-4.0 y=3.0 level=1) rotation=0
+name=1R type=0 location(x=4.0 y=3.0 level=1) rotation=0
+name=1S type=0 location(x=8.0 y=3.0 level=1) rotation=0
+name=1T type=0 location(x=12.0 y=3.0 level=1) rotation=0
+name=1U type=0 location(x=16.0 y=3.0 level=1) rotation=0
+name=1V type=0 location(x=20.0 y=3.0 level=1) rotation=0
+name=1W type=0 location(x=24.0 y=3.0 level=1) rotation=0
+name=1X type=0 location(x=28.0 y=3.0 level=1) rotation=0
+name=1Y type=0 location(x=32.0 y=3.0 level=1) rotation=0
+name=1Z type=0 location(x=36.0 y=3.0 level=1) rotation=0
+name=10 type=0 location(x=40.0 y=3.0 level=1) rotation=0
+name=11 type=0 location(x=44.0 y=3.0 level=1) rotation=0
+name=12 type=0 location(x=48.0 y=3.0 level=1) rotation=0
+name=13 type=0 location(x=52.0 y=3.0 level=1) rotation=0
+name=14 type=0 location(x=56.0 y=3.0 level=1) rotation=0
+name=15 type=0 location(x=60.0 y=3.0 level=1) rotation=0
+name=16 type=0 location(x=64.0 y=3.0 level=1) rotation=0
+name=17 type=0 location(x=68.0 y=3.0 level=1) rotation=0
 
-name=F1 type=0 location(x=-68.0 y=21.0 level=2) rotation=135
-name=F2 type=0 location(x=-64.0 y=21.0 level=2) rotation=135
-name=F3 type=0 location(x=-60.0 y=21.0 level=2) rotation=135
-name=F4 type=0 location(x=-56.0 y=21.0 level=2) rotation=135
-name=F5 type=0 location(x=-52.0 y=21.0 level=2) rotation=135
-name=F6 type=0 location(x=-48.0 y=21.0 level=2) rotation=135
-name=F7 type=0 location(x=-44.0 y=21.0 level=2) rotation=135
-name=F8 type=0 location(x=-40.0 y=21.0 level=2) rotation=135
-name=F9 type=0 location(x=-36.0 y=21.0 level=2) rotation=135
-name=F10 type=0 location(x=-32.0 y=21.0 level=2) rotation=135
-name=F11 type=0 location(x=-28.0 y=21.0 level=2) rotation=135
-name=F12 type=0 location(x=-24.0 y=21.0 level=2) rotation=135
-name=F13 type=0 location(x=-20.0 y=21.0 level=2) rotation=135
-name=F14 type=0 location(x=-16.0 y=21.0 level=2) rotation=135
-name=F15 type=0 location(x=-12.0 y=21.0 level=2) rotation=135
-name=F16 type=0 location(x=-8.0 y=21.0 level=2) rotation=135
-name=F17 type=0 location(x=-4.0 y=21.0 level=2) rotation=135
-name=F18 type=0 location(x=4.0 y=21.0 level=2) rotation=135
-name=F19 type=0 location(x=8.0 y=21.0 level=2) rotation=135
-name=F20 type=0 location(x=12.0 y=21.0 level=2) rotation=135
-name=F21 type=0 location(x=16.0 y=21.0 level=2) rotation=135
-name=F22 type=0 location(x=20.0 y=21.0 level=2) rotation=135
-name=F23 type=0 location(x=24.0 y=21.0 level=2) rotation=135
-name=F24 type=0 location(x=28.0 y=21.0 level=2) rotation=135
-name=F25 type=0 location(x=32.0 y=21.0 level=2) rotation=135
-name=F26 type=0 location(x=36.0 y=21.0 level=2) rotation=135
-name=F27 type=0 location(x=40.0 y=21.0 level=2) rotation=135
-name=F28 type=0 location(x=44.0 y=21.0 level=2) rotation=135
-name=F29 type=0 location(x=48.0 y=21.0 level=2) rotation=135
-name=F30 type=0 location(x=52.0 y=21.0 level=2) rotation=135
-name=F31 type=0 location(x=56.0 y=21.0 level=2) rotation=135
-name=F32 type=0 location(x=60.0 y=21.0 level=2) rotation=135
-name=F33 type=0 location(x=64.0 y=21.0 level=2) rotation=135
-name=F34 type=0 location(x=68.0 y=21.0 level=2) rotation=135
+name=18 type=0 location(x=-68.0 y=28.0 level=1) rotation=180
+name=19 type=0 location(x=-64.0 y=28.0 level=1) rotation=180
+name=1a type=0 location(x=-60.0 y=28.0 level=1) rotation=180
+name=1b type=0 location(x=-56.0 y=28.0 level=1) rotation=180
+name=1c type=0 location(x=-52.0 y=28.0 level=1) rotation=180
+name=1d type=0 location(x=-48.0 y=28.0 level=1) rotation=180
+name=1e type=0 location(x=-44.0 y=28.0 level=1) rotation=180
+name=1f type=0 location(x=-40.0 y=28.0 level=1) rotation=180
+name=1g type=0 location(x=-36.0 y=28.0 level=1) rotation=180
+name=1h type=0 location(x=-32.0 y=28.0 level=1) rotation=180
+name=1i type=0 location(x=-28.0 y=28.0 level=1) rotation=180
+name=1j type=0 location(x=-24.0 y=28.0 level=1) rotation=180
+name=1k type=0 location(x=-20.0 y=28.0 level=1) rotation=180
+name=1l type=0 location(x=-16.0 y=28.0 level=1) rotation=180
+name=1m type=0 location(x=-12.0 y=28.0 level=1) rotation=180
+name=1n type=0 location(x=-8.0 y=28.0 level=1) rotation=180
+name=1o type=0 location(x=-4.0 y=28.0 level=1) rotation=180
+name=1p type=0 location(x=4.0 y=28.0 level=1) rotation=180
+name=1q type=0 location(x=8.0 y=28.0 level=1) rotation=180
+name=1r type=0 location(x=12.0 y=28.0 level=1) rotation=180
+name=1s type=0 location(x=16.0 y=28.0 level=1) rotation=180
+name=1t type=0 location(x=20.0 y=28.0 level=1) rotation=180
+name=1u type=0 location(x=24.0 y=28.0 level=1) rotation=180
+name=1v type=0 location(x=28.0 y=28.0 level=1) rotation=180
+name=1w type=0 location(x=32.0 y=28.0 level=1) rotation=180
+name=1x type=0 location(x=36.0 y=28.0 level=1) rotation=180
+name=1y type=0 location(x=40.0 y=28.0 level=1) rotation=180
+name=1z type=0 location(x=44.0 y=28.0 level=1) rotation=180
+name=20 type=0 location(x=48.0 y=28.0 level=1) rotation=180
+name=21 type=0 location(x=52.0 y=28.0 level=1) rotation=180
+name=22 type=0 location(x=56.0 y=28.0 level=1) rotation=180
+name=23 type=0 location(x=60.0 y=28.0 level=1) rotation=180
+name=24 type=0 location(x=64.0 y=28.0 level=1) rotation=180
+name=25 type=0 location(x=68.0 y=28.0 level=1) rotation=180
 
-# === LEVEL 3 ===
-name=G1 type=0 location(x=-68.0 y=5.0 level=3) rotation=45
-name=G2 type=0 location(x=-64.0 y=5.0 level=3) rotation=45
-name=G3 type=0 location(x=-60.0 y=5.0 level=3) rotation=45
-name=G4 type=0 location(x=-56.0 y=5.0 level=3) rotation=45
-name=G5 type=0 location(x=-52.0 y=5.0 level=3) rotation=45
-name=G6 type=0 location(x=-48.0 y=5.0 level=3) rotation=45
-name=G7 type=0 location(x=-44.0 y=5.0 level=3) rotation=45
-name=G8 type=0 location(x=-40.0 y=5.0 level=3) rotation=45
-name=G9 type=0 location(x=-36.0 y=5.0 level=3) rotation=45
-name=G10 type=0 location(x=-32.0 y=5.0 level=3) rotation=45
-name=G11 type=0 location(x=-28.0 y=5.0 level=3) rotation=45
-name=G12 type=0 location(x=-24.0 y=5.0 level=3) rotation=45
-name=G13 type=0 location(x=-20.0 y=5.0 level=3) rotation=45
-name=G14 type=0 location(x=-16.0 y=5.0 level=3) rotation=45
-name=G15 type=0 location(x=-12.0 y=5.0 level=3) rotation=45
-name=G16 type=0 location(x=-8.0 y=5.0 level=3) rotation=45
-name=G17 type=0 location(x=-4.0 y=5.0 level=3) rotation=45
-name=G18 type=0 location(x=4.0 y=5.0 level=3) rotation=45
-name=G19 type=0 location(x=8.0 y=5.0 level=3) rotation=45
-name=G20 type=0 location(x=12.0 y=5.0 level=3) rotation=45
-name=G21 type=0 location(x=16.0 y=5.0 level=3) rotation=45
-name=G22 type=0 location(x=20.0 y=5.0 level=3) rotation=45
-name=G23 type=0 location(x=24.0 y=5.0 level=3) rotation=45
-name=G24 type=0 location(x=28.0 y=5.0 level=3) rotation=45
-name=G25 type=0 location(x=32.0 y=5.0 level=3) rotation=45
-name=G26 type=0 location(x=36.0 y=5.0 level=3) rotation=45
-name=G27 type=0 location(x=40.0 y=5.0 level=3) rotation=45
-name=G28 type=0 location(x=44.0 y=5.0 level=3) rotation=45
-name=G29 type=0 location(x=48.0 y=5.0 level=3) rotation=45
-name=G30 type=0 location(x=52.0 y=5.0 level=3) rotation=45
-name=G31 type=0 location(x=56.0 y=5.0 level=3) rotation=45
-name=G32 type=0 location(x=60.0 y=5.0 level=3) rotation=45
-name=G33 type=0 location(x=64.0 y=5.0 level=3) rotation=45
-name=G34 type=0 location(x=68.0 y=5.0 level=3) rotation=45
+# === LEVEL 2 - 68 spaces ===
+name=2A type=0 location(x=-68.0 y=3.0 level=2) rotation=0
+name=2B type=0 location(x=-64.0 y=3.0 level=2) rotation=0
+name=2C type=0 location(x=-60.0 y=3.0 level=2) rotation=0
+name=2D type=0 location(x=-56.0 y=3.0 level=2) rotation=0
+name=2E type=0 location(x=-52.0 y=3.0 level=2) rotation=0
+name=2F type=0 location(x=-48.0 y=3.0 level=2) rotation=0
+name=2G type=0 location(x=-44.0 y=3.0 level=2) rotation=0
+name=2H type=0 location(x=-40.0 y=3.0 level=2) rotation=0
+name=2I type=0 location(x=-36.0 y=3.0 level=2) rotation=0
+name=2J type=0 location(x=-32.0 y=3.0 level=2) rotation=0
+name=2K type=0 location(x=-28.0 y=3.0 level=2) rotation=0
+name=2L type=0 location(x=-24.0 y=3.0 level=2) rotation=0
+name=2M type=0 location(x=-20.0 y=3.0 level=2) rotation=0
+name=2N type=0 location(x=-16.0 y=3.0 level=2) rotation=0
+name=2O type=0 location(x=-12.0 y=3.0 level=2) rotation=0
+name=2P type=0 location(x=-8.0 y=3.0 level=2) rotation=0
+name=2Q type=0 location(x=-4.0 y=3.0 level=2) rotation=0
+name=2R type=0 location(x=4.0 y=3.0 level=2) rotation=0
+name=2S type=0 location(x=8.0 y=3.0 level=2) rotation=0
+name=2T type=0 location(x=12.0 y=3.0 level=2) rotation=0
+name=2U type=0 location(x=16.0 y=3.0 level=2) rotation=0
+name=2V type=0 location(x=20.0 y=3.0 level=2) rotation=0
+name=2W type=0 location(x=24.0 y=3.0 level=2) rotation=0
+name=2X type=0 location(x=28.0 y=3.0 level=2) rotation=0
+name=2Y type=0 location(x=32.0 y=3.0 level=2) rotation=0
+name=2Z type=0 location(x=36.0 y=3.0 level=2) rotation=0
+name=30 type=0 location(x=40.0 y=3.0 level=2) rotation=0
+name=31 type=0 location(x=44.0 y=3.0 level=2) rotation=0
+name=32 type=0 location(x=48.0 y=3.0 level=2) rotation=0
+name=33 type=0 location(x=52.0 y=3.0 level=2) rotation=0
+name=34 type=0 location(x=56.0 y=3.0 level=2) rotation=0
+name=35 type=0 location(x=60.0 y=3.0 level=2) rotation=0
+name=36 type=0 location(x=64.0 y=3.0 level=2) rotation=0
+name=37 type=0 location(x=68.0 y=3.0 level=2) rotation=0
 
-name=H1 type=0 location(x=-68.0 y=21.0 level=3) rotation=135
-name=H2 type=0 location(x=-64.0 y=21.0 level=3) rotation=135
-name=H3 type=0 location(x=-60.0 y=21.0 level=3) rotation=135
-name=H4 type=0 location(x=-56.0 y=21.0 level=3) rotation=135
-name=H5 type=0 location(x=-52.0 y=21.0 level=3) rotation=135
-name=H6 type=0 location(x=-48.0 y=21.0 level=3) rotation=135
-name=H7 type=0 location(x=-44.0 y=21.0 level=3) rotation=135
-name=H8 type=0 location(x=-40.0 y=21.0 level=3) rotation=135
-name=H9 type=0 location(x=-36.0 y=21.0 level=3) rotation=135
-name=H10 type=0 location(x=-32.0 y=21.0 level=3) rotation=135
-name=H11 type=0 location(x=-28.0 y=21.0 level=3) rotation=135
-name=H12 type=0 location(x=-24.0 y=21.0 level=3) rotation=135
-name=H13 type=0 location(x=-20.0 y=21.0 level=3) rotation=135
-name=H14 type=0 location(x=-16.0 y=21.0 level=3) rotation=135
-name=H15 type=0 location(x=-12.0 y=21.0 level=3) rotation=135
-name=H16 type=0 location(x=-8.0 y=21.0 level=3) rotation=135
-name=H17 type=0 location(x=-4.0 y=21.0 level=3) rotation=135
-name=H18 type=0 location(x=4.0 y=21.0 level=3) rotation=135
-name=H19 type=0 location(x=8.0 y=21.0 level=3) rotation=135
-name=H20 type=0 location(x=12.0 y=21.0 level=3) rotation=135
-name=H21 type=0 location(x=16.0 y=21.0 level=3) rotation=135
-name=H22 type=0 location(x=20.0 y=21.0 level=3) rotation=135
-name=H23 type=0 location(x=24.0 y=21.0 level=3) rotation=135
-name=H24 type=0 location(x=28.0 y=21.0 level=3) rotation=135
-name=H25 type=0 location(x=32.0 y=21.0 level=3) rotation=135
-name=H26 type=0 location(x=36.0 y=21.0 level=3) rotation=135
-name=H27 type=0 location(x=40.0 y=21.0 level=3) rotation=135
-name=H28 type=0 location(x=44.0 y=21.0 level=3) rotation=135
-name=H29 type=0 location(x=48.0 y=21.0 level=3) rotation=135
-name=H30 type=0 location(x=52.0 y=21.0 level=3) rotation=135
-name=H31 type=0 location(x=56.0 y=21.0 level=3) rotation=135
-name=H32 type=0 location(x=60.0 y=21.0 level=3) rotation=135
-name=H33 type=0 location(x=64.0 y=21.0 level=3) rotation=135
-name=H34 type=0 location(x=68.0 y=21.0 level=3) rotation=135
+name=38 type=0 location(x=-68.0 y=28.0 level=2) rotation=180
+name=39 type=0 location(x=-64.0 y=28.0 level=2) rotation=180
+name=3a type=0 location(x=-60.0 y=28.0 level=2) rotation=180
+name=3b type=0 location(x=-56.0 y=28.0 level=2) rotation=180
+name=3c type=0 location(x=-52.0 y=28.0 level=2) rotation=180
+name=3d type=0 location(x=-48.0 y=28.0 level=2) rotation=180
+name=3e type=0 location(x=-44.0 y=28.0 level=2) rotation=180
+name=3f type=0 location(x=-40.0 y=28.0 level=2) rotation=180
+name=3g type=0 location(x=-36.0 y=28.0 level=2) rotation=180
+name=3h type=0 location(x=-32.0 y=28.0 level=2) rotation=180
+name=3i type=0 location(x=-28.0 y=28.0 level=2) rotation=180
+name=3j type=0 location(x=-24.0 y=28.0 level=2) rotation=180
+name=3k type=0 location(x=-20.0 y=28.0 level=2) rotation=180
+name=3l type=0 location(x=-16.0 y=28.0 level=2) rotation=180
+name=3m type=0 location(x=-12.0 y=28.0 level=2) rotation=180
+name=3n type=0 location(x=-8.0 y=28.0 level=2) rotation=180
+name=3o type=0 location(x=-4.0 y=28.0 level=2) rotation=180
+name=3p type=0 location(x=4.0 y=28.0 level=2) rotation=180
+name=3q type=0 location(x=8.0 y=28.0 level=2) rotation=180
+name=3r type=0 location(x=12.0 y=28.0 level=2) rotation=180
+name=3s type=0 location(x=16.0 y=28.0 level=2) rotation=180
+name=3t type=0 location(x=20.0 y=28.0 level=2) rotation=180
+name=3u type=0 location(x=24.0 y=28.0 level=2) rotation=180
+name=3v type=0 location(x=28.0 y=28.0 level=2) rotation=180
+name=3w type=0 location(x=32.0 y=28.0 level=2) rotation=180
+name=3x type=0 location(x=36.0 y=28.0 level=2) rotation=180
+name=3y type=0 location(x=40.0 y=28.0 level=2) rotation=180
+name=3z type=0 location(x=44.0 y=28.0 level=2) rotation=180
+name=40 type=0 location(x=48.0 y=28.0 level=2) rotation=180
+name=41 type=0 location(x=52.0 y=28.0 level=2) rotation=180
+name=42 type=0 location(x=56.0 y=28.0 level=2) rotation=180
+name=43 type=0 location(x=60.0 y=28.0 level=2) rotation=180
+name=44 type=0 location(x=64.0 y=28.0 level=2) rotation=180
+name=45 type=0 location(x=68.0 y=28.0 level=2) rotation=180
+
+# === LEVEL 3 - 68 spaces ===
+name=4A type=0 location(x=-68.0 y=3.0 level=3) rotation=0
+name=4B type=0 location(x=-64.0 y=3.0 level=3) rotation=0
+name=4C type=0 location(x=-60.0 y=3.0 level=3) rotation=0
+name=4D type=0 location(x=-56.0 y=3.0 level=3) rotation=0
+name=4E type=0 location(x=-52.0 y=3.0 level=3) rotation=0
+name=4F type=0 location(x=-48.0 y=3.0 level=3) rotation=0
+name=4G type=0 location(x=-44.0 y=3.0 level=3) rotation=0
+name=4H type=0 location(x=-40.0 y=3.0 level=3) rotation=0
+name=4I type=0 location(x=-36.0 y=3.0 level=3) rotation=0
+name=4J type=0 location(x=-32.0 y=3.0 level=3) rotation=0
+name=4K type=0 location(x=-28.0 y=3.0 level=3) rotation=0
+name=4L type=0 location(x=-24.0 y=3.0 level=3) rotation=0
+name=4M type=0 location(x=-20.0 y=3.0 level=3) rotation=0
+name=4N type=0 location(x=-16.0 y=3.0 level=3) rotation=0
+name=4O type=0 location(x=-12.0 y=3.0 level=3) rotation=0
+name=4P type=0 location(x=-8.0 y=3.0 level=3) rotation=0
+name=4Q type=0 location(x=-4.0 y=3.0 level=3) rotation=0
+name=4R type=0 location(x=4.0 y=3.0 level=3) rotation=0
+name=4S type=0 location(x=8.0 y=3.0 level=3) rotation=0
+name=4T type=0 location(x=12.0 y=3.0 level=3) rotation=0
+name=4U type=0 location(x=16.0 y=3.0 level=3) rotation=0
+name=4V type=0 location(x=20.0 y=3.0 level=3) rotation=0
+name=4W type=0 location(x=24.0 y=3.0 level=3) rotation=0
+name=4X type=0 location(x=28.0 y=3.0 level=3) rotation=0
+name=4Y type=0 location(x=32.0 y=3.0 level=3) rotation=0
+name=4Z type=0 location(x=36.0 y=3.0 level=3) rotation=0
+name=50 type=0 location(x=40.0 y=3.0 level=3) rotation=0
+name=51 type=0 location(x=44.0 y=3.0 level=3) rotation=0
+name=52 type=0 location(x=48.0 y=3.0 level=3) rotation=0
+name=53 type=0 location(x=52.0 y=3.0 level=3) rotation=0
+name=54 type=0 location(x=56.0 y=3.0 level=3) rotation=0
+name=55 type=0 location(x=60.0 y=3.0 level=3) rotation=0
+name=56 type=0 location(x=64.0 y=3.0 level=3) rotation=0
+name=57 type=0 location(x=68.0 y=3.0 level=3) rotation=0
+
+name=58 type=0 location(x=-68.0 y=28.0 level=3) rotation=180
+name=59 type=0 location(x=-64.0 y=28.0 level=3) rotation=180
+name=5a type=0 location(x=-60.0 y=28.0 level=3) rotation=180
+name=5b type=0 location(x=-56.0 y=28.0 level=3) rotation=180
+name=5c type=0 location(x=-52.0 y=28.0 level=3) rotation=180
+name=5d type=0 location(x=-48.0 y=28.0 level=3) rotation=180
+name=5e type=0 location(x=-44.0 y=28.0 level=3) rotation=180
+name=5f type=0 location(x=-40.0 y=28.0 level=3) rotation=180
+name=5g type=0 location(x=-36.0 y=28.0 level=3) rotation=180
+name=5h type=0 location(x=-32.0 y=28.0 level=3) rotation=180
+name=5i type=0 location(x=-28.0 y=28.0 level=3) rotation=180
+name=5j type=0 location(x=-24.0 y=28.0 level=3) rotation=180
+name=5k type=0 location(x=-20.0 y=28.0 level=3) rotation=180
+name=5l type=0 location(x=-16.0 y=28.0 level=3) rotation=180
+name=5m type=0 location(x=-12.0 y=28.0 level=3) rotation=180
+name=5n type=0 location(x=-8.0 y=28.0 level=3) rotation=180
+name=5o type=0 location(x=-4.0 y=28.0 level=3) rotation=180
+name=5p type=0 location(x=4.0 y=28.0 level=3) rotation=180
+name=5q type=0 location(x=8.0 y=28.0 level=3) rotation=180
+name=5r type=0 location(x=12.0 y=28.0 level=3) rotation=180
+name=5s type=0 location(x=16.0 y=28.0 level=3) rotation=180
+name=5t type=0 location(x=20.0 y=28.0 level=3) rotation=180
+name=5u type=0 location(x=24.0 y=28.0 level=3) rotation=180
+name=5v type=0 location(x=28.0 y=28.0 level=3) rotation=180
+name=5w type=0 location(x=32.0 y=28.0 level=3) rotation=180
+name=5x type=0 location(x=36.0 y=28.0 level=3) rotation=180
+name=5y type=0 location(x=40.0 y=28.0 level=3) rotation=180
+name=5z type=0 location(x=44.0 y=28.0 level=3) rotation=180
+name=60 type=0 location(x=48.0 y=28.0 level=3) rotation=180
+name=61 type=0 location(x=52.0 y=28.0 level=3) rotation=180
+name=62 type=0 location(x=56.0 y=28.0 level=3) rotation=180
+name=63 type=0 location(x=60.0 y=28.0 level=3) rotation=180
+name=64 type=0 location(x=64.0 y=28.0 level=3) rotation=180
+name=65 type=0 location(x=68.0 y=28.0 level=3) rotation=180
 
 [Paths]
 # Level 0
-vec(x=0.0 y=13.0) location(x=0.0 y=0.0 level=0)
-vec(x=-71.0 y=0.0) location(x=0.0 y=13.0 level=0)
-vec(x=71.0 y=0.0) location(x=0.0 y=13.0 level=0)
-vec(x=0.0 y=13.0) location(x=0.0 y=13.0 level=0)
+vec(x=0.0 y=15.5) location(x=0.0 y=0.0 level=0)
+vec(x=-71.0 y=0.0) location(x=0.0 y=15.5 level=0)
+vec(x=71.0 y=0.0) location(x=0.0 y=15.5 level=0)
+vec(x=0.0 y=15.5) location(x=0.0 y=15.5 level=0)
+vec(x=0.0 y=15.0) location(x=0.0 y=31.0 level=0)
 
 # Level 1
-vec(x=0.0 y=-13.0) location(x=0.0 y=26.0 level=1)
-vec(x=-71.0 y=0.0) location(x=0.0 y=13.0 level=1)
-vec(x=71.0 y=0.0) location(x=0.0 y=13.0 level=1)
-vec(x=0.0 y=13.0) location(x=0.0 y=13.0 level=1)
+vec(x=0.0 y=-15.0) location(x=0.0 y=46.0 level=1)
+vec(x=0.0 y=-15.5) location(x=0.0 y=31.0 level=1)
+vec(x=-71.0 y=0.0) location(x=0.0 y=15.5 level=1)
+vec(x=71.0 y=0.0) location(x=0.0 y=15.5 level=1)
 
 # Level 2
-vec(x=0.0 y=-13.0) location(x=0.0 y=26.0 level=2)
-vec(x=-71.0 y=0.0) location(x=0.0 y=13.0 level=2)
-vec(x=71.0 y=0.0) location(x=0.0 y=13.0 level=2)
-vec(x=0.0 y=13.0) location(x=0.0 y=13.0 level=2)
+vec(x=0.0 y=-15.0) location(x=0.0 y=46.0 level=2)
+vec(x=0.0 y=-15.5) location(x=0.0 y=31.0 level=2)
+vec(x=-71.0 y=0.0) location(x=0.0 y=15.5 level=2)
+vec(x=71.0 y=0.0) location(x=0.0 y=15.5 level=2)
 
 # Level 3
-vec(x=0.0 y=-13.0) location(x=0.0 y=26.0 level=3)
-vec(x=-71.0 y=0.0) location(x=0.0 y=13.0 level=3)
-vec(x=71.0 y=0.0) location(x=0.0 y=13.0 level=3)
+vec(x=0.0 y=-15.0) location(x=0.0 y=46.0 level=3)
+vec(x=0.0 y=-15.5) location(x=0.0 y=31.0 level=3)
+vec(x=-71.0 y=0.0) location(x=0.0 y=15.5 level=3)
+vec(x=71.0 y=0.0) location(x=0.0 y=15.5 level=3)
 
 [Ups]
-x=0.0 y=26.0 level=0
-x=0.0 y=26.0 level=1
-x=0.0 y=26.0 level=2
+x=0.0 y=46.0 level=0
+x=0.0 y=46.0 level=1
+x=0.0 y=46.0 level=2
 
 [Downs]
-x=0.0 y=26.0 level=1
-x=0.0 y=26.0 level=2
-x=0.0 y=26.0 level=3
+x=0.0 y=46.0 level=1
+x=0.0 y=46.0 level=2
+x=0.0 y=46.0 level=3
 
 [Locations]
-x=0.0 y=13.0 level=0
+x=0.0 y=15.5 level=0
