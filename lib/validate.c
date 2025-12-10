@@ -1,72 +1,94 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <float.h>
-#include <string.h>
 #include "validate.h"
-#include "data.h"
 #include "calculations.h"
+#include "data.h"
+#include <float.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define PATH_CLEARANCE 1.5
 #define PATH_ACCESSIBILITY 6.0
-#define OK (ValidationResult){ Ok, NoError }
-#define ERR(e) (ValidationResult){ Err, e }
+#define OK                                                                     \
+  (ValidationResult) { Ok, NoError }
+#define ERR(e)                                                                 \
+  (ValidationResult) { Err, e }
 
-const char* validation_error_message(LotValidationError error) {
+const char *validation_error_message(LotValidationError error) {
   switch (error) {
-    case NoError:                  return "No error";
-    case ZeroLengthPath:           return "A path has zero length";
-    case PathNotConnected:         return "Paths are not all connected";
-    case SpacesOverlap:            return "Some spaces overlap";
-    case SpacesEncroachPath:       return "A space encroaches on a path";
-    case SpacesInaccessible:       return "A space is not accessible from any path";
-    case InvalidEntranceOrPOI:     return "Entrance or POI is on an invalid level";
-    case DuplicateSpaceNames:      return "Duplicate space names found";
-    case IncorrectUpDownCount:     return "Incorrect number of ups/downs for level count";
-    case LevelsMissingUpsOrDowns:  return "Some levels are missing required ups or downs";
-    default:                       return "Unknown error";
+  case NoError:
+    return "No error";
+  case ZeroLengthPath:
+    return "A path has zero length";
+  case PathNotConnected:
+    return "Paths are not all connected";
+  case SpacesOverlap:
+    return "Some spaces overlap";
+  case SpacesEncroachPath:
+    return "A space encroaches on a path";
+  case SpacesInaccessible:
+    return "A space is not accessible from any path";
+  case InvalidEntranceOrPOI:
+    return "Entrance or POI is on an invalid level";
+  case DuplicateSpaceNames:
+    return "Duplicate space names found";
+  case IncorrectUpDownCount:
+    return "Incorrect number of ups/downs for level count";
+  case LevelsMissingUpsOrDowns:
+    return "Some levels are missing required ups or downs";
+  default:
+    return "Unknown error";
   }
 }
 
 ValidationResult validate_lot(const Lot *lot) {
   // Rule 0: Each path must have a non-zero length
   for (int i = 0; i < lot->path_count; i++) {
-    double path_length = sqrt(lot->paths[i].vector.x * lot->paths[i].vector.x + lot->paths[i].vector.y * lot->paths[i].vector.y);
+    double path_length = sqrt(lot->paths[i].vector.x * lot->paths[i].vector.x +
+                              lot->paths[i].vector.y * lot->paths[i].vector.y);
     if (path_length < DBL_EPSILON) {
       return ERR(ZeroLengthPath);
     }
   }
-  
+
   // Rule 1: Each path must connect
-  if (!paths_connected(lot)) return ERR(PathNotConnected);
-  
+  if (!paths_connected(lot))
+    return ERR(PathNotConnected);
+
   // Rule 2: Spaces must not overlap
-  if (spaces_overlap(lot)) return ERR(SpacesOverlap);
-  
+  if (spaces_overlap(lot))
+    return ERR(SpacesOverlap);
+
   // Rule 3: No spaces encroach within PATH_CLEARANCE of path centerline
-  if (spaces_encroach_path(lot, PATH_CLEARANCE)) return ERR(SpacesEncroachPath);
-  
+  if (spaces_encroach_path(lot, PATH_CLEARANCE))
+    return ERR(SpacesEncroachPath);
+
   // Rule 4: Spaces must be within PATH_ACCESSIBILITY of a path
-  if (!spaces_accessible(lot, PATH_ACCESSIBILITY)) return ERR(SpacesInaccessible);
-  
+  if (!spaces_accessible(lot, PATH_ACCESSIBILITY))
+    return ERR(SpacesInaccessible);
+
   // Rule 5: Must have valid entrance and POI
-  if (!has_valid_entrance_and_poi(lot)) return ERR(InvalidEntranceOrPOI);
-  
+  if (!has_valid_entrance_and_poi(lot))
+    return ERR(InvalidEntranceOrPOI);
+
   // Rule 6: Every space must have a unique name
-  if (!spaces_have_unique_names(lot)) return ERR(DuplicateSpaceNames);
-  
+  if (!spaces_have_unique_names(lot))
+    return ERR(DuplicateSpaceNames);
+
   // Rule 7: Must have correct number of ups and downs
-  if (!has_correct_up_down_count(lot)) return ERR(IncorrectUpDownCount);
-  
+  if (!has_correct_up_down_count(lot))
+    return ERR(IncorrectUpDownCount);
+
   // Rule 8: Each level must have appropriate ups and downs
-  if (!levels_have_ups_and_downs(lot)) return ERR(LevelsMissingUpsOrDowns);
-  
+  if (!levels_have_ups_and_downs(lot))
+    return ERR(LevelsMissingUpsOrDowns);
+
   return OK;
 }
 
 int paths_connected(const Lot *lot) {
   int connected = 0;
-  Location* endpoints = get_all_endpoints(lot->paths, lot->path_count); // get every path's endpoint
+  Location *endpoints = get_all_endpoints(
+      lot->paths, lot->path_count); // get every path's endpoint
   int amount_of_endpoints = lot->path_count;
   // for each path we check:
   for (int i = 0; i < lot->path_count; i++) {
@@ -79,7 +101,8 @@ int paths_connected(const Lot *lot) {
         break;
       }
     }
-    if (cur != connected) continue;
+    if (cur != connected)
+      continue;
     // no? then is the start point the entrance?
     if (compare_locations(lot->paths[i].start_point, lot->entrance)) {
       connected++;
@@ -92,7 +115,8 @@ int paths_connected(const Lot *lot) {
         break;
       }
     }
-    if (cur != connected) continue;
+    if (cur != connected)
+      continue;
     // no? then is the start point a down?
     for (int l = 0; l < lot->down_count; l++) {
       if (compare_locations(lot->paths[i].start_point, lot->downs[l])) {
@@ -105,11 +129,11 @@ int paths_connected(const Lot *lot) {
     // causing the function to return 0.
   }
   free(endpoints);
-  return connected == lot->path_count; 
+  return connected == lot->path_count;
 }
 
-Location* get_all_endpoints(Path* paths, int path_count) {
-  Location* endpoints = (Location*)malloc(sizeof(Location) * path_count);
+Location *get_all_endpoints(Path *paths, int path_count) {
+  Location *endpoints = (Location *)malloc(sizeof(Location) * path_count);
   for (int i = 0; i < path_count; i++) {
     endpoints[i] = get_endpoint(&paths[i]);
   }
@@ -117,7 +141,7 @@ Location* get_all_endpoints(Path* paths, int path_count) {
 }
 
 int compare_locations(Location loc1, Location loc2) {
-    return (loc1.x == loc2.x) && (loc1.y == loc2.y) && (loc1.level == loc2.level);
+  return (loc1.x == loc2.x) && (loc1.y == loc2.y) && (loc1.level == loc2.level);
 }
 
 int spaces_overlap(const Lot *lot) {
@@ -126,9 +150,12 @@ int spaces_overlap(const Lot *lot) {
     Rectangle rect1 = get_space_rectangle(&lot->spaces[i]);
     // we then wanna compare it to every other space's rectangle
     for (int j = i + 1; j < lot->space_count; j++) {
-      if (lot->spaces[i].location.level != lot->spaces[j].location.level) { continue; } // only compare spaces on the same level
+      if (lot->spaces[i].location.level != lot->spaces[j].location.level) {
+        continue;
+      } // only compare spaces on the same level
       Rectangle rect2 = get_space_rectangle(&lot->spaces[j]);
-      // by the separating axis theorem, if we find one axis where they do not overlap, we can be sure there is no collision.
+      // by the separating axis theorem, if we find one axis where they do not
+      // overlap, we can be sure there is no collision.
       if (!separating_axis(&rect1, &rect2)) {
         return 1; // overlap found
       }
@@ -138,20 +165,23 @@ int spaces_overlap(const Lot *lot) {
 };
 
 int spaces_encroach_path(const Lot *lot, double margin) {
-  // for each path, we create a "corridor" rectangle representing the path with margin on both sides. 
-  // then we check if any space's rectangle overlaps with this corridor.
-  
+  // for each path, we create a "corridor" rectangle representing the path with
+  // margin on both sides. then we check if any space's rectangle overlaps with
+  // this corridor.
+
   // for each path
   for (int i = 0; i < lot->path_count; i++) {
     Rectangle path_corridor = get_path_corridor(&lot->paths[i], margin);
-    
+
     // check against each space
     for (int j = 0; j < lot->space_count; j++) {
       // only check spaces on the same level as the path
-      if (lot->spaces[j].location.level != lot->paths[i].start_point.level) { continue; }
-      
+      if (lot->spaces[j].location.level != lot->paths[i].start_point.level) {
+        continue;
+      }
+
       Rectangle space_rect = get_space_rectangle(&lot->spaces[j]);
-      
+
       // if no separating axis is found, the rectangles overlap
       if (!separating_axis(&path_corridor, &space_rect)) {
         return 1; // encroachment found
@@ -162,68 +192,66 @@ int spaces_encroach_path(const Lot *lot, double margin) {
 }
 
 Rectangle get_path_corridor(const Path *path, double margin) {
-  // here, we create a rectangle that represents a path with the margin on both sides.
-  
-  // first we have to get the normalized perpendicular vector to the path direction
-  double path_length = sqrt(path->vector.x * path->vector.x + path->vector.y * path->vector.y);
+  // here, we create a rectangle that represents a path with the margin on both
+  // sides.
+
+  // first we have to get the normalized perpendicular vector to the path
+  // direction
+  double path_length =
+      sqrt(path->vector.x * path->vector.x + path->vector.y * path->vector.y);
   Vector dir = {path->vector.x / path_length, path->vector.y / path_length};
   Vector normal = normal_vector(dir);
-  
+
   // Scale normal by margin
   Vector offset = {normal.x * margin, normal.y * margin};
-  
+
   // Calculate the four corners of the corridor rectangle:
   // Starting from start_point, going to endpoint (start + vector)
   // Offset by margin in the normal direction on both sides
   Rectangle rect;
-  
+
   // Corner 0: start - offset
-  rect. corner[0] = (Vector){
-    path->start_point. x - offset.x,
-    path->start_point.y - offset.y
-  };
+  rect.corner[0] =
+      (Vector){path->start_point.x - offset.x, path->start_point.y - offset.y};
 
   // Corner 1: end - offset (follow the path direction first!)
-  rect.corner[1] = (Vector){
-    path->start_point.x + path->vector.x - offset. x,
-    path->start_point. y + path->vector.y - offset. y
-  };
+  rect.corner[1] = (Vector){path->start_point.x + path->vector.x - offset.x,
+                            path->start_point.y + path->vector.y - offset.y};
 
   // Corner 2: end + offset
-  rect. corner[2] = (Vector){
-    path->start_point.x + path->vector.x + offset.x,
-    path->start_point.y + path->vector.y + offset.y
-  };
+  rect.corner[2] = (Vector){path->start_point.x + path->vector.x + offset.x,
+                            path->start_point.y + path->vector.y + offset.y};
 
   // Corner 3: start + offset
-  rect.corner[3] = (Vector){
-    path->start_point.x + offset.x,
-    path->start_point.y + offset.y
-  };
-  
+  rect.corner[3] =
+      (Vector){path->start_point.x + offset.x, path->start_point.y + offset.y};
+
   return rect;
 }
 
 int spaces_accessible(const Lot *lot, double max_distance) {
-  // for each space, check if it overlaps with at least one path's accessibility corridor
+  // for each space, check if it overlaps with at least one path's accessibility
+  // corridor
   for (int i = 0; i < lot->space_count; i++) {
     Rectangle space_rect = get_space_rectangle(&lot->spaces[i]);
     int accessible = 0;
-    
+
     // check against each path
     for (int j = 0; j < lot->path_count; j++) {
       // only check paths on the same level as the space
-      if (lot->spaces[i].location.level != lot->paths[j].start_point.level) { continue; }
-      
+      if (lot->spaces[i].location.level != lot->paths[j].start_point.level) {
+        continue;
+      }
+
       Rectangle path_corridor = get_path_corridor(&lot->paths[j], max_distance);
-      
+
       // if no separating axis found → space overlaps with corridor → accessible
       if (!separating_axis(&path_corridor, &space_rect)) {
         accessible = 1;
         break;
       }
     }
-    
+
     if (!accessible) {
       return 0; // this space is not accessible from any path
     }
@@ -269,10 +297,12 @@ int levels_have_ups_and_downs(const Lot *lot) {
   if (lot->level_count <= 1) {
     return 1; // single level, no ups/downs needed
   }
-  
+
   int *has_up = calloc(lot->level_count, sizeof(int));
-  int *has_down = calloc(lot->level_count, sizeof(int)); // calloc simply initializes every entry to 0 (false)
-  
+  int *has_down =
+      calloc(lot->level_count,
+             sizeof(int)); // calloc simply initializes every entry to 0 (false)
+
   // step 1: mark which levels have ups and downs
   for (int i = 0; i < lot->up_count; i++) {
     int level = lot->ups[i].level; // looping over every up's level
@@ -286,7 +316,7 @@ int levels_have_ups_and_downs(const Lot *lot) {
       has_down[level] = 1;
     }
   }
-  
+
   // step 2: verify the levels have the required ups and downs
   for (int i = 0; i < lot->level_count - 1; i++) {
     // every level except the top must have an up
@@ -296,7 +326,7 @@ int levels_have_ups_and_downs(const Lot *lot) {
       return 0;
     }
   }
-  
+
   for (int i = 1; i < lot->level_count; i++) {
     // every level except the bottom must have a down
     if (!has_down[i]) {
