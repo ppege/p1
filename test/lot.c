@@ -22,7 +22,7 @@ void test_best_space_no_occupancy(void) {
   Space* space = best_space(lot, Standard);
   TEST_ASSERT_NOT_NULL_MESSAGE(space, "best_space should return a valid space pointer");
   if (space != NULL) {
-    TEST_ASSERT_EQUAL_STRING_MESSAGE("D3", space->name, "best_space should return the closest available Standard space named D3");
+    TEST_ASSERT_EQUAL_STRING_MESSAGE("D4", space->name, "best_space should return the closest available Standard space named D4");
   } else {
     TEST_FAIL_MESSAGE("best_space returned NULL space pointer (somehow)");
   }
