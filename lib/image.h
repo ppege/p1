@@ -20,6 +20,7 @@ static const Color COLOR_POI        = {255, 100, 255};  // Magenta
 static const Color COLOR_UP         = {255, 165, 0};    // Orange
 static const Color COLOR_DOWN       = {139, 69, 19};    // Brown
 static const Color COLOR_BLACK      = {0, 0, 0};        // Black
+static const Color COLOR_RED        = {255, 0, 0};      // Red
 
 void draw_level_label(Color *buffer, int img_width, int img_height, int level, int margin);
 void draw_space_label(Color *buffer, int img_width, int img_height, const Rectangle pixel_rect, const char *name);
@@ -58,9 +59,10 @@ void draw_scale_bar(Color *buffer, int img_width, int img_height,
 /**
  * Write a Lot to a PPM file for a specific level.
  */
-int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_unit);
+int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_unit, Path* nav, int nav_count);
 
 /**
  * Write all levels of a Lot to separate PPM files. 
  */
-int lot_to_ppm_all_levels(const Lot lot, const char *base_filename, int pixels_per_unit);
+int lot_to_ppm_all_levels(const Lot lot, const char *base_filename, int pixels_per_unit, Path* nav, int nav_count);
+

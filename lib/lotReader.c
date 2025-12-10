@@ -20,7 +20,8 @@ static Space readSpace(char *line) {
   Space space = {.type = type,
                  .location = {x, y, level},
                  .rotation = rotation,
-                 .name = strdup(name)};
+                 .name = strdup(name),
+                 .occupied = -1};
 
   // printf("Created space: Name=%s, Type=%d, Location=(%.2f, %.2f %d),  "
   //        "Rotation=%.2f\n",
@@ -70,6 +71,7 @@ static Location readLocation(char *line) {
 Lot lot_from_file(char *filename) {
   // initialize a lot struct with 1 of everything
   Lot lot = create_lot(1, 1, 1, 1, 1);
+  lot.ramp_length = 40.0; // default ramp length
   // Opening the file for reading
   FILE *fptr = fopen(filename, "r");
 
@@ -115,6 +117,8 @@ Lot lot_from_file(char *filename) {
         stage = 6;
       } else if (strcmp(buffer, "[Entrance]\n") == 0) {
         stage = 7;
+      } else if (strcmp(buffer, "[Ramp Length]\n") == 0) {
+        stage = 8;
       } else {
         // Unknown header, "handle" error
         printf("Unknown header: |%s|\n", buffer);
@@ -168,6 +172,10 @@ Lot lot_from_file(char *filename) {
         // Entrance
         lot.entrance = location;
       }
+    } else if (stage == 8) {
+      double length = 0.0;
+      sscanf(buffer, "%lf", &length);
+      lot.ramp_length = length;
     } else {
       // Unknown stage, handle error
       printf("Unknown stage: %d\n", stage);

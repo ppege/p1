@@ -28,6 +28,7 @@ typedef struct {
   Location location;
   double rotation; // in degrees
   char* name;
+  int occupied;
 } Space;
 
 typedef struct {
@@ -59,6 +60,7 @@ typedef struct {
   int down_count;
   Location entrance;
   Location POI;
+  double ramp_length;
 } Lot;
 
 Location get_endpoint(const Path path);

@@ -435,7 +435,7 @@ void test_validate_lot_wrong_up_down_count() {
   lot.POI = (Location){10, 0, 0};
   lot.ups[0] = (Location){0, 0, 0};
 	lot.downs[0] = (Location){0, 0, 1};
-	lot.downs[1] = (Location){50, 50, 1}; // to hell with you, invalid down!
+	lot.downs[1] = (Location){20, 0, 1}; // down at valid location but extra down overall
   lot.paths[0] = (Path){ .start_point = (Location){0, 0, 0}, .vector = (Vector){20, 0} };
   lot.paths[1] = (Path){ .start_point = (Location){0, 0, 1}, .vector = (Vector){20, 0} };
   lot.spaces[0] = (Space){ .type = Standard, .location = (Location){5, 4, 0}, .rotation = 0, .name = "A1" };

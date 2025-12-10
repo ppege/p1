@@ -110,8 +110,47 @@ int paths_connected(const Lot lot) {
     // connected will be less than path_count,
     // causing the function to return 0.
   }
+
+  // then, for every up and down, we need to check they connect to at least one path.
+  // this can either be "to" or "from" the up/down since non-entrance levels tend to have
+  // paths exclusively going from ups/downs rather than to them.
+  
+  // for each up
+  for (int m = 0; m < lot.up_count; m++) {
+    // is there at least one path connecting to this up?
+    for (int n = 0; n < lot.path_count; n++) {
+      // first check against every endpoint
+      Location endpoint = endpoints[n];
+      if (compare_locations(lot.ups[m], endpoint)) {
+        connected++;
+        break;
+      }
+      // then check against every start point
+      Location startpoint = lot.paths[n].start_point;
+      if (compare_locations(lot.ups[m], startpoint)) {
+        connected++;
+        break;
+      }
+    }
+  }
+  for (int o = 0; o < lot.down_count; o++) {
+    // is there at least one path connecting to this down?
+    for (int p = 0; p < lot.path_count; p++) {
+      Location endpoint = endpoints[p];
+      if (compare_locations(lot.downs[o], endpoint)) {
+        connected++;
+        break;
+      }
+      // then check against every start point
+      Location startpoint = lot.paths[p].start_point;
+      if (compare_locations(lot.downs[o], startpoint)) {
+        connected++;
+        break;
+      }
+    }
+  }
   free(endpoints);
-  return connected == lot.path_count; 
+  return connected == lot.path_count + lot.up_count + lot.down_count; 
 }
 
 Location* get_all_endpoints(Path* paths, int path_count) {

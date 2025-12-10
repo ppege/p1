@@ -610,7 +610,7 @@ static Rectangle world_to_pixel_rect(const Rectangle world_rect, double pixels_p
   return pixel_rect;
 }
 
-int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_unit) {
+int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_unit, Path* nav, int nav_count) {
   if (!filename || pixels_per_unit <= 0) return -1;
 
   double min_x, min_y, max_x, max_y;
@@ -626,6 +626,15 @@ int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_un
 
   for (int i = 0; i < img_width * img_height; i++) {
     buffer[i] = COLOR_BACKGROUND;
+  }
+
+  for (int i = 0; i < img_width; i++) {
+    set_pixel(buffer, img_width, img_height, i, 0, COLOR_BLACK);
+    set_pixel(buffer, img_width, img_height, i, img_height - 1, COLOR_BLACK);
+  }
+  for (int i = 0; i < img_height; i++) {
+    set_pixel(buffer, img_width, img_height, 0, i, COLOR_BLACK);
+    set_pixel(buffer, img_width, img_height, img_width - 1, i, COLOR_BLACK);
   }
 
   #define TO_PX_X(wx) (((wx) - min_x) * pixels_per_unit)
@@ -645,6 +654,24 @@ int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_un
         TO_PX_Y(end.y),
         COLOR_PATH,
         pixels_per_unit * 3
+      );
+    }
+  }
+
+  // if nav data is provided, draw it
+  for (int i = 0; i < nav_count; i++) {
+    if (nav[i].start_point.level == level) {
+      Location end = get_endpoint(nav[i]);
+      draw_line(
+        buffer,
+        img_width,
+        img_height,
+        TO_PX_X(nav[i].start_point.x),
+        TO_PX_Y(nav[i].start_point.y),
+        TO_PX_X(end.x),
+        TO_PX_Y(end.y),
+        COLOR_RED,
+        pixels_per_unit / 3
       );
     }
   }
@@ -716,13 +743,13 @@ int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_un
   return 0;
 }
 
-int lot_to_ppm_all_levels(const Lot lot, const char *base_filename, int pixels_per_unit) {
+int lot_to_ppm_all_levels(const Lot lot, const char *base_filename, int pixels_per_unit, Path* nav, int nav_count) {
   if (!base_filename) return -1;
 
   char filename[256];
   for (int level = 0; level < lot.level_count; level++) {
     snprintf(filename, sizeof(filename), "%s_level%d.ppm", base_filename, level);
-    if (lot_to_ppm(lot, filename, level, pixels_per_unit) != 0) {
+    if (lot_to_ppm(lot, filename, level, pixels_per_unit, nav, nav_count) != 0) {
       return -1;
     }
   }

@@ -1,5 +1,6 @@
 #include "lot.h"
 #include "data.h"
+#include "nav.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -131,4 +132,39 @@ int count_levels(const Lot lot) {
   }
   free(levels);
   return level_count;
+}
+
+// find the best available space of a given type; best means closest to the entrance
+Space* best_space(const Lot lot, SpaceType type) {
+  Space* best = NULL;
+  double best_distance = -1.0;
+
+  for (int i = 0; i < lot.space_count; i++) {
+    // check if space is of the desired type and unoccupied
+    if (lot.spaces[i].type != type || lot.spaces[i].occupied != -1) {
+      continue;
+    }
+
+    printf("Evaluating space %s at (%.2f, %.2f, Level %d)\n", lot.spaces[i].name, lot.spaces[i].location.x, lot.spaces[i].location.y, lot.spaces[i].location.level);
+
+    // calculate distance from entrance
+    int count = 0;
+    Path* superpath = superpath_to_space(lot, lot.spaces[i], &count);
+    if (count == -1) {
+      continue; // no valid path to this space
+    }
+    double distance = superpath_length(superpath, count);
+    free(superpath);
+
+    // add ramp length * level difference (if 0 nothing is added)
+    int level_diff = abs(lot.spaces[i].location.level - lot.entrance.level);
+    distance += level_diff * lot.ramp_length;
+
+    // check if this is the best (shortest) so far
+    if (best_distance < 0 || distance < best_distance) {
+      best_distance = distance;
+      best = &lot.spaces[i];
+    }
+  }
+  return best;
 }

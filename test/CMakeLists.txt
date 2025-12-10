@@ -5,7 +5,7 @@ add_executable(test_PlateDB PlateDB.c)
 target_link_libraries(test_PlateDB data PlateDB Unity)
 
 add_executable(test_lot lot.c)
-target_link_libraries(test_lot lot Unity)
+target_link_libraries(test_lot lot lotReader Unity)
 
 add_executable(test_data data.c)
 target_link_libraries(test_data data calculations lot Unity)
