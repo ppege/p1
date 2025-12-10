@@ -39,6 +39,10 @@ Path readPath(char *line) {
   Path path = {.vector = {vx, vy},
                .start_point = {location_x, location_y, level}};
 
+  printf("Created path: Vector=(%.2f, %.2f), location=(%.2f, %.2f, "
+         "Level %d)\n",
+         path.vector.x, path.vector.y, path.start_point.x, path.start_point.y,
+         path.start_point.level);
   return path;
 };
 
@@ -92,6 +96,9 @@ void readLotFromFile(char *filename, Lot *lot) {
         stage = 1;
       } else if (strcmp(buffer, "[Paths]\n") == 0) {
         stage = 2;
+      } else if (strcmp(buffer, "[Locations]\n") ==
+                 0) { // TODO: Remove since its unused
+        stage = 3;
       } else if (strcmp(buffer, "[Ups]\n") == 0) {
         stage = 3;
       } else if (strcmp(buffer, "[Downs]\n") == 0) {

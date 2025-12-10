@@ -11,6 +11,38 @@ Location get_endpoint(const Path *path) {
   return endpoint;
 }
 
+int get_occupied_space_from_car(Lot *lot, int CarIndex) {
+  for (int i = 0; i < lot->space_count; i++) {
+    if (lot->spaces[i].occupied == CarIndex) {
+      return i; // Return the index of the occupied space
+    }
+  }
+  return -1; // Car not found in any occupied space
+}
+
+int CheckInOrOut(Lot *lot, int CarIndex) {
+  int index = get_occupied_space_from_car(lot, CarIndex);
+  if (index != -1) {
+    // Car is already checked in, so check it out
+    lot->spaces[index].occupied = -1;
+    return -1; // Checked out
+  } else {
+    // Car is not checked in, so check it in
+    // Find the best available space
+    // TODO: Space finder alg
+    // For now, just find the first available space
+    for (int i = 0; i < lot->space_count; i++) {
+      if (lot->spaces[i].occupied == -1) {
+        // Found an available space, check the car in here
+        lot->spaces[i].occupied = CarIndex;
+        return i; // Return the index of the space where the car was checked in
+      }
+    }
+    // Something went wrong if we reach here
+    return -2;
+  }
+}
+
 Rectangle get_space_rectangle(const Space *space) {
   Dimension dim = standardized_spaces[space->type];
   double angle_rad = degrees_to_radians(space->rotation);

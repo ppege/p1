@@ -1,17 +1,17 @@
 #include "PlateDB.h"
 #include "data.h"
 #include "display.h"
+#include "image.h"
 #include "lot.h"
 #include "lotReader.h"
 #include "validate.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 int main() {
-  // Create lot and read .lot file
-  Lot *lot = create_lot(0, 10, 10, 10, 10);
-  char *LotFileName = "test.lot";
+  Lot *lot = create_lot(1, 1, 1, 1, 1);
+  char *LotFileName = "example.lot";
   readLotFromFile(LotFileName, lot);
+  ValidationResult result = validate_lot(lot);
 
   // Validate lot
   ValidationResult result = validate_lot(lot);
