@@ -12,7 +12,6 @@ int main() {
   Lot *lot = create_lot(1, 1, 1, 1, 1);
   char *LotFileName = "example.lot";
   readLotFromFile(LotFileName, lot);
-  ValidationResult result = validate_lot(lot);
 
   // Validate lot
   ValidationResult result = validate_lot(lot);
