@@ -150,22 +150,22 @@ Lot lot_from_file(char *filename) {
       // Process location data
       Location location = readLocation(buffer);
       if (stage == 3) {
-        lot->ups[UpCount++] = location;
-        if (UpCount == lot->up_count) {
+        lot.ups[UpCount++] = location;
+        if (UpCount == lot.up_count) {
           // Resize the ups array if needed
           lot.up_count += 10;
           lot.ups = realloc(lot.ups, lot.up_count * sizeof(Location));
         }
       } else if (stage == 4) {
-        lot->downs[DownCount++] = location;
-        if (DownCount == lot->down_count) {
+        lot.downs[DownCount++] = location;
+        if (DownCount == lot.down_count) {
           // Resize the downs array if needed
           lot.down_count += 10;
           lot.downs = realloc(lot.downs, lot.down_count * sizeof(Location));
         }
       } else if (stage == 5) {
         // POI
-        lot->POI = location;
+        lot.POI = location;
       } else if (stage == 6) {
         // Entrance
         lot.entrance = location;
