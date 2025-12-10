@@ -12,8 +12,6 @@ int main() {
   Lot lot = lot_from_file("diagonal.lot");
   ValidationResult result = validate_lot(lot);
 
-  // Validate lot
-  ValidationResult result = validate_lot(lot);
   if (result.error != NoError) {
     printf("Lot validation failed with error: %s\n",
            validation_error_message(result.error));
