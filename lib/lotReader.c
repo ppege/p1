@@ -102,7 +102,8 @@ void readLotFromFile(char *filename, Lot *lot) {
         stage = 1;
       } else if (strcmp(buffer, "[Paths]\n") == 0) {
         stage = 2;
-      } else if (strcmp(buffer, "[Locations]\n") == 0) {
+      } else if (strcmp(buffer, "[Locations]\n") ==
+                 0) { // TODO: Remove since its unused
         stage = 3;
       } else if (strcmp(buffer, "[Ups]\n") == 0) {
         stage = 4;

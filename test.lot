@@ -13,3 +13,15 @@ name=B2 type=0 location(x=8 y=5 level=0) rotation=90
 [Paths]
 vec(x=0 y=10) location(x=10 y=0 level=0)
 
+<<<<<<< HEAD
+[Ups]
+x=2.5 y=1.25 level=0
+x=2.5 y=1.25 level=0
+
+[Downs]
+x=2.5 y=1.25 level=0
+x=2.5 y=1.25 level=0
+
+
+
+# comment
