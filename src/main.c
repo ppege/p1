@@ -1,12 +1,10 @@
-#include "PlateDB.h"
 #include "data.h"
-#include "display.h"
 #include "image.h"
 #include "lot.h"
 #include "lotReader.h"
 #include "validate.h"
 #include "nav.h"
-#include "data.h"
+#include <stdio.h>
 
 int main() {
   Lot lot = lot_from_file("diagonal.lot");
@@ -30,6 +28,5 @@ int main() {
   int standard_size = 30;
   lot_to_ppm_all_levels(lot, "parking", standard_size, nav, count);
 
-  free(CarArr);
   return 0;
 }
