@@ -1,16 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <float.h>
-#include <string.h>
 #include "validate.h"
-#include "data.h"
 #include "calculations.h"
+#include "data.h"
+#include <float.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define OK (ValidationResult){ Ok, NoError }
 #define ERR(e) (ValidationResult){ Err, e }
 
-const char* validation_error_message(LotValidationError error) {
+const char *validation_error_message(LotValidationError error) {
   switch (error) {
     case NoError:                  return "No error";
     case ZeroLengthPath:           return "A path has zero length";
@@ -35,13 +34,15 @@ ValidationResult validate_lot(const Lot lot) {
       return ERR(ZeroLengthPath);
     }
   }
-  
+
   // Rule 1: Each path must connect
-  if (!paths_connected(lot)) return ERR(PathNotConnected);
-  
+  if (!paths_connected(lot))
+    return ERR(PathNotConnected);
+
   // Rule 2: Spaces must not overlap
-  if (spaces_overlap(lot)) return ERR(SpacesOverlap);
-  
+  if (spaces_overlap(lot))
+    return ERR(SpacesOverlap);
+
   // Rule 3: No spaces encroach within PATH_CLEARANCE of path centerline
   if (spaces_encroach_path(lot, path_clearance)) return ERR(SpacesEncroachPath);
   
@@ -49,14 +50,17 @@ ValidationResult validate_lot(const Lot lot) {
   if (!spaces_accessible(lot, path_accessibility)) return ERR(SpacesInaccessible);
   
   // Rule 5: Must have valid entrance and POI
-  if (!has_valid_entrance_and_poi(lot)) return ERR(InvalidEntranceOrPOI);
-  
+  if (!has_valid_entrance_and_poi(lot))
+    return ERR(InvalidEntranceOrPOI);
+
   // Rule 6: Every space must have a unique name
-  if (!spaces_have_unique_names(lot)) return ERR(DuplicateSpaceNames);
-  
+  if (!spaces_have_unique_names(lot))
+    return ERR(DuplicateSpaceNames);
+
   // Rule 7: Must have correct number of ups and downs
-  if (!has_correct_up_down_count(lot)) return ERR(IncorrectUpDownCount);
-  
+  if (!has_correct_up_down_count(lot))
+    return ERR(IncorrectUpDownCount);
+
   // Rule 8: Each level must have appropriate ups and downs
   if (!levels_have_ups_and_downs(lot)) return ERR(LevelsMissingUpsOrDowns);
 
@@ -85,7 +89,8 @@ int paths_connected(const Lot lot) {
         break;
       }
     }
-    if (cur != connected) continue;
+    if (cur != connected)
+      continue;
     // no? then is the start point the entrance?
     if (compare_locations(lot.paths[i].start_point, lot.entrance)) {
       connected++;
@@ -98,7 +103,8 @@ int paths_connected(const Lot lot) {
         break;
       }
     }
-    if (cur != connected) continue;
+    if (cur != connected)
+      continue;
     // no? then is the start point a down?
     for (int l = 0; l < lot.down_count; l++) {
       if (compare_locations(lot.paths[i].start_point, lot.downs[l])) {
@@ -153,14 +159,13 @@ int paths_connected(const Lot lot) {
   return connected == lot.path_count + lot.up_count + lot.down_count; 
 }
 
-Location* get_all_endpoints(Path* paths, int path_count) {
-  Location* endpoints = (Location*)malloc(sizeof(Location) * path_count);
+Location *get_all_endpoints(Path *paths, int path_count) {
+  Location *endpoints = (Location *)malloc(sizeof(Location) * path_count);
   for (int i = 0; i < path_count; i++) {
     endpoints[i] = get_endpoint(paths[i]);
   }
   return endpoints;
 }
-
 
 int spaces_overlap(const Lot lot) {
   // using get_space_rectangle we get the rectangles of each space
@@ -210,15 +215,15 @@ Rectangle get_path_corridor(const Path path, double margin) {
   double path_length = sqrt(path.vector.x * path.vector.x + path.vector.y * path.vector.y);
   Vector dir = {path.vector.x / path_length, path.vector.y / path_length};
   Vector normal = normal_vector(dir);
-  
+
   // Scale normal by margin
   Vector offset = {normal.x * margin, normal.y * margin};
-  
+
   // Calculate the four corners of the corridor rectangle:
   // Starting from start_point, going to endpoint (start + vector)
   // Offset by margin in the normal direction on both sides
   Rectangle rect;
-  
+
   // Corner 0: start - offset
   rect.corner[0] = (Vector){
     path.start_point.x - offset.x,
@@ -251,7 +256,7 @@ int spaces_accessible(const Lot lot, double max_distance) {
   for (int i = 0; i < lot.space_count; i++) {
     Rectangle space_rect = get_space_rectangle(lot.spaces[i]);
     int accessible = 0;
-    
+
     // check against each path
     for (int j = 0; j < lot.path_count; j++) {
       // only check paths on the same level as the space
@@ -265,7 +270,7 @@ int spaces_accessible(const Lot lot, double max_distance) {
         break;
       }
     }
-    
+
     if (!accessible) {
       return 0; // this space is not accessible from any path
     }
@@ -328,7 +333,7 @@ int levels_have_ups_and_downs(const Lot lot) {
       has_down[level] = 1;
     }
   }
-  
+
   // step 2: verify the levels have the required ups and downs
   for (int i = 0; i < lot.level_count - 1; i++) {
     // every level except the top must have an up

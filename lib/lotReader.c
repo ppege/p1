@@ -76,7 +76,7 @@ Lot lot_from_file(char *filename) {
   FILE *fptr = fopen(filename, "r");
 
   // Buffer to hold each line and counting variables
-  char buffer[80];
+  char buffer[420];
   int stage = 0;
   int SpaceCount = 0;
   int PathCount = 0;
@@ -107,18 +107,16 @@ Lot lot_from_file(char *filename) {
         stage = 1;
       } else if (strcmp(buffer, "[Paths]\n") == 0) {
         stage = 2;
-      } else if (strcmp(buffer, "[Locations]\n") == 0) {
-        stage = 3;
       } else if (strcmp(buffer, "[Ups]\n") == 0) {
-        stage = 4;
+        stage = 3;
       } else if (strcmp(buffer, "[Downs]\n") == 0) {
-        stage = 5;
+        stage = 4;
       } else if (strcmp(buffer, "[POI]\n") == 0) {
-        stage = 6;
+        stage = 5;
       } else if (strcmp(buffer, "[Entrance]\n") == 0) {
-        stage = 7;
+        stage = 6;
       } else if (strcmp(buffer, "[Ramp Length]\n") == 0) {
-        stage = 8;
+        stage = 7;
       } else {
         // Unknown header, "handle" error
         printf("Unknown header: |%s|\n", buffer);
@@ -146,33 +144,33 @@ Lot lot_from_file(char *filename) {
         lot.path_count += 25;
         lot.paths = realloc(lot.paths, lot.path_count * sizeof(Path));
       }
-    } else if (stage > 2 && stage < 8) {
-      // It has to be stage 3,4,5,6 or 7 since they are all just a location
+    } else if (stage > 2 && stage < 7) {
+      // It has to be stage 3,4,5, or 6 since they are all just a location
       // Is still different stages for making it easier to read
       // Process location data
       Location location = readLocation(buffer);
-      if (stage == 4) {
-        lot.ups[UpCount++] = location;
-        if (UpCount == lot.up_count) {
+      if (stage == 3) {
+        lot->ups[UpCount++] = location;
+        if (UpCount == lot->up_count) {
           // Resize the ups array if needed
           lot.up_count += 10;
           lot.ups = realloc(lot.ups, lot.up_count * sizeof(Location));
         }
-      } else if (stage == 5) {
-        lot.downs[DownCount++] = location;
-        if (DownCount == lot.down_count) {
+      } else if (stage == 4) {
+        lot->downs[DownCount++] = location;
+        if (DownCount == lot->down_count) {
           // Resize the downs array if needed
           lot.down_count += 10;
           lot.downs = realloc(lot.downs, lot.down_count * sizeof(Location));
         }
-      } else if (stage == 6) {
+      } else if (stage == 5) {
         // POI
-        lot.POI = location;
-      } else if (stage == 7) {
+        lot->POI = location;
+      } else if (stage == 6) {
         // Entrance
         lot.entrance = location;
       }
-    } else if (stage == 8) {
+    } else if (stage == 7) {
       double length = 0.0;
       sscanf(buffer, "%lf", &length);
       lot.ramp_length = length;

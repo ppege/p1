@@ -1,7 +1,6 @@
 #include "lotReader.h"
 #include "data.h"
 #include "unity.h"
-#include <stdio.h>
 
 void setUp() {}
 

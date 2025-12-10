@@ -7,6 +7,7 @@ target_link_libraries(lot PUBLIC nav)
 
 add_library(validate validate.c)
 target_include_directories(validate PUBLIC .)
+target_link_libraries(validate data)
 
 add_library(calculations calculations.c)
 target_include_directories(calculations PUBLIC .)
