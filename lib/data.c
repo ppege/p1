@@ -2,15 +2,15 @@
 #include "calculations.h"
 #include <float.h>
 
-Location get_endpoint(const Path *path) {
+Location get_endpoint(const Path path) {
   // Calculate the endpoint of the path based on its start_point and vector
   Location endpoint;
-  endpoint.x = path->start_point.x + path->vector.x;
-  endpoint.y = path->start_point.y + path->vector.y;
-  endpoint.level = path->start_point.level;
+  endpoint.x = path.start_point.x + path.vector.x;
+  endpoint.y = path.start_point.y + path.vector.y;
+  endpoint.level = path.start_point.level;
   return endpoint;
 }
-
+  
 int get_occupied_space_from_car(Lot *lot, int CarIndex) {
   for (int i = 0; i < lot->space_count; i++) {
     if (lot->spaces[i].occupied == CarIndex) {
@@ -43,9 +43,9 @@ int CheckInOrOut(Lot *lot, int CarIndex) {
   }
 }
 
-Rectangle get_space_rectangle(const Space *space) {
-  Dimension dim = standardized_spaces[space->type];
-  double angle_rad = degrees_to_radians(space->rotation);
+Rectangle get_space_rectangle(const Space space) {
+  Dimension dim = standardized_spaces[space.type];
+  double angle_rad = degrees_to_radians(space.rotation);
 
   // first we find the four corners relative to the bottom-left corner.
   Vector local_corners[4] = {
@@ -60,12 +60,15 @@ Rectangle get_space_rectangle(const Space *space) {
     // since each "corner" is really a vector from the bottom left to corner i,
     // we can just rotate this vector.
     Vector rotated = rotate_vector(local_corners[i], angle_rad);
-    // then we use simple vector math to find the vector from the origin to the
-    // corner in world space, ie a coordinate.
-    rect.corner[i].x = rotated.x + space->location.x;
-    rect.corner[i].y = rotated.y + space->location.y;
+    // then we use simple vector math to find the vector from the origin to the corner in world space, ie a coordinate.
+    rect.corner[i].x = rotated.x + space.location.x;
+    rect.corner[i].y = rotated.y + space.location.y;
   }
 
   return rect; // we now have the absolute coordinates of every corner of the
                // space given.
+}
+
+int compare_locations(Location loc1, Location loc2) {
+    return (loc1.x == loc2.x) && (loc1.y == loc2.y) && (loc1.level == loc2.level);
 }

@@ -53,6 +53,7 @@ dkms.conf
 
 .DS_Store
 build/
+release/
 .idea
 .env
 .cache/
