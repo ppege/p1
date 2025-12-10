@@ -6,6 +6,7 @@
 #include "lotReader.h"
 #include "validate.h"
 #include <stdio.h>
+#include "stdlib.h"
 
 int main() {
   Lot *lot = create_lot(1, 1, 1, 1, 1);
