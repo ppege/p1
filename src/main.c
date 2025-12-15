@@ -112,7 +112,7 @@ int main() {
       printf("No navigation path found to space %s.\n", foundSpace->name);
       continue;
     }
-    lot_to_ppm_all_levels(lot, "outshit", 10, superpath, lenght);
+    lot_to_ppm_all_levels(lot, "outImg", 10, superpath, lenght);
     printf(
         "Navigation path to space %s generated and saved as outshit_LvX.ppm.\n",
         foundSpace->name);

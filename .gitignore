@@ -59,6 +59,9 @@ release/
 .cache/
 compile_commands.json
 
+# Image files
+*.ppm
+
 # debug information files
 *.dwo
 
