@@ -258,7 +258,7 @@ void draw_circle(Color *buffer, int img_width, int img_height, double cx, double
   if (start_x < 0) start_x = 0;
   if (start_y < 0) start_y = 0;
   if (end_x >= img_width) end_x = img_width - 1;
-  if (endA_y >= img_height) end_y = img_height - 1;
+  if (end_y >= img_height) end_y = img_height - 1;
 
   Vector center = { cx, cy };
 
