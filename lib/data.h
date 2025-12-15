@@ -66,3 +66,4 @@ typedef struct {
 Location get_endpoint(const Path path);
 Rectangle get_space_rectangle(const Space space);
 int compare_locations(Location loc1, Location loc2);
+int get_occupied_space_from_car(Lot *lot, int CarIndex);
