@@ -10,6 +10,7 @@
 // Color Helpers
 // ============================================================================
 
+// Helper function to get color based on space type
 static Color get_space_color(SpaceType type) {
   switch (type) {
     case Standard: return COLOR_STANDARD;
@@ -20,6 +21,7 @@ static Color get_space_color(SpaceType type) {
   }
 }
 
+// Helper function to read the color of a pixel based on coordinates
 static Color get_pixel(Color *buffer, int img_width, int img_height, int x, int y) {
   if (x >= 0 && x < img_width && y >= 0 && y < img_height) {
     return buffer[y * img_width + x];
@@ -27,10 +29,16 @@ static Color get_pixel(Color *buffer, int img_width, int img_height, int x, int 
   return COLOR_BACKGROUND;
 }
 
+// Helper function to blend two colors with alpha
 static Color blend_colors(Color bg, Color fg, double alpha) {
+  // Clamp alpha to [0, 1]
   if (alpha < 0.0) alpha = 0.0;
   if (alpha > 1.0) alpha = 1.0;
 
+  // Each color channel is 100-alpha% background and alpha% foreground if you get what I mean
+  // Like, with 1.0 alpha it's 100% foreground, with 0.0 it's 100% background
+  // 0.5 alpha gives 0.5 background and 0.5 foreground
+  // 0.75 alpha gives 0.25 background and 0.75 foreground, etc; totals to 1.0
   return (Color){
     .r = (unsigned char)(bg.r * (1.0 - alpha) + fg.r * alpha),
     .g = (unsigned char)(bg.g * (1.0 - alpha) + fg.g * alpha),
@@ -38,12 +46,15 @@ static Color blend_colors(Color bg, Color fg, double alpha) {
   };
 }
 
+// Helper function to set the color of a pixel based on coordinates
 static void set_pixel(Color *buffer, int img_width, int img_height, int x, int y, Color color) {
   if (x >= 0 && x < img_width && y >= 0 && y < img_height) {
     buffer[y * img_width + x] = color;
   }
 }
 
+// Helper function that combines get_pixel, blend_colors, and set_pixel
+// blends a color with the background and sets the pixel
 static void set_pixel_alpha(Color *buffer, int img_width, int img_height,
                             int x, int y, Color color, double alpha) {
   if (x >= 0 && x < img_width && y >= 0 && y < img_height) {
@@ -56,6 +67,7 @@ static void set_pixel_alpha(Color *buffer, int img_width, int img_height,
 // Vector Math Helpers
 // ============================================================================
 
+// used to find out if we're inside a rectangle
 static double point_to_rect_edge_distance(const Rectangle rect, Vector point) {
   double min_dist = 1e9;
 
@@ -70,7 +82,7 @@ static double point_to_rect_edge_distance(const Rectangle rect, Vector point) {
 }
 
 // ============================================================================
-// Wu's Algorithm Helpers
+// Wu's Algorithm Helpers https://en.wikipedia.org/wiki/Xiaolin_Wu%27s_line_algorithm
 // ============================================================================
 
 static double fpart(double x) {
@@ -85,9 +97,14 @@ static double rfpart(double x) {
 // Drawing Functions
 // ============================================================================
 
+// Wu's line algorithm with thickness support
+// Please read https://en.wikipedia.org/wiki/Xiaolin_Wu%27s_line_algorithm to understand this
+// Or at least to see that this is a C implementation of the pseudocode under the section "Floating Point Implementation"
 void draw_line(Color *buffer, int img_width, int img_height,
                double x0, double y0, double x1, double y1,
                Color color, int thickness) {
+  // thickness support outside the scope of Wu's algorithm
+  // simply calls itself multiple times offset by perpendicular vectors
   if (thickness > 1) {
     Vector dir = { x1 - x0, y1 - y0 };
     double len = vector_length(dir);
@@ -105,53 +122,82 @@ void draw_line(Color *buffer, int img_width, int img_height,
     return;
   }
 
-  // Wu's algorithm
-  int steep = fabs(y1 - y0) > fabs(x1 - x0);
+  // In the wise words of Xiaolin Wu:
+  int steep = fabs(y1 - y0) > fabs(x1 - x0); // y difference greater than x difference, the line forms an acute angle with the y-axis
+                                             // this is relevant because the algorithm only takes into account the single pixels above and below the line
+                                             // you can imagine that as the line gets steeper, this becomes increasingly useless
+                                             // so we need to know whether or not the line is "steep" for later
 
   if (steep) {
+    // swap x0 and y0
     double tmp;
     tmp = x0;
     x0 = y0;
     y0 = tmp;
 
+    // swap x1 and y1
     tmp = x1;
     x1 = y1;
     y1 = tmp;
+
+    // this effectively mirrors the line across the y=x axis
+    // this lets the algorithm operate in terms of x as the major axis
   }
 
+  // Wu's algorithm assumes left to right drawing, so if (x1, y1) is to the left of (x0, y0), we swap the points
   if (x0 > x1) {
+    // swap x0 and x1
     double tmp;
     tmp = x0;
     x0 = x1;
     x1 = tmp;
 
+    // swap y0 and y1
     tmp = y0;
     y0 = y1;
     y1 = tmp;
   }
 
+  // Compute the slope
   double dx = x1 - x0;
   double dy = y1 - y0;
-  double gradient = (dx == 0.0) ? 1.0 : dy / dx;
+  double gradient = (dx == 0.0) ? 1.0 : dy / dx; // avoid division by zero; setting the gradient to 1.0 doesn't matter
+                                                 // the only case where dx == 0 is the degenerate case of a line with no length
+                                                 // kind of hard to visualize, but consider this:
+                                                 //   1. if the line is vertical (x0 == x1), then steep is true and
+                                                 //      x and y are swapped, therefore not necessarily making dx zero
+                                                 //   2. if the line is horizontal (y0 == y1), there is no swap so still no dx == 0
+                                                 //   3. if the line is a single point (x0 == x1 and y0 == y1), there is no swap,
+                                                 //      but dx == 0
+                                                 // at this point the main loop doesn't do anything anyway because xpxl1 == xpxl2
+                                                 // also, gradient will always be a value between 0 and 1 since dy <= dx
 
+  // The two endpoints of a line are treated specially.
   // First endpoint
-  double xend = round(x0);
-  double yend = y0 + gradient * (xend - x0);
-  double xgap = rfpart(x0 + 0.5);
+  double xend = round(x0); // xend is the first integer x-coordinate where the line begins
+  double yend = y0 + gradient * (xend - x0); // corresponding y value for xend
+  double xgap = rfpart(x0 + 0.5); // the coverage of the first pixel
   int xpxl1 = (int)xend;
-  int ypxl1 = (int)floor(yend);
+  int ypxl1 = (int)floor(yend); // flooring gives the pixel y below the intersection
 
+  // One pixel receives intensity proportional to the distance
+  // from the intersection to its center (rfpart), the other receives the
+  // complement (fpart). This is seen in the final argument to set_pixel_alpha below.
   if (steep) {
+    // if steep, we swapped x and y earlier, so we need to swap them back here
     set_pixel_alpha(buffer, img_width, img_height, ypxl1, xpxl1, color, rfpart(yend) * xgap);
     set_pixel_alpha(buffer, img_width, img_height, ypxl1 + 1, xpxl1, color, fpart(yend) * xgap);
   } else {
+    // otherwise just set the pixel normally
     set_pixel_alpha(buffer, img_width, img_height, xpxl1, ypxl1, color, rfpart(yend) * xgap);
     set_pixel_alpha(buffer, img_width, img_height, xpxl1, ypxl1 + 1, color, fpart(yend) * xgap);
   }
 
+  // intery is the y-value at the next integer x step: yend + slope
+  // this serves as the running y coordinate as we iterate through x
   double intery = yend + gradient;
 
-  // Second endpoint
+  // Second endpoint; this is similar to the first endpoint except we use fpart instead of rfpart when finding xgap
   xend = round(x1);
   yend = y1 + gradient * (xend - x1);
   xgap = fpart(x1 + 0.5);
@@ -166,7 +212,14 @@ void draw_line(Color *buffer, int img_width, int img_height,
     set_pixel_alpha(buffer, img_width, img_height, xpxl2, ypxl2 + 1, color, fpart(yend) * xgap);
   }
 
-  // Main loop
+  // Main loop where we iterate over the x values between the two endpoints
+  // At each column:
+  //  - intery holds the real-valued intersection of the mathematical line.
+  //  - floor(intery) gives the pixel just below the line.
+  //  - rfpart(intery) gives the intensity weight for the lower pixel.
+  //  - fpart(intery) gives the intensity weight for the pixel above it.
+  // At each step, we increment intery by the slope (gradient).
+  // Again, the only difference between steep and not steep is whether we swap x and y when setting pixels.
   if (steep) {
     for (int x = xpxl1 + 1; x < xpxl2; x++) {
       int y = (int)floor(intery);
@@ -184,72 +237,109 @@ void draw_line(Color *buffer, int img_width, int img_height,
   }
 }
 
+// Function to draw a filled circle with optional outline.
+// The algorithm works by iterating over a bounding box around the circle and
+// estimating pixel coverage by sampling multiple sub-pixel locations.
+// - Each pixel is subdivided into a small grid (samples × samples).
+// - For each sub-sample, we test whether it lies inside the circle, inside the outline band, or outside entirely.
+// - Coverage is accumulated as alpha and blended against the buffer.
+// Very brute-force technique.
 void draw_circle(Color *buffer, int img_width, int img_height, double cx, double cy, double radius, const Color *fill_color, const Color *outline_color, int outline_thickness) {
   if (!buffer) return;
 
+  // First we find the bounding box of the circle plus outline
   int padding = outline_thickness + 2;
   int start_x = (int)floor(cx - radius) - padding;
   int end_x   = (int)ceil(cx + radius) + padding;
   int start_y = (int)floor(cy - radius) - padding;
   int end_y   = (int)ceil(cy + radius) + padding;
 
+  // Clamp to image bounds
   if (start_x < 0) start_x = 0;
   if (start_y < 0) start_y = 0;
   if (end_x >= img_width) end_x = img_width - 1;
-  if (end_y >= img_height) end_y = img_height - 1;
+  if (endA_y >= img_height) end_y = img_height - 1;
 
   Vector center = { cx, cy };
+
+  // We use half thickness so the outline is centered on the circle edge
   double half_thickness = (double)outline_thickness / 2.0;
 
+  // Main loop
+  // Iterate over each pixel in the bounding box
+  // For each pixel, estimate how much of it is covered by the fill and outline, respectively.
   for (int py = start_y; py <= end_y; py++) {
     for (int px = start_x; px <= end_x; px++) {
+
+      // Accumulated coverage for the pixel
       double fill_coverage = 0.0;
       double outline_coverage = 0.0;
+
+      // Supersampling parameters; the pixel is subdivided into a 4x4 grid of points
       int samples = 4;
+      // Each sample contributes equally to the total coverage
       double sample_weight = 1.0 / (double)(samples * samples);
 
+      // Supersampling loop
+      // Each iteration evaluates a single sub-pixel sample
       for (int sy = 0; sy < samples; sy++) {
         for (int sx = 0; sx < samples; sx++) {
           Vector sample = {
             (double)px + ((double)sx + 0.5) / (double)samples,
             (double)py + ((double)sy + 0.5) / (double)samples
-          };
+          }; // place the sample in the center of the sub-pixel grid cell
 
           double dist = vector_length(subtract_vectors(sample, center));
 
+          // Determine if the sample is inside the fill area, outline area, or outside
           if (dist <= radius) {
-            double edge_dist = radius - dist;
+            // We are somewhat inside the circle
+            double edge_dist = radius - dist; // distance from the edge of the circle to the sample point
+
+            // Decide if this sample contributes to outline or fill
             if (outline_color && edge_dist <= (double)outline_thickness) {
+              // Inside the outline band
               outline_coverage += sample_weight;
             } else if (fill_color) {
+              // Inside the fill area
               fill_coverage += sample_weight;
             }
           } else if (outline_color && dist <= radius + half_thickness + 1.0) {
-            double aa_alpha = 1.0 - (dist - radius - half_thickness);
+            // We are not inside the circle, but close enough to it to be in the outline's anti-aliasing region
+            double aa_alpha = 1.0 - (dist - radius - half_thickness); // alpha falls off linearly with distance
             if (aa_alpha > 0.0 && aa_alpha <= 1.0) {
+              // alpha is valid, so we contribute to outline coverage
               outline_coverage += sample_weight * aa_alpha;
             }
           }
         }
       }
 
+      // final pixel composition; first, did we cover anything at all?
       if (outline_coverage > 0.0 || fill_coverage > 0.0) {
+        // we did! so, get the background color and assign it a result which we will modify
         Color bg = get_pixel(buffer, img_width, img_height, px, py);
         Color result = bg;
 
+        // if there's some fill coverage, blend it in proportionally to the coverage
         if (fill_color && fill_coverage > 0.0) {
           result = blend_colors(result, *fill_color, fill_coverage);
         }
+        // same for outline; the idea is that both can contribute to the final pixel color
+        // outline goes last so it appears "on top" of the fill
         if (outline_color && outline_coverage > 0.0) {
           result = blend_colors(result, *outline_color, outline_coverage);
         }
 
+        // finally, set the pixel to the computed result
         set_pixel(buffer, img_width, img_height, px, py, result);
       }
     }
   }
 }
 
+// Function to draw a filled rectangle with optional outline.
+// works similarly to draw_circle with supersampling for anti-aliasing
 void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangle rect, const Color *fill_color, const Color *outline_color, int outline_thickness) {
   if (!buffer) return;
 
@@ -264,21 +354,28 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
     if (rect.corner[i].y > max_y) max_y = rect.corner[i].y;
   }
 
+  // padding to ensure outline and anti-aliasing falloff are included
   int padding = outline_thickness + 2;
   int start_x = (int)floor(min_x) - padding;
   int end_x   = (int)ceil(max_x) + padding;
   int start_y = (int)floor(min_y) - padding;
   int end_y   = (int)ceil(max_y) + padding;
 
+  // Clamp to image bounds
   if (start_x < 0) start_x = 0;
   if (start_y < 0) start_y = 0;
   if (end_x >= img_width) end_x = img_width - 1;
   if (end_y >= img_height) end_y = img_height - 1;
 
+  // Outline thickness is centered on the geometric edge
   double half_thickness = (double)outline_thickness / 2.0;
 
+  // Main loop
+  // Iterate over each pixel in the bounding box
+  // For each pixel, estimate how much of it is covered by the fill and outline, respectively.
   for (int py = start_y; py <= end_y; py++) {
     for (int px = start_x; px <= end_x; px++) {
+      // completely analog to draw_circle.
       double fill_coverage = 0.0;
       double outline_coverage = 0.0;
       int samples = 4;
@@ -291,9 +388,13 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
             (double)py + ((double)sy + 0.5) / (double)samples
           };
 
+          // minimum distance from sample point to rectangle edge
           double edge_dist = point_to_rect_edge_distance(rect, sample);
 
           // Check if sample point is inside rectangle
+          // Uses this rule: for any rectangle with consistently ordered vertices,
+          // a point lies inside if it is always on the same side of every edge.
+          // cross(edge, to_point) > 0 indicates the point lies outside
           int inside = 1;
           for (int i = 0; i < 4; i++) {
             Vector edge = subtract_vectors(rect.corner[(i + 1) % 4], rect.corner[i]);
@@ -306,11 +407,15 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
 
           if (inside) {
             if (outline_color && edge_dist <= (double)outline_thickness) {
+              // sample is inside outline band
               outline_coverage += sample_weight;
             } else if (fill_color) {
+              // sample is inside fill area
               fill_coverage += sample_weight;
             }
           } else if (outline_color && edge_dist <= half_thickness + 1.0) {
+            // sample is outside rectangle, but within outline anti-aliasing region
+            // just like draw_circle
             double aa_alpha = 1.0 - (edge_dist - half_thickness);
             if (aa_alpha > 0.0 && aa_alpha <= 1.0) {
               outline_coverage += sample_weight * aa_alpha;
@@ -319,6 +424,7 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
         }
       }
 
+      // final pixel composition; again, just like draw_circle.
       if (outline_coverage > 0.0 || fill_coverage > 0.0) {
         Color bg = get_pixel(buffer, img_width, img_height, px, py);
         Color result = bg;
@@ -330,6 +436,7 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
           result = blend_colors(result, *outline_color, outline_coverage);
         }
 
+        // set the pixel to the computed result
         set_pixel(buffer, img_width, img_height, px, py, result);
       }
     }
