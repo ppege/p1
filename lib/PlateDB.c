@@ -25,7 +25,7 @@ int GetFileLines(char *FileName) {
   return i;
 }
 
-void ReadFile(car *CarArr, int lines, char *FileName) {
+void ReadFile(Car *CarArr, int lines, char *FileName) {
   // Opens file from name
   FILE *Tempptr = fopen(FileName, "r");
 
@@ -43,7 +43,7 @@ void ReadFile(car *CarArr, int lines, char *FileName) {
   fclose(Tempptr);
 }
 
-car ReadLine(char line[10]) {
+Car ReadLine(char line[10]) {
   char plate[8];
   int num;
 
@@ -51,23 +51,22 @@ car ReadLine(char line[10]) {
   sscanf(line, " %s %d", plate, &num);
 
   // Creating an empty struct
-  car TempCar;
+  Car car;
 
-  // Casting from int to SpaceType and then adding it to the struct
-  SpaceType TempType = (SpaceType)num;
-  TempCar.carType = TempType;
+  // Casting from int to SpaceType and adding it to the struct
+  car.type = (SpaceType)num;
 
   // String copy into the struct
-  strcpy(TempCar.plate, plate);
-  return TempCar;
+  strcpy(car.plate, plate);
+  return car;
 }
 
 // A function to find the index of the plate
-int GetCarIndexFromPlate(car *CarArr, int size, char plate[8]) {
+int GetCarIndexFromPlate(Car *CarArr, int size, char plate[8]) {
   for (int i = 0; i < size; i++) {
     // Using strcmp to check if its eaqual
     if (!strcmp(CarArr[i].plate, plate)) {
-      printf("Search plate found at: %d \n", i);
+      // printf("Search plate found at: %d \n", i);
       // returning the index
       return i;
     }

@@ -16,15 +16,15 @@ void test_read_file_lines(void) {
 
 void test_read_line(void) {
   char *buffer = "AB12345 0";
-  car CarStruc = ReadLine(buffer);
+  Car CarStruc = ReadLine(buffer);
   TEST_ASSERT_EQUAL_INT_MESSAGE(0, strcmp(CarStruc.plate, "AB12345"),
                                 "Checking plate");
-  TEST_ASSERT_EQUAL_INT_MESSAGE(0, CarStruc.carType, "Checking car type");
+  TEST_ASSERT_EQUAL_INT_MESSAGE(0, CarStruc.type, "Checking car type");
 }
 
 void test_read_file_to_struct(void) {
   int lines = 3;
-  car CarArr[3];
+  Car CarArr[3];
   ReadFile(CarArr, lines, FileName);
   TEST_ASSERT_EQUAL_INT_MESSAGE(0, strcmp(CarArr[0].plate, "AB12345"),
                                 "Checking first plate");
@@ -36,7 +36,7 @@ void test_read_file_to_struct(void) {
 
 void test_get_plate_from_index(void) {
   int lines = 3;
-  car CarArr[3] = {{"AB12345", 0}, {"EZ69420", 1}, {"NO99999", 2}};
+  Car CarArr[3] = {{"AB12345", 0}, {"EZ69420", 1}, {"NO99999", 2}};
   TEST_ASSERT_EQUAL_INT_MESSAGE(0,
                                 GetCarIndexFromPlate(CarArr, lines, "AB12345"),
                                 "Checking first plate");

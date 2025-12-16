@@ -21,7 +21,7 @@ static const Dimension standardized_spaces[4] = {
     [EV] = {2.6, 5.0},
 }; // These might be magic numbers
 
-// const char* space_type_labels[4] = {"Standard", "Handicap", "Compact", "EV"};
+static const char* space_type_labels[4] = {"Standard", "Handicap", "Compact", "EV"};
 
 typedef struct {
   SpaceType type;
@@ -45,6 +45,11 @@ typedef struct {
   Location start_point;
 } Path;
 
+typedef struct {
+  char plate[8];
+  SpaceType type;
+} Car;
+
 static const double path_clearance = 1.5;
 static const double path_accessibility = 6.0;
 
@@ -66,4 +71,4 @@ typedef struct {
 Location get_endpoint(const Path path);
 Rectangle get_space_rectangle(const Space space);
 int compare_locations(Location loc1, Location loc2);
-int get_occupied_space_from_car(Lot *lot, int CarIndex);
+int get_occupied_space_from_car(Lot lot, int CarIndex);

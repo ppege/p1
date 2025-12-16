@@ -71,14 +71,14 @@ int scan_plate(char plate_out[8]) {
 
   printf("Enter your license plate: ");
   scanf("%7s", NumberPlate); // FIXED: limit input to 7 chars
-  printf("Your license plate is: %s\n", NumberPlate);
+  // printf("Your license plate is: %s\n", NumberPlate);
 
   if (validate_plate(NumberPlate) != 0) {
     printf("Your license plate is not valid\n");
     return 1;
   }
 
-  printf("Your numberplate is valid :): %s\n", NumberPlate);
+  // printf("Your numberplate is valid :): %s\n", NumberPlate);
   strcpy(plate_out, NumberPlate);
   return 0;
 }

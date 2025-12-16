@@ -9,6 +9,19 @@
 #include "validate.h"
 #include <stdio.h>
 
+void sleep_ms(unsigned int milliseconds) {
+#ifdef _WIN32
+    #include <windows.h>
+    Sleep(milliseconds);
+#else
+    #include <time.h>
+    struct timespec ts;
+    ts.tv_sec  = milliseconds / 1000;
+    ts.tv_nsec = (milliseconds % 1000) * 1000000L;
+    nanosleep(&ts, NULL);
+#endif
+}
+
 int main() {
   char *LotFileName = "example.lot";
   Lot lot = lot_from_file(LotFileName);
@@ -18,20 +31,28 @@ int main() {
   if (result.error != NoError) {
     printf("Lot validation failed with error: %s\n",
            validation_error_message(result.error));
+    lot_to_ppm_all_levels(lot, "invalid_lot", 30, NULL, 0);
     return 1;
   }
 
   // Create plateDB and read it from file
   char *PlateDBFileName = "test/test.txt";
   int lines = GetFileLines(PlateDBFileName);
-  car *CarArr = (car *)malloc(sizeof(car) * lines);
+  Car *CarArr = (Car *)malloc(sizeof(Car) * lines);
 
   ReadFile(CarArr, lines, PlateDBFileName);
 
-  while (1) {
-    // Get a quick overview of the lot
-    // print_lot(lot);
+  for (int i = 0; i < lines; i++) {
+    printf("Car %d: Plate=%s, Type=%s\n", i, CarArr[i].plate,
+           space_type_labels[CarArr[i].type]);
+  }
 
+  while (1) {
+
+    // wait 3 seconds so any previous message is readable
+    sleep_ms(3000);
+
+    // then we clear the screen
     clear_screen();
 
     int box_width = 67;
@@ -41,7 +62,7 @@ int main() {
     box_break(box_width);
     box_line_start();
     box_line_fill(
-        printf("Here we have a total of %d parking spaces!", lot.space_count),
+        printf("%d spaces available / %d total", lot.space_count - count_occupied_spaces(lot), lot.space_count),
         box_width);
     box_end(box_width);
 
@@ -50,8 +71,8 @@ int main() {
       printf("Plate is not valid. Please try again with a valid plate.\n");
       continue;
     }
-    int Res = GetCarIndexFromPlate(CarArr, lines, TempPlate);
-    if (Res == -1) {
+    int CarIndex = GetCarIndexFromPlate(CarArr, lines, TempPlate);
+    if (CarIndex == -1) {
       printf("Car with plate %s not found in database.\n", TempPlate);
       continue;
     }
@@ -63,61 +84,30 @@ int main() {
     //  Then display the parking lot and find a space for the car
     //  Display the navigation to the space
     // End by saying goodbye to the user
+    Space *assigned = NULL;
+    CheckInResult checkin_result = handle_checkin(lot, CarArr[CarIndex], CarIndex, &assigned);
+    if (checkin_result == EpicFail) {
+      continue; // user couldn't get a space, error message already displayed
+    }
+    if (checkin_result == CheckOutSuccess) {
+      continue; // user checked out successfully, no need to display navigation
+    }
+    if (assigned == NULL) {
+      printf("No space was assigned, something went wrong.\n");
+      continue;
+    }
 
-    int index = get_occupied_space_from_car(&lot, Res);
-    if (index != -1) {
-      // Car is already checked in, so check it out
-      lot.spaces[index].occupied = -1;
-      printf("Car with plate %s checked out successfully.\n", TempPlate);
-      printf("Thank you for using our parking lot! Goodbye!\n");
-      continue;
-    }
-    // Car is not checked in, so check it in
-    // Find the best available space
-    Space *foundSpace = best_space(lot, CarArr[index].carType);
-    if (foundSpace == NULL) {
-      printf("No available space found for car with plate %s.\n", TempPlate);
-      if (CarArr[index].carType != Standard) {
-        printf("This may be due to the car type (%s) not having any "
-               "available spaces.\n");
-        printf("Would you line to try checking in as a standard car? (y/n): ");
-        char response = getchar();
-        getchar(); // consume newline
-        // Clear clear_screen
-        if (response == 'y' || response == 'Y') {
-          foundSpace = best_space(lot, Standard);
-          if (foundSpace->name == NULL) {
-            printf("No available standard space found for car with plate %s.\n",
-                   TempPlate);
-            continue;
-          } else {
-            foundSpace->occupied = Res;
-            printf("Car with plate %s checked in successfully to space %s as "
-                   "a standard car.\n",
-                   TempPlate, foundSpace->name);
-          }
-          continue;
-        }
-        foundSpace->occupied = Res;
-        printf("Car with plate %s checked in successfully to space %s.\n",
-               TempPlate, foundSpace->name);
-      }
-      continue;
-    } else {
-      foundSpace->occupied = Res;
-      printf("Car with plate %s checked in successfully to space %s.\n",
-             TempPlate, foundSpace->name);
-    }
     // Print navigation instructions
-    int lenght = 0;
-    Path *superpath = superpath_to_space(lot, *foundSpace, &lenght);
-    if (superpath == NULL || lenght <= 0) {
+    Space *foundSpace = assigned;
+    int length = 0;
+    Path *superpath = superpath_to_space(lot, *foundSpace, &length);
+    if (superpath == NULL || length <= 0) {
       printf("No navigation path found to space %s.\n", foundSpace->name);
       continue;
     }
-    lot_to_ppm_all_levels(lot, "outImg", 10, superpath, lenght);
+    lot_to_ppm(lot, "outImg.ppm", foundSpace->location.level, 30, superpath, length);
     printf(
-        "Navigation path to space %s generated and saved as outshit_LvX.ppm.\n",
+        "Navigation path to space %s generated and saved as outImg.ppm.\n",
         foundSpace->name);
   }
   free(CarArr);

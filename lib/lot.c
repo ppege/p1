@@ -153,12 +153,9 @@ Space *best_space(const Lot lot, SpaceType type) {
   for (int i = 0; i < lot.space_count; i++) {
     // check if space is of the desired type and unoccupied
     if (lot.spaces[i].type != type || lot.spaces[i].occupied != -1) {
+      // report the type mismatch or occupancy
       continue;
     }
-
-    printf("Evaluating space %s at (%.2f, %.2f, Level %d)\n",
-           lot.spaces[i].name, lot.spaces[i].location.x,
-           lot.spaces[i].location.y, lot.spaces[i].location.level);
 
     // calculate distance from entrance
     int count = 0;
@@ -180,4 +177,92 @@ Space *best_space(const Lot lot, SpaceType type) {
     }
   }
   return best;
+}
+
+int count_occupied_spaces(const Lot lot) {
+  int count = 0;
+  for (int i = 0; i < lot.space_count; i++) {
+    if (lot.spaces[i].occupied != -1) {
+      count++;
+    }
+  }
+  return count;
+}
+
+static int confirm(const char *prompt) {
+  char response;
+  printf("%s (y/n): ", prompt);
+  scanf(" %c", &response);  // leading space consumes whitespace
+  return response == 'y' || response == 'Y';
+}
+
+// takes a lot, a car, and the index of the car in the car array
+// handles the control flow of car type needs vs space availability
+CheckInResult handle_checkin(const Lot lot, const Car car, const int car_index, Space **out_space) {
+  if (out_space) *out_space = NULL;
+  // first check if the car is already checked in
+  int index = get_occupied_space_from_car(lot, car_index);
+  if (index >= 0 && index < lot.space_count) {
+    // car is already checked in, so check it out
+    lot.spaces[index].occupied = -1;
+    printf("Car with plate %s checked out successfully.\n", car.plate);
+    printf("Thank you for using our parking lot! Goodbye!\n");
+    return CheckOutSuccess; // this cannot fail (famous last words)
+  }
+
+  // Car is not checked in, so check it in
+  // If it's an EV we need to ask if they want a charging space
+  if (car.type == EV) {
+    if (confirm("Would you like to check in to an EV charging space?") == 0) {
+      // user does not want an EV space, so treat as standard
+      Car fake_standard_car = car;
+      fake_standard_car.type = Standard;
+      return handle_checkin(lot, fake_standard_car, car_index, out_space);
+    } // else continue as normal to find an EV space
+  }
+
+  // Best case: find the best available space for the car type
+  Space *foundSpace = best_space(lot, car.type);
+  if (foundSpace != NULL) {
+    // successfully found a space of the ideal type
+    // very simple, just occupy it
+    foundSpace->occupied = car_index;
+    printf("Car with plate %s checked in successfully to space %s.\n",
+            car.plate, foundSpace->name);
+    if (out_space) *out_space = foundSpace;
+    return CheckInSuccess;
+  }
+
+  // in the case of no available ideal space
+  if (car.type == Compact) {
+    // if the car is compact, a standard space could do just fine with no user confirmation
+    // for the recursive call we create a fake standard car with the same plate
+    // this isn't detrimental because the car index stays the same
+    Car fake_standard_car = car;
+    fake_standard_car.type = Standard;
+    return handle_checkin(lot, fake_standard_car, car_index, out_space); // if this also fails we'll reach the next block
+  }
+
+  printf("No available %s space found for car with plate %s.\n", space_type_labels[car.type], car.plate);
+  if (car.type == Standard) {
+    // if the car is standard, there is nothing we can do
+    // cars with no special needs shouldn't occupy handicapped spaces, for example
+    // duh
+    return EpicFail;
+  }
+
+  // at this point the car must either be EV or Handicapped
+  // we can offer a standard space but need user confirmation
+  printf("There may be standard spaces available, as "
+         "only %s spaces are verified to be unavailable.\n", space_type_labels[car.type]);
+  if (confirm("Would you like to attempt to check in to a standard space instead?")) {
+    // user accepted, so we create a fake standard car and recurse
+    Car fake_standard_car = car;
+    fake_standard_car.type = Standard;
+    return handle_checkin(lot, fake_standard_car, car_index, out_space);
+  } else {
+    printf("Check-in cancelled. Please try again later.\n");
+    return EpicFail;
+  }
+  return EpicFail; // if this is reached the universe has exploded
 }
