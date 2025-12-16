@@ -39,7 +39,10 @@ int main() {
     box_start(box_width);
     box_line("Welcome to the parking lot!", box_width);
     box_break(box_width);
-    box_line("Here we have a total of 69 parking spaces!", box_width);
+    box_line_start();
+    box_line_fill(
+        printf("Here we have a total of %d parking spaces!", lot.space_count),
+        box_width);
     box_end(box_width);
 
     char TempPlate[8];

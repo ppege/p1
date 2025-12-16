@@ -11,6 +11,15 @@ void box_start(int width) {
   printf("╮\n");
 }
 
+void box_line_start() { printf("│"); }
+
+void box_line_fill(int printSize, int fillSize) {
+  int size = fillSize - printSize;
+  for (int i = 0; i < size; i++)
+    printf(" ");
+  printf("│\n");
+}
+
 // Creates the side part and text within the box
 void box_line(const char *text, int width) {
   int len = strlen(text);

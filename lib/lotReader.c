@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static Space readSpace(char *line) {
+Space readSpace(char *line) {
   // Reading a space from a line
   // It consists of name, type, location(x,y,level), rotation
   char name[11];
@@ -31,7 +31,7 @@ static Space readSpace(char *line) {
   return space;
 };
 
-static Path readPath(char *line) {
+Path readPath(char *line) {
   // Reading a path from a line
   // It consists of vector(x,y) and location(x,y,level)
   double vx, vy;
@@ -48,12 +48,12 @@ static Path readPath(char *line) {
 
   // printf("Created path: Vector=(%.2f, %.2f), location=(%.2f, %.2f, "
   //        "Level %d)\n",
-  //        path.vector.x, path.vector.y, path.start_point.x, path.start_point.y,
-  //        path.start_point.level);
+  //        path.vector.x, path.vector.y, path.start_point.x,
+  //        path.start_point.y, path.start_point.level);
   return path;
 };
 
-static Location readLocation(char *line) {
+Location readLocation(char *line) {
   // Reading a location from a line
   double x, y;
   int level;
@@ -64,7 +64,8 @@ static Location readLocation(char *line) {
   // Updating the values
   Location loc = {x, y, level};
 
-  // printf("Created location: (%.2f, %.2f, Level %d)\n", loc.x, loc.y, loc.level);
+  // printf("Created location: (%.2f, %.2f, Level %d)\n", loc.x, loc.y,
+  // loc.level);
   return loc;
 };
 
@@ -193,7 +194,8 @@ Lot lot_from_file(char *filename) {
   lot.ups = realloc(lot.ups, lot.up_count * sizeof(Location));
   lot.downs = realloc(lot.downs, lot.down_count * sizeof(Location));
 
-  // we call this ridiculous helper function to count the unique levels in the lot
+  // we call this ridiculous helper function to count the unique levels in the
+  // lot
   lot.level_count = count_levels(lot);
 
   // Closing file again
