@@ -27,10 +27,7 @@ void test_superpath_to_space_paths_connected(void) {
   
   // Check that each path's endpoint matches the next path's start point
   for (int i = 0; i < count - 1; i++) {
-  	printf("Current Path %d: start(%.2f, %.2f), vector(%.2f, %.2f)\n", 
-			i, superpath[i].start_point.x, superpath[i].start_point.y,
-			superpath[i].vector.x, superpath[i].vector.y);
-    Location endpoint = get_endpoint(superpath[i]);
+  	Location endpoint = get_endpoint(superpath[i]);
     Location next_start = superpath[i + 1].start_point;
 
     if (endpoint.level != next_start.level) {

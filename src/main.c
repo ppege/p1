@@ -17,13 +17,13 @@ void sleep_ms(unsigned int milliseconds) {
     #include <time.h>
     struct timespec ts;
     ts.tv_sec  = milliseconds / 1000;
-    ts.tv_nsec = (milliseconds % 1000) * 1000000L;
+    ts.tv_nsec = (milliseconds % 1000) * 1000000L; // L means we are using the long integer type
     nanosleep(&ts, NULL);
 #endif
 }
 
 int main() {
-  char *LotFileName = "example.lot";
+  char *LotFileName = "parkinglot.lot";
   Lot lot = lot_from_file(LotFileName);
 
   // Validate lot
@@ -41,11 +41,6 @@ int main() {
   Car *CarArr = (Car *)malloc(sizeof(Car) * lines);
 
   ReadFile(CarArr, lines, PlateDBFileName);
-
-  for (int i = 0; i < lines; i++) {
-    printf("Car %d: Plate=%s, Type=%s\n", i, CarArr[i].plate,
-           space_type_labels[CarArr[i].type]);
-  }
 
   while (1) {
 
