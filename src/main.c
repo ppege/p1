@@ -107,5 +107,6 @@ int main() {
         foundSpace->name);
   }
   free(CarArr);
+  free_lot(lot);
   return 0;
 }
