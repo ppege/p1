@@ -71,7 +71,8 @@ int main() {
       printf("Car with plate %s not found in database.\n", TempPlate);
       continue;
     }
-    printf("Car with plate %s found in database.\n", TempPlate);
+    Car car = CarArr[CarIndex];
+    printf("Car with plate %s found in database.\n", car.plate);
 
     // Check the car in/out
     // If the car is checked in, check it out and then continue
@@ -80,7 +81,7 @@ int main() {
     //  Display the navigation to the space
     // End by saying goodbye to the user
     Space *assigned = NULL;
-    CheckInResult checkin_result = handle_checkin(lot, CarArr[CarIndex], CarIndex, &assigned);
+    CheckInResult checkin_result = handle_checkin(lot, car, CarIndex, &assigned);
     if (checkin_result == EpicFail) {
       continue; // user couldn't get a space, error message already displayed
     }
