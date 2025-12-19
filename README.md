@@ -1,12 +1,6 @@
-# Parking lot manager 16 Pro Ultra++
+# Parking lot manager
 
-The large amount of densely packed cars found in urban environments results in greater emissions due to time wastage brought on by suboptimal parking conditions.
-In order to help reduce these issues, this report presents a software tool which assigns incoming drivers a specific spot to park at in a given parking garage and visualizes navigational instructions.
-This software was implemented in C, and made to be interfaced with through the command line.
-Additionally, a graphical subcomponent for the navigation was added. The program, at its core, functions by tracking the state of a parking lot using data structures.
-The utilization of a custom parser, allows for  deserializing the contents of a file into a C data structure representing a parking lot.
-Leveraging vector mathematics to reconstruct a parking lot enables the data structure to maintain simplicity while maximizing flexibility and functionality.
-Allowed the program to satisfy the requirements derived from problem statement.
+The large amount of densely packed cars found in urban environments results in greater emissions due to time wastage brought on by suboptimal parking conditions. In order to help reduce these issues, this report presents a software tool which assigns incoming drivers a specific spot to park at in a given parking garage and visualizes navigational instructions. This software was implemented in C, and made to be interfaced with through the command line. Additionally, a graphical subcomponent for the navigation was added. The program, at its core, functions by tracking the state of a parking lot using data structures. The utilization of a custom parser allows for deserializing the contents of a file into a C data structure representing a parking lot. Leveraging vector mathematics to reconstruct a parking lot enables the data structure to maintain simplicity while maximizing flexibility and functionality. Following all of the earlier specifications resulted in a program that satisfied the requirements derived from the problem statement.
 
 ## Building
 
