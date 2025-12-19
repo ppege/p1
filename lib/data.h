@@ -51,7 +51,7 @@ typedef struct {
 } Car;
 
 static const double path_clearance = 1.5;
-static const double path_accessibility = 6.0;
+static const double path_accessibility = 4.0;
 
 typedef struct {
   int level_count;
