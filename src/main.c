@@ -17,13 +17,13 @@ void sleep_ms(unsigned int milliseconds) {
     #include <time.h>
     struct timespec ts;
     ts.tv_sec  = milliseconds / 1000;
-    ts.tv_nsec = (milliseconds % 1000) * 1000000L;
+    ts.tv_nsec = (milliseconds % 1000) * 1000000L; // L means we are using the long integer type
     nanosleep(&ts, NULL);
 #endif
 }
 
 int main() {
-  char *LotFileName = "example.lot";
+  char *LotFileName = "parkinglot.lot";
   Lot lot = lot_from_file(LotFileName);
 
   // Validate lot
@@ -41,11 +41,6 @@ int main() {
   Car *CarArr = (Car *)malloc(sizeof(Car) * lines);
 
   ReadFile(CarArr, lines, PlateDBFileName);
-
-  for (int i = 0; i < lines; i++) {
-    printf("Car %d: Plate=%s, Type=%s\n", i, CarArr[i].plate,
-           space_type_labels[CarArr[i].type]);
-  }
 
   while (1) {
 
@@ -76,7 +71,8 @@ int main() {
       printf("Car with plate %s not found in database.\n", TempPlate);
       continue;
     }
-    printf("Car with plate %s found in database.\n", TempPlate);
+    Car car = CarArr[CarIndex];
+    printf("Car with plate %s found in database.\n", car.plate);
 
     // Check the car in/out
     // If the car is checked in, check it out and then continue
@@ -85,7 +81,7 @@ int main() {
     //  Display the navigation to the space
     // End by saying goodbye to the user
     Space *assigned = NULL;
-    CheckInResult checkin_result = handle_checkin(lot, CarArr[CarIndex], CarIndex, &assigned);
+    CheckInResult checkin_result = handle_checkin(lot, car, CarIndex, &assigned);
     if (checkin_result == EpicFail) {
       continue; // user couldn't get a space, error message already displayed
     }
@@ -111,5 +107,6 @@ int main() {
         foundSpace->name);
   }
   free(CarArr);
+  free_lot(lot);
   return 0;
 }

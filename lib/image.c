@@ -447,19 +447,6 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
 // Text Rendering
 // ============================================================================
 
-
-static void draw_char(Color *buffer, int img_width, int img_height,
-                      const int *bitmap, int char_width, int char_height,
-                      int start_x, int start_y) {
-  for (int row = 0; row < char_height; row++) {
-    for (int col = 0; col < char_width; col++) {
-      if (bitmap[row] & (1 << (char_width - 1 - col))) {
-        set_pixel(buffer, img_width, img_height, start_x + col, start_y + row, COLOR_BLACK);
-      }
-    }
-  }
-}
-
 static void draw_text(Color *buffer, int img_width, int img_height, const char *text, int center_x, int center_y, Color color) {
   const int char_width = 5;
   const int char_height = 7;
