@@ -10,17 +10,17 @@ x=0.0 y=0.0 level=0
 
 [Spaces]
 name=A1 type=1 location(x=-13.4 y=2.0 level=0) rotation=0
-#name=A2 type=1 location(x=-9.7  y=2.0 level=0) rotation=0
-#name=A3 type=1 location(x=-6.0  y=2.0 level=0) rotation=0
-#name=A4 type=1 location(x=6.0   y=2.0 level=0) rotation=0
-#name=A5 type=1 location(x=9.7   y=2.0 level=0) rotation=0
-#name=A6 type=1 location(x=13.4  y=2.0 level=0) rotation=0
+name=A2 type=1 location(x=-9.7  y=2.0 level=0) rotation=0
+name=A3 type=1 location(x=-6.0  y=2.0 level=0) rotation=0
+name=A4 type=1 location(x=6.0   y=2.0 level=0) rotation=0
+name=A5 type=1 location(x=9.7   y=2.0 level=0) rotation=0
+name=A6 type=1 location(x=13.4  y=2.0 level=0) rotation=0
 
-#name=B1 type=1 location(x=-13.4 y=18.0 level=0) rotation=180
-#name=B2 type=1 location(x=-9.7  y=18.0 level=0) rotation=180
-#name=B3 type=1 location(x=-6.0  y=18.0 level=0) rotation=180
-#name=B4 type=1 location(x=6.0   y=18.0 level=0) rotation=180
-#name=B5 type=1 location(x=9.7   y=18.0 level=0) rotation=180
+name=B1 type=1 location(x=-13.4 y=18.0 level=0) rotation=180
+name=B2 type=1 location(x=-9.7  y=18.0 level=0) rotation=180
+name=B3 type=1 location(x=-6.0  y=18.0 level=0) rotation=180
+name=B4 type=1 location(x=6.0   y=18.0 level=0) rotation=180
+name=B5 type=1 location(x=9.7   y=18.0 level=0) rotation=180
 name=B6 type=1 location(x=13.4  y=18.0 level=0) rotation=180
 
 name=C1 type=0 location(x=-12.0 y=2.0 level=1) rotation=0

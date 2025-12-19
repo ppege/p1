@@ -173,9 +173,13 @@ Lot lot_from_file(char *filename) {
         printf("ERROR: Failed to read space from line: %s\n", buffer);
         exit(1);
       }
-      lot.spaces[SpaceCount++] = *space;
-      free(space->name);
+      // Copy the struct, but fix the name pointer
+      lot.spaces[SpaceCount] = *space; // copies everything including pointer
+      lot.spaces[SpaceCount].name = space->name; // transfer ownership
+      space->name = NULL; // prevent double free
+
       free(space);
+      SpaceCount++;
       if (SpaceCount == lot.space_count) {
         // Resize the spaces array if needed
         lot.space_count += 25;
@@ -219,7 +223,7 @@ Lot lot_from_file(char *filename) {
         if (UpCount == lot.up_count) {
           // Resize the ups array if needed
           lot.up_count += 10;
-          Up* upres = realloc(lot.ups, lot.up_count * sizeof(Location));
+          Location* upres = realloc(lot.ups, lot.up_count * sizeof(Location));
           if (!upres) {
             printf("ERROR: Memory reallocation failed!\n");
             exit(1);
@@ -231,7 +235,7 @@ Lot lot_from_file(char *filename) {
         if (DownCount == lot.down_count) {
           // Resize the downs array if needed
           lot.down_count += 10;
-          Down* downres = realloc(lot.downs, lot.down_count * sizeof(Location));
+          Location* downres = realloc(lot.downs, lot.down_count * sizeof(Location));
           if (!downres) {
             printf("ERROR: Memory reallocation failed!\n");
             exit(1);
@@ -269,8 +273,8 @@ Lot lot_from_file(char *filename) {
   // Resizing the arrays to fit the actual counts
   Space* spaceres = realloc(lot.spaces, lot.space_count * sizeof(Space));
   Path* pathres = realloc(lot.paths, lot.path_count * sizeof(Path));
-  Up* upres = realloc(lot.ups, lot.up_count * sizeof(Location));
-  Down* downres = realloc(lot.downs, lot.down_count * sizeof(Location));
+  Location* upres = realloc(lot.ups, lot.up_count * sizeof(Location));
+  Location* downres = realloc(lot.downs, lot.down_count * sizeof(Location));
 
   if (!spaceres || !pathres || !upres || !downres) {
     printf("ERROR: Memory reallocation failed!\n");
