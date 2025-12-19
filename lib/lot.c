@@ -204,12 +204,15 @@ static int confirm(const char *prompt) {
 // takes a lot, a car, and the index of the car in the car array
 // handles the control flow of car type needs vs space availability
 CheckInResult handle_checkin(const Lot lot, const Car car, const int car_index, Space **out_space) {
-  if (out_space) *out_space = NULL;
+  if (!out_space) {
+    // ensure out_space is a valid pointer
+    return EpicFail;
+  }
   // first check if the car is already checked in
-  int index = get_occupied_space_from_car(lot, car_index);
-  if (index >= 0 && index < lot.space_count) {
+  int space_index = get_occupied_space_from_car(lot, car_index);
+  if (space_index >= 0 && space_index < lot.space_count) {
     // car is already checked in, so check it out
-    lot.spaces[index].occupied = -1;
+    lot.spaces[space_index].occupied = -1;
     printf("Car with plate %s checked out successfully.\n", car.plate);
     printf("Thank you for using our parking lot! Goodbye!\n");
     return CheckOutSuccess; // this cannot fail (famous last words)
