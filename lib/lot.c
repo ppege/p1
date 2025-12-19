@@ -67,6 +67,7 @@ void print_lot(const Lot lot) {
   }
 }
 
+// return a pointer to the space with the given name, or NULL if not found
 Space *space_by_name(const Lot lot, const char *name) {
   for (int i = 0; i < lot.space_count; i++) {
     if (strcmp(lot.spaces[i].name, name) == 0) {
@@ -76,6 +77,8 @@ Space *space_by_name(const Lot lot, const char *name) {
   return NULL;
 }
 
+// count the number of unique levels in the lot
+// this turns out to be non-trivial since levels are only indicated in locations
 int count_levels(const Lot lot) {
   // to find the level count we must find the number of unique levels in paths
   // and spaces
@@ -179,6 +182,7 @@ Space *best_space(const Lot lot, SpaceType type) {
   return best;
 }
 
+// count the number of occupied spaces in the lot
 int count_occupied_spaces(const Lot lot) {
   int count = 0;
   for (int i = 0; i < lot.space_count; i++) {
@@ -189,6 +193,7 @@ int count_occupied_spaces(const Lot lot) {
   return count;
 }
 
+// simple yes/no confirmation prompt
 static int confirm(const char *prompt) {
   char response;
   printf("%s (y/n): ", prompt);

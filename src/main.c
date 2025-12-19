@@ -9,6 +9,8 @@
 #include "validate.h"
 #include <stdio.h>
 
+// sleeps for the given number of milliseconds
+// platform independent for puny windows users
 void sleep_ms(unsigned int milliseconds) {
 #ifdef _WIN32
     #include <windows.h>
@@ -23,6 +25,7 @@ void sleep_ms(unsigned int milliseconds) {
 }
 
 int main() {
+  // read lot from file
   char *LotFileName = "parkinglot.lot";
   Lot lot = lot_from_file(LotFileName);
 

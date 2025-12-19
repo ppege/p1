@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-Space readSpace(char *line) {
+Space* readSpace(const char *line) {
   // Reading a space from a line
   // It consists of name, type, location(x,y,level), rotation
   char name[11];
@@ -12,16 +12,32 @@ Space readSpace(char *line) {
   int level, itype;
 
   // Getting info from the line
-  sscanf(line, "name=%10s type=%d location(x=%lf y=%lf level=%d) rotation=%lf",
+  if (!line) return NULL; // dont dereference a null pointer dude
+  int n = sscanf(line, "name=%10s type=%d location(x=%lf y=%lf level=%d) rotation=%lf",
          name, &itype, &x, &y, &level, &rotation);
+
+  // Validating the read
+  if (n != 6) {
+    printf("ERROR: Invalid space line format: %s\n", line);
+    return NULL;
+  }
 
   // Updating the values
   SpaceType type = (SpaceType)itype;
-  Space space = {.type = type,
-                 .location = {x, y, level},
-                 .rotation = rotation,
-                 .name = strdup(name),
-                 .occupied = -1};
+
+  // create the space and return pointer to it
+  Space* space = malloc(sizeof(Space));
+  if (!space) return NULL; // malloc failed
+  space->type = type;
+  space->location = (Location){x, y, level};
+  space->rotation = rotation;
+  space->name = strdup(name);
+  space->occupied = -1;
+
+  if (!space->name) {
+    free(space);
+    return NULL; // strdup can fail
+  }
 
   // printf("Created space: Name=%s, Type=%d, Location=(%.2f, %.2f %d),  "
   //        "Rotation=%.2f\n",
@@ -31,7 +47,7 @@ Space readSpace(char *line) {
   return space;
 };
 
-Path readPath(char *line) {
+Path* readPath(const char *line) {
   // Reading a path from a line
   // It consists of vector(x,y) and location(x,y,level)
   double vx, vy;
@@ -39,12 +55,23 @@ Path readPath(char *line) {
   int level;
 
   // Getting info from the line
-  sscanf(line, "vec(x=%lf y=%lf) location(x=%lf y=%lf level=%d)", &vx, &vy,
+  if (!line) return NULL; // dont dereference a null pointer dude
+  int n = sscanf(line, "vec(x=%lf y=%lf) location(x=%lf y=%lf level=%d)", &vx, &vy,
          &location_x, &location_y, &level);
 
+  // Validating the read
+  if (n != 5) {
+    printf("ERROR: Invalid path line format: %s\n", line);
+    return NULL;
+  }
+
+  // create a path
+  Path* path = malloc(sizeof(Path));
+  if (!path) return NULL; // malloc failed
+
   // Updating the values
-  Path path = {.vector = {vx, vy},
-               .start_point = {location_x, location_y, level}};
+  path->vector = (Vector){vx, vy};
+  path->start_point = (Location){location_x, location_y, level};
 
   // printf("Created path: Vector=(%.2f, %.2f), location=(%.2f, %.2f, "
   //        "Level %d)\n",
@@ -53,22 +80,34 @@ Path readPath(char *line) {
   return path;
 };
 
-Location readLocation(char *line) {
+Location* readLocation(const char *line) {
   // Reading a location from a line
   double x, y;
   int level;
 
   // Getting info from the line
-  sscanf(line, "x=%lf y=%lf level=%d", &x, &y, &level);
+  if (!line) return NULL; // dont dereference a null pointer dude
+  int n = sscanf(line, "x=%lf y=%lf level=%d", &x, &y, &level);
+
+  // Validating the read
+  if (n != 3) {
+    printf("ERROR: Invalid location line format: %s\n", line);
+    return NULL;
+  }
+
+  // create location
+  Location* loc = malloc(sizeof(Location));
+  if (!loc) return NULL; // malloc failed
 
   // Updating the values
-  Location loc = {x, y, level};
+  *loc = (Location){x, y, level};
 
   // printf("Created location: (%.2f, %.2f, Level %d)\n", loc.x, loc.y,
   // loc.level);
   return loc;
 };
 
+// taking a filename, read the lot data from the file and return a Lot struct
 Lot lot_from_file(char *filename) {
   // initialize a lot struct with 1 of everything
   Lot lot = create_lot(1, 1, 1, 1, 1);
@@ -129,57 +168,96 @@ Lot lot_from_file(char *filename) {
     // This is a data line
     if (stage == 1) {
       // Process space data
-      Space space = readSpace(buffer);
-      lot.spaces[SpaceCount++] = space;
+      Space *space = readSpace(buffer);
+      if (!space) {
+        printf("ERROR: Failed to read space from line: %s\n", buffer);
+        exit(1);
+      }
+      lot.spaces[SpaceCount++] = *space;
+      free(space->name);
+      free(space);
       if (SpaceCount == lot.space_count) {
         // Resize the spaces array if needed
         lot.space_count += 25;
-        lot.spaces = realloc(lot.spaces, lot.space_count * sizeof(Space));
+        Space* spaceres = realloc(lot.spaces, lot.space_count * sizeof(Space));
+        if (!spaceres) {
+          printf("ERROR: Memory reallocation failed!\n");
+          exit(1);
+        }
+        lot.spaces = spaceres;
       }
     } else if (stage == 2) {
       // Process path data
-      Path path = readPath(buffer);
-      lot.paths[PathCount++] = path;
+      Path *path = readPath(buffer);
+      if (!path) {
+        printf("ERROR: Failed to read path from line: %s\n", buffer);
+        exit(1);
+      }
+      lot.paths[PathCount++] = *path;
+      free(path);
       if (PathCount == lot.path_count) {
         // Resize the paths array if needed
         lot.path_count += 25;
-        lot.paths = realloc(lot.paths, lot.path_count * sizeof(Path));
+        Path* pathres = realloc(lot.paths, lot.path_count * sizeof(Path));
+        if (!pathres) {
+          printf("ERROR: Memory reallocation failed!\n");
+          exit(1);
+        }
+        lot.paths = pathres;
       }
     } else if (stage > 2 && stage < 7) {
       // It has to be stage 3,4,5, or 6 since they are all just a location
       // Is still different stages for making it easier to read
       // Process location data
-      Location location = readLocation(buffer);
+      Location *location = readLocation(buffer);
+      if (!location) {
+        printf("ERROR: Failed to read location from line: %s\n", buffer);
+        exit(1);
+      }
       if (stage == 3) {
-        lot.ups[UpCount++] = location;
+        lot.ups[UpCount++] = *location;
         if (UpCount == lot.up_count) {
           // Resize the ups array if needed
           lot.up_count += 10;
-          lot.ups = realloc(lot.ups, lot.up_count * sizeof(Location));
+          Up* upres = realloc(lot.ups, lot.up_count * sizeof(Location));
+          if (!upres) {
+            printf("ERROR: Memory reallocation failed!\n");
+            exit(1);
+          }
+          lot.ups = upres;
         }
       } else if (stage == 4) {
-        lot.downs[DownCount++] = location;
+        lot.downs[DownCount++] = *location;
         if (DownCount == lot.down_count) {
           // Resize the downs array if needed
           lot.down_count += 10;
-          lot.downs = realloc(lot.downs, lot.down_count * sizeof(Location));
+          Down* downres = realloc(lot.downs, lot.down_count * sizeof(Location));
+          if (!downres) {
+            printf("ERROR: Memory reallocation failed!\n");
+            exit(1);
+          }
+          lot.downs = downres;
         }
       } else if (stage == 5) {
         // POI
-        lot.POI = location;
+        lot.POI = *location;
       } else if (stage == 6) {
         // Entrance
-        lot.entrance = location;
+        lot.entrance = *location;
       }
+      free(location);
     } else if (stage == 7) {
       double length = 0.0;
-      sscanf(buffer, "%lf", &length);
+      int n = sscanf(buffer, "%lf", &length);
+      if (n != 1) {
+        printf("ERROR: Invalid ramp length line format: %s\n", buffer);
+        exit(1);
+      }
       lot.ramp_length = length;
     } else {
       // Unknown stage, handle error
       printf("Unknown stage: %d\n", stage);
       exit(1);
-      continue;
     }
   }
 
@@ -189,10 +267,20 @@ Lot lot_from_file(char *filename) {
   lot.up_count = UpCount;
   lot.down_count = DownCount;
   // Resizing the arrays to fit the actual counts
-  lot.spaces = realloc(lot.spaces, lot.space_count * sizeof(Space));
-  lot.paths = realloc(lot.paths, lot.path_count * sizeof(Path));
-  lot.ups = realloc(lot.ups, lot.up_count * sizeof(Location));
-  lot.downs = realloc(lot.downs, lot.down_count * sizeof(Location));
+  Space* spaceres = realloc(lot.spaces, lot.space_count * sizeof(Space));
+  Path* pathres = realloc(lot.paths, lot.path_count * sizeof(Path));
+  Up* upres = realloc(lot.ups, lot.up_count * sizeof(Location));
+  Down* downres = realloc(lot.downs, lot.down_count * sizeof(Location));
+
+  if (!spaceres || !pathres || !upres || !downres) {
+    printf("ERROR: Memory reallocation failed!\n");
+    exit(1);
+  }
+
+  lot.spaces = spaceres;
+  lot.paths = pathres;
+  lot.ups = upres;
+  lot.downs = downres;
 
   // we call this ridiculous helper function to count the unique levels in the
   // lot

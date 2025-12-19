@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+// A function to get the number of lines in a file
 int GetFileLines(char *FileName) {
   // Opening file from name
   FILE *fptr = fopen(FileName, "r");
@@ -25,6 +26,7 @@ int GetFileLines(char *FileName) {
   return i;
 }
 
+// A function to read the file into an array of Car structs
 void ReadFile(Car *CarArr, int lines, char *FileName) {
   // Opens file from name
   FILE *Tempptr = fopen(FileName, "r");
@@ -43,6 +45,7 @@ void ReadFile(Car *CarArr, int lines, char *FileName) {
   fclose(Tempptr);
 }
 
+// A function to read a line into a Car struct
 Car ReadLine(char line[10]) {
   char plate[8];
   int num;
@@ -61,7 +64,7 @@ Car ReadLine(char line[10]) {
   return car;
 }
 
-// A function to find the index of the plate
+// A function to find the index of a given plate in the a Car array
 int GetCarIndexFromPlate(Car *CarArr, int size, char plate[8]) {
   for (int i = 0; i < size; i++) {
     // Using strcmp to check if its eaqual

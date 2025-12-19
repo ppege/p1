@@ -17,6 +17,7 @@ Vector normal_vector(Vector v) {
   return (Vector){ -v.y, v.x };
 };
 
+// rotate vector v by angle_radians (counter-clockwise)
 Vector rotate_vector(Vector v, double angle_radians) {
   double cos_angle = cos(angle_radians);
   double sin_angle = sin(angle_radians);
@@ -38,6 +39,7 @@ Vector vector_add(Vector a, Vector b) {
   return (Vector){ a.x + b.x, a.y + b.y };
 }
 
+// calculate the minimum distance from point to line segment defined by seg_start and seg_end
 double point_to_segment_distance(Vector point, Vector seg_start, Vector seg_end) {
   Vector seg = subtract_vectors(seg_end, seg_start);
   double seg_length_sq = vector_dot_product(seg, seg);
@@ -81,6 +83,8 @@ static int projections_overlap(float min1, float max1, float min2, float max2) {
     return !(max1 < min2 || max2 < min1);
 }
 
+// uses Separating Axis Theorem to check if two rectangles overlap
+// essentially, if we can find an axis where the projections of the two rectangles do not overlap, then they do not collide
 int separating_axis(Rectangle rect1, Rectangle rect2) {
   Rectangle rects[2] = {rect1, rect2};
   

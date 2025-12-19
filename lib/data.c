@@ -2,8 +2,8 @@
 #include "calculations.h"
 #include <float.h>
 
+// Calculate the endpoint of the path based on its start_point and vector
 Location get_endpoint(const Path path) {
-  // Calculate the endpoint of the path based on its start_point and vector
   Location endpoint;
   endpoint.x = path.start_point.x + path.vector.x;
   endpoint.y = path.start_point.y + path.vector.y;
@@ -11,6 +11,7 @@ Location get_endpoint(const Path path) {
   return endpoint;
 }
   
+// given a lot and a CarIndex, return the index of the space occupied by that car, or -1 if not found
 int get_occupied_space_from_car(Lot lot, int CarIndex) {
   for (int i = 0; i < lot.space_count; i++) {
     if (lot.spaces[i].occupied == CarIndex) {
@@ -43,6 +44,7 @@ int get_occupied_space_from_car(Lot lot, int CarIndex) {
 //   }
 // }
 
+// takes a space and returns the rectangle representing its corners in world coordinates in a counter-clockwise order starting from bottom-left
 Rectangle get_space_rectangle(const Space space) {
   Dimension dim = standardized_spaces[space.type];
   double angle_rad = degrees_to_radians(space.rotation);

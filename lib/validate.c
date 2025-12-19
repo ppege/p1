@@ -6,9 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+// macros to help return results
 #define OK (ValidationResult){ Ok, NoError }
 #define ERR(e) (ValidationResult){ Err, e }
 
+// map errors to messages
 const char *validation_error_message(LotValidationError error) {
   switch (error) {
     case NoError:                  return "No error";
@@ -26,6 +28,7 @@ const char *validation_error_message(LotValidationError error) {
   }
 }
 
+// main validation function; sequentially checks each rule
 ValidationResult validate_lot(const Lot lot) {
   // Rule 0: Each path must have a non-zero length
   for (int i = 0; i < lot.path_count; i++) {
@@ -74,6 +77,7 @@ ValidationResult validate_lot(const Lot lot) {
   return OK;
 }
 
+// helper function to check if all paths are connected
 int paths_connected(const Lot lot) {
   int connected = 0;
   Location* endpoints = get_all_endpoints(lot.paths, lot.path_count); // get every path's endpoint
@@ -159,6 +163,7 @@ int paths_connected(const Lot lot) {
   return connected == lot.path_count + lot.up_count + lot.down_count; 
 }
 
+// helper function to get all path endpoints
 Location *get_all_endpoints(Path *paths, int path_count) {
   Location *endpoints = (Location *)malloc(sizeof(Location) * path_count);
   for (int i = 0; i < path_count; i++) {
@@ -167,6 +172,8 @@ Location *get_all_endpoints(Path *paths, int path_count) {
   return endpoints;
 }
 
+// helper function to check if two rectangles are separated along any axis
+// returns 1 if separated, 0 if overlapping
 int spaces_overlap(const Lot lot) {
   // using get_space_rectangle we get the rectangles of each space
   for (int i = 0; i < lot.space_count; i++) {
@@ -184,6 +191,7 @@ int spaces_overlap(const Lot lot) {
   return 0; // no overlaps found
 };
 
+// helper function to check if any spaces encroach within margin of any path
 int spaces_encroach_path(const Lot lot, double margin) {
   // for each path, we create a "corridor" rectangle representing the path with margin on both sides. 
   // then we check if any space's rectangle overlaps with this corridor.
@@ -208,6 +216,7 @@ int spaces_encroach_path(const Lot lot, double margin) {
   return 0; // no encroachments found
 }
 
+// helper function to get the corridor rectangle for a path with margin
 Rectangle get_path_corridor(const Path path, double margin) {
   // here, we create a rectangle that represents a path with the margin on both sides.
   
@@ -251,6 +260,7 @@ Rectangle get_path_corridor(const Path path, double margin) {
   return rect;
 }
 
+// helper function to check if all spaces are accessible from at least one path
 int spaces_accessible(const Lot lot, double max_distance) {
   // for each space, check if it overlaps with at least one path's accessibility corridor
   for (int i = 0; i < lot.space_count; i++) {
@@ -278,6 +288,7 @@ int spaces_accessible(const Lot lot, double max_distance) {
   return 1; // all spaces are accessible
 }
 
+// helper function to check if entrance and POI are on valid levels
 int has_valid_entrance_and_poi(const Lot lot) {
   // Check entrance is on a valid level
   if (lot.entrance.level < 0 || lot.entrance.level >= lot.level_count) {
@@ -292,6 +303,7 @@ int has_valid_entrance_and_poi(const Lot lot) {
   return 1;
 }
 
+// helper function to check if all space names are unique
 int spaces_have_unique_names(const Lot lot) {
   for (int i = 0; i < lot.space_count; i++) {
     for (int j = i + 1; j < lot.space_count; j++) {
@@ -304,6 +316,7 @@ int spaces_have_unique_names(const Lot lot) {
   return 1; // all names are unique
 }
 
+// helper function to check if the number of ups and downs is correct for the level count
 int has_correct_up_down_count(const Lot lot) {
   if (lot.level_count <= 1) {
     return 1; // single level, no ups/downs needed
@@ -312,6 +325,7 @@ int has_correct_up_down_count(const Lot lot) {
   return (lot.up_count == required) && (lot.down_count == required);
 }
 
+// helper function to check if each level has appropriate ups and downs
 int levels_have_ups_and_downs(const Lot lot) {
   if (lot.level_count <= 1) {
     return 1; // single level, no ups/downs needed

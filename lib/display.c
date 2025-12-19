@@ -13,6 +13,7 @@ void box_start(int width) {
 
 void box_line_start() { printf("│"); }
 
+// Fills the rest of the line with spaces
 void box_line_fill(int printSize, int fillSize) {
   int size = fillSize - printSize;
   for (int i = 0; i < size; i++)
@@ -83,4 +84,5 @@ int scan_plate(char plate_out[8]) {
   return 0;
 }
 
+// prints ANSI escape codes to clear the terminal screen
 void clear_screen() { printf("\033[1;1H\033[2J"); }

@@ -85,10 +85,12 @@ static double point_to_rect_edge_distance(const Rectangle rect, Vector point) {
 // Wu's Algorithm Helpers https://en.wikipedia.org/wiki/Xiaolin_Wu%27s_line_algorithm
 // ============================================================================
 
+// fractional part of x
 static double fpart(double x) {
   return x - floor(x);
 }
 
+// reverse fractional part of x
 static double rfpart(double x) {
   return 1.0 - fpart(x);
 }
@@ -447,6 +449,7 @@ void draw_rectangle(Color *buffer, int img_width, int img_height, const Rectangl
 // Text Rendering
 // ============================================================================
 
+// Simple function to draw text using a basic bitmap font
 static void draw_text(Color *buffer, int img_width, int img_height, const char *text, int center_x, int center_y, Color color) {
   const int char_width = 5;
   const int char_height = 7;
@@ -541,6 +544,7 @@ static void draw_text(Color *buffer, int img_width, int img_height, const char *
   }
 }
 
+// Function to draw a space label at the center of a rectangle
 void draw_space_label(Color *buffer, int img_width, int img_height, const Rectangle pixel_rect, const char *name) {
   if (!buffer || !name) return;
 
@@ -561,6 +565,7 @@ void draw_space_label(Color *buffer, int img_width, int img_height, const Rectan
   draw_text(buffer, img_width, img_height, name, (int)center_x, (int)center_y, COLOR_BLACK);
 }
 
+// Function to draw the level label at the top-left corner
 void draw_level_label(Color *buffer, int img_width, int img_height, int level, int margin) {
   int x = margin;
   int y = margin;
@@ -574,6 +579,7 @@ void draw_level_label(Color *buffer, int img_width, int img_height, int level, i
 // Scale Bar
 // ============================================================================
 
+// draws the scale bar, representing 1 unit of distance, so the user can tell how big things are
 void draw_scale_bar(Color *buffer, int img_width, int img_height, int pixels_per_unit, int margin) {
   int bar_length = pixels_per_unit;
   int bar_height = 4;
@@ -627,6 +633,7 @@ void draw_scale_bar(Color *buffer, int img_width, int img_height, int pixels_per
 // Lot Rendering
 // ============================================================================
 
+// Function to calculate the bounding box of the lot at a given level
 static void calculate_lot_bounds(const Lot lot, int level, double *min_x, double *min_y, double *max_x, double *max_y) {
   *min_x = *min_y = 1e9;
   *max_x = *max_y = -1e9;
@@ -695,6 +702,8 @@ static void calculate_lot_bounds(const Lot lot, int level, double *min_x, double
   *max_y += 2.0;
 }
 
+// Function to convert a world rectangle to pixel rectangle, ie scaling and flipping y-axis
+// (rasters typically have origin at top-left, y increasing downward)
 static Rectangle world_to_pixel_rect(const Rectangle world_rect, double pixels_per_unit, double min_x, double max_y) {
   Rectangle pixel_rect;
   for (int i = 0; i < 4; i++) {
@@ -704,6 +713,9 @@ static Rectangle world_to_pixel_rect(const Rectangle world_rect, double pixels_p
   return pixel_rect;
 }
 
+// Main function to render a lot level to a PPM image file
+// Combines the various drawing functions defined above
+// using them to draw all components of the lot
 int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_unit, Path* nav, int nav_count) {
   if (!filename || pixels_per_unit <= 0) return -1;
 
@@ -837,6 +849,7 @@ int lot_to_ppm(const Lot lot, const char *filename, int level, int pixels_per_un
   return 0;
 }
 
+// wrapper to loop over all levels and call lot_to_ppm for each
 int lot_to_ppm_all_levels(const Lot lot, const char *base_filename, int pixels_per_unit, Path* nav, int nav_count) {
   if (!base_filename) return -1;
 
